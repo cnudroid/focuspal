@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(tree:*)",
+      "Bash(ls:*)",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal status)",
+      "Bash(git add:*)"
+    ]
+  }
+}
