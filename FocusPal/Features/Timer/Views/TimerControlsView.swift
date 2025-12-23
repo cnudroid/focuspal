@@ -14,51 +14,70 @@ struct TimerControlsView: View {
     let onPause: () -> Void
     let onResume: () -> Void
     let onStop: () -> Void
+    let onCompleteEarly: () -> Void
 
     var body: some View {
-        HStack(spacing: 24) {
-            switch state {
-            case .idle:
-                PrimaryActionButton(
-                    title: "Start",
-                    icon: "play.fill",
-                    color: .blue,
-                    action: onStart
-                )
+        VStack(spacing: 16) {
+            HStack(spacing: 24) {
+                switch state {
+                case .idle:
+                    PrimaryActionButton(
+                        title: "Start",
+                        icon: "play.fill",
+                        color: .blue,
+                        action: onStart
+                    )
 
-            case .running:
-                SecondaryActionButton(
-                    icon: "stop.fill",
-                    action: onStop
-                )
+                case .running:
+                    SecondaryActionButton(
+                        icon: "stop.fill",
+                        action: onStop
+                    )
 
-                PrimaryActionButton(
-                    title: "Pause",
-                    icon: "pause.fill",
-                    color: .orange,
-                    action: onPause
-                )
+                    PrimaryActionButton(
+                        title: "Pause",
+                        icon: "pause.fill",
+                        color: .orange,
+                        action: onPause
+                    )
 
-            case .paused:
-                SecondaryActionButton(
-                    icon: "stop.fill",
-                    action: onStop
-                )
+                case .paused:
+                    SecondaryActionButton(
+                        icon: "stop.fill",
+                        action: onStop
+                    )
 
-                PrimaryActionButton(
-                    title: "Resume",
-                    icon: "play.fill",
-                    color: .green,
-                    action: onResume
-                )
+                    PrimaryActionButton(
+                        title: "Resume",
+                        icon: "play.fill",
+                        color: .green,
+                        action: onResume
+                    )
 
-            case .completed:
-                PrimaryActionButton(
-                    title: "Done",
-                    icon: "checkmark",
-                    color: .green,
-                    action: onStop
-                )
+                case .completed:
+                    PrimaryActionButton(
+                        title: "Done",
+                        icon: "checkmark",
+                        color: .green,
+                        action: onStop
+                    )
+                }
+            }
+
+            // Complete Early button - shown when running or paused
+            if state == .running || state == .paused {
+                Button(action: onCompleteEarly) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("I'm Done!")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.green)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .background(Color.green.opacity(0.15))
+                    .cornerRadius(24)
+                }
             }
         }
     }
@@ -103,9 +122,9 @@ struct SecondaryActionButton: View {
 
 #Preview {
     VStack(spacing: 40) {
-        TimerControlsView(state: .idle, onStart: {}, onPause: {}, onResume: {}, onStop: {})
-        TimerControlsView(state: .running, onStart: {}, onPause: {}, onResume: {}, onStop: {})
-        TimerControlsView(state: .paused, onStart: {}, onPause: {}, onResume: {}, onStop: {})
-        TimerControlsView(state: .completed, onStart: {}, onPause: {}, onResume: {}, onStop: {})
+        TimerControlsView(state: .idle, onStart: {}, onPause: {}, onResume: {}, onStop: {}, onCompleteEarly: {})
+        TimerControlsView(state: .running, onStart: {}, onPause: {}, onResume: {}, onStop: {}, onCompleteEarly: {})
+        TimerControlsView(state: .paused, onStart: {}, onPause: {}, onResume: {}, onStop: {}, onCompleteEarly: {})
+        TimerControlsView(state: .completed, onStart: {}, onPause: {}, onResume: {}, onStop: {}, onCompleteEarly: {})
     }
 }

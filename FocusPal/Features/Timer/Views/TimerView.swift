@@ -11,6 +11,7 @@ import SwiftUI
 struct TimerView: View {
     @StateObject private var viewModel: TimerViewModel
     @State private var showingParentControls = false
+    @State private var showingNameEditor = false
 
     init(timerService: TimerServiceProtocol? = nil, activityService: ActivityServiceProtocol? = nil) {
         _viewModel = StateObject(wrappedValue: TimerViewModel(
@@ -21,7 +22,24 @@ struct TimerView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 32) {
+            VStack(spacing: 24) {
+                // Child name greeting - tappable to edit
+                Button {
+                    showingNameEditor = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Text("👋")
+                            .font(.title2)
+                        Text("Hi, \(viewModel.childName)!")
+                            .font(.title2.weight(.semibold))
+                            .foregroundColor(.primary)
+                        Image(systemName: "pencil.circle.fill")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.top, 8)
+
                 // Category selector with duration display
                 CategorySelector(
                     categories: viewModel.categories,
@@ -55,7 +73,17 @@ struct TimerView: View {
                 }
                 .frame(maxWidth: 300, maxHeight: 300)
 
+                // Time info when running
+                if viewModel.timerState == .running || viewModel.timerState == .paused {
+                    TimeInfoView(viewModel: viewModel)
+                }
+
                 Spacer()
+
+                // Add time buttons when running
+                if viewModel.timerState == .running || viewModel.timerState == .paused {
+                    AddTimeButtonsView(onAddTime: viewModel.addTime)
+                }
 
                 // Timer controls
                 TimerControlsView(
@@ -63,11 +91,13 @@ struct TimerView: View {
                     onStart: viewModel.startTimer,
                     onPause: viewModel.pauseTimer,
                     onResume: viewModel.resumeTimer,
-                    onStop: viewModel.stopTimer
+                    onStop: viewModel.stopTimer,
+                    onCompleteEarly: viewModel.completeEarly
                 )
             }
             .padding()
             .navigationTitle("Timer")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     HStack(spacing: 12) {
@@ -116,7 +146,128 @@ struct TimerView: View {
                         }
                 }
             }
+            .sheet(isPresented: $showingNameEditor) {
+                NameEditorView(
+                    currentName: viewModel.childName,
+                    onSave: { newName in
+                        viewModel.setChildName(newName)
+                        showingNameEditor = false
+                    },
+                    onCancel: {
+                        showingNameEditor = false
+                    }
+                )
+            }
         }
+    }
+}
+
+// MARK: - Time Info View
+
+struct TimeInfoView: View {
+    @ObservedObject var viewModel: TimerViewModel
+
+    var body: some View {
+        HStack(spacing: 24) {
+            // Elapsed time
+            VStack(spacing: 4) {
+                Text("Elapsed")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(viewModel.elapsedTimeFormatted)
+                    .font(.headline.monospacedDigit())
+            }
+
+            // Extra time added (if any)
+            if viewModel.timeAdded > 0 {
+                VStack(spacing: 4) {
+                    Text("Added")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(viewModel.timeAddedFormatted)
+                        .font(.headline)
+                        .foregroundColor(.orange)
+                }
+            }
+        }
+        .padding(.horizontal)
+    }
+}
+
+// MARK: - Add Time Buttons View
+
+struct AddTimeButtonsView: View {
+    let onAddTime: (Int) -> Void
+
+    var body: some View {
+        HStack(spacing: 16) {
+            AddTimeButton(minutes: 1, onTap: { onAddTime(1) })
+            AddTimeButton(minutes: 5, onTap: { onAddTime(5) })
+            AddTimeButton(minutes: 10, onTap: { onAddTime(10) })
+        }
+    }
+}
+
+struct AddTimeButton: View {
+    let minutes: Int
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            Text("+\(minutes)m")
+                .font(.subheadline.weight(.medium))
+                .foregroundColor(.orange)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(Color.orange.opacity(0.15))
+                .cornerRadius(16)
+        }
+    }
+}
+
+// MARK: - Name Editor View
+
+struct NameEditorView: View {
+    let currentName: String
+    let onSave: (String) -> Void
+    let onCancel: () -> Void
+
+    @State private var name: String = ""
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("Child's Name", text: $name)
+                        .textContentType(.name)
+                        .autocapitalization(.words)
+                } header: {
+                    Text("What's your name?")
+                } footer: {
+                    Text("This name will be shown on the timer screen.")
+                }
+            }
+            .navigationTitle("Edit Name")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", action: onCancel)
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !trimmed.isEmpty {
+                            onSave(trimmed)
+                        }
+                    }
+                    .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+            .onAppear {
+                name = currentName
+            }
+        }
+        .presentationDetents([.medium])
     }
 }
 

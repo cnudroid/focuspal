@@ -21,6 +21,8 @@ class MockTimerService: TimerServiceProtocol {
     var pauseTimerCallCount = 0
     var resumeTimerCallCount = 0
     var stopTimerCallCount = 0
+    var addTimeCallCount = 0
+    var lastAddedTime: TimeInterval = 0
 
     // MARK: - Publishers
 
@@ -61,6 +63,12 @@ class MockTimerService: TimerServiceProtocol {
         mockElapsedTime = 0
     }
 
+    func addTime(_ time: TimeInterval) {
+        addTimeCallCount += 1
+        lastAddedTime = time
+        mockRemainingTime += time
+    }
+
     func setVisualizationMode(_ mode: TimerVisualizationMode) {
         // No-op for mock
     }
@@ -80,5 +88,7 @@ class MockTimerService: TimerServiceProtocol {
         pauseTimerCallCount = 0
         resumeTimerCallCount = 0
         stopTimerCallCount = 0
+        addTimeCallCount = 0
+        lastAddedTime = 0
     }
 }

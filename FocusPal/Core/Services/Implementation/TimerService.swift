@@ -115,6 +115,25 @@ class TimerService: TimerServiceProtocol {
         endBackgroundTask()
     }
 
+    func addTime(_ time: TimeInterval) {
+        guard timerState == .running || timerState == .paused else { return }
+
+        // Update total duration and remaining time
+        totalDuration += time
+        remainingTime += time
+
+        // Update the countdown mode with new duration
+        if case .countdown = currentMode {
+            currentMode = .countdown(duration: totalDuration)
+        }
+
+        // Reschedule notification if running
+        if timerState == .running {
+            notificationService.cancelNotifications(withIdentifier: "timer_completion")
+            scheduleTimerNotification(duration: remainingTime)
+        }
+    }
+
     func setVisualizationMode(_ mode: TimerVisualizationMode) {
         visualizationMode = mode
     }

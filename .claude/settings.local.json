@@ -17,7 +17,9 @@
       "Bash(git commit:*)",
       "Bash(gh issue list:*)",
       "Bash(gh issue close:*)",
-      "Bash(xcodebuild:*)"
+      "Bash(xcodebuild:*)",
+      "Bash(xcrun simctl:*)",
+      "Bash(open:*)"
     ]
   }
 }

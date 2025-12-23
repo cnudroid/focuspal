@@ -36,6 +36,10 @@ protocol TimerServiceProtocol {
     /// Stop and reset the timer
     func stopTimer()
 
+    /// Add additional time to the current timer
+    /// - Parameter time: Additional time in seconds
+    func addTime(_ time: TimeInterval)
+
     /// Set the visualization mode for the timer display
     func setVisualizationMode(_ mode: TimerVisualizationMode)
 }

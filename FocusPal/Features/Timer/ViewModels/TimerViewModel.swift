@@ -33,6 +33,12 @@ class TimerViewModel: ObservableObject {
     @Published var visualizationMode: TimerVisualizationMode = .circular
     @Published var defaultDuration: TimeInterval = 25 * 60  // 25 minutes
     @Published var audioCalloutsEnabled: Bool = true
+    @Published var childName: String = "Buddy"
+
+    // Time tracking for actual duration
+    @Published var actualStartTime: Date?
+    @Published var actualDuration: TimeInterval = 0
+    @Published var timeAdded: TimeInterval = 0  // Extra time added during session
 
     // MARK: - Dependencies
 
@@ -56,6 +62,22 @@ class TimerViewModel: ObservableObject {
 
         setupBindings()
         loadCategories()
+        loadChildName()
+    }
+
+    private func loadChildName() {
+        // Load child name from UserDefaults (set during onboarding)
+        if let name = UserDefaults.standard.string(forKey: "childName_\(childId.uuidString)") {
+            childName = name
+        } else if let name = UserDefaults.standard.string(forKey: "childName") {
+            childName = name
+        }
+    }
+
+    func setChildName(_ name: String) {
+        childName = name
+        UserDefaults.standard.set(name, forKey: "childName")
+        UserDefaults.standard.set(name, forKey: "childName_\(childId.uuidString)")
     }
 
     // MARK: - Setup
@@ -128,6 +150,9 @@ class TimerViewModel: ObservableObject {
         totalDuration = duration
         remainingTime = duration
         progress = 1.0
+        timeAdded = 0
+        actualStartTime = Date()
+        actualDuration = 0
 
         // Reset audio announcements
         audioService.reset()
@@ -139,6 +164,52 @@ class TimerViewModel: ObservableObject {
         )
     }
 
+    /// Complete task early (before timer ends)
+    func completeEarly() {
+        guard timerState == .running || timerState == .paused else { return }
+
+        // Calculate actual duration
+        if let startTime = actualStartTime {
+            actualDuration = Date().timeIntervalSince(startTime)
+        }
+
+        // Log the activity with actual duration
+        logCompletedActivity(wasCompletedEarly: true)
+
+        // Stop the timer
+        timerService.stopTimer()
+        audioService.reset()
+        timerState = .completed
+
+        // Reset for next session
+        resetForNextSession()
+    }
+
+    /// Add extra time to the current timer
+    func addTime(minutes: Int) {
+        guard timerState == .running || timerState == .paused else { return }
+
+        let additionalTime = TimeInterval(minutes * 60)
+        timeAdded += additionalTime
+        totalDuration += additionalTime
+        remainingTime += additionalTime
+
+        // Update the timer service
+        timerService.addTime(additionalTime)
+    }
+
+    private func resetForNextSession() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            guard let self = self else { return }
+            self.progress = 1.0
+            self.remainingTime = self.selectedCategory?.recommendedDuration ?? self.defaultDuration
+            self.timerState = .idle
+            self.actualStartTime = nil
+            self.actualDuration = 0
+            self.timeAdded = 0
+        }
+    }
+
     func pauseTimer() {
         timerService.pauseTimer()
     }
@@ -148,15 +219,23 @@ class TimerViewModel: ObservableObject {
     }
 
     func stopTimer() {
+        // Calculate actual duration
+        if let startTime = actualStartTime {
+            actualDuration = Date().timeIntervalSince(startTime)
+        }
+
         // Log activity if timer was running
         if timerState == .completed || timerState == .running || timerState == .paused {
-            logCompletedActivity()
+            logCompletedActivity(wasCompletedEarly: false)
         }
 
         timerService.stopTimer()
         audioService.reset()
         progress = 1.0
         remainingTime = selectedCategory?.recommendedDuration ?? defaultDuration
+        actualStartTime = nil
+        actualDuration = 0
+        timeAdded = 0
     }
 
     func setVisualizationMode(_ mode: TimerVisualizationMode) {
@@ -175,19 +254,48 @@ class TimerViewModel: ObservableObject {
         progress = remainingTime / totalDuration
     }
 
-    private func logCompletedActivity() {
+    private func logCompletedActivity(wasCompletedEarly: Bool) {
         guard let category = selectedCategory else { return }
 
-        let duration = totalDuration - remainingTime
+        // Use actual duration if available, otherwise calculate from timer
+        let duration = actualDuration > 0 ? actualDuration : (totalDuration - remainingTime)
 
         Task {
-            let mockChild = Child(name: "Test", age: 8)
+            let child = Child(name: childName, age: 8)
             _ = try? await activityService.logActivity(
                 category: category,
                 duration: duration,
-                child: mockChild
+                child: child
             )
         }
+
+        // Log for debugging
+        let plannedMinutes = Int(totalDuration / 60)
+        let actualMinutes = Int(duration / 60)
+        let actualSeconds = Int(duration) % 60
+        print("📊 Activity logged: \(category.name)")
+        print("   Planned: \(plannedMinutes) min")
+        print("   Actual: \(actualMinutes)m \(actualSeconds)s")
+        print("   Completed early: \(wasCompletedEarly)")
+        if timeAdded > 0 {
+            print("   Extra time added: \(Int(timeAdded / 60)) min")
+        }
+    }
+
+    /// Formatted string for actual elapsed time
+    var elapsedTimeFormatted: String {
+        guard let startTime = actualStartTime else { return "0:00" }
+        let elapsed = Date().timeIntervalSince(startTime)
+        let minutes = Int(elapsed) / 60
+        let seconds = Int(elapsed) % 60
+        return String(format: "%d:%02d", minutes, seconds)
+    }
+
+    /// Formatted string for time added
+    var timeAddedFormatted: String {
+        guard timeAdded > 0 else { return "" }
+        let minutes = Int(timeAdded / 60)
+        return "+\(minutes) min"
     }
 }
 
