@@ -19,6 +19,7 @@ struct Category: Identifiable, Equatable, Hashable {
     var isSystem: Bool
     var parentCategoryId: UUID?
     let childId: UUID
+    var recommendedDuration: TimeInterval  // Duration in seconds
 
     init(
         id: UUID = UUID(),
@@ -29,7 +30,8 @@ struct Category: Identifiable, Equatable, Hashable {
         sortOrder: Int = 0,
         isSystem: Bool = false,
         parentCategoryId: UUID? = nil,
-        childId: UUID
+        childId: UUID,
+        recommendedDuration: TimeInterval = 25 * 60  // Default 25 minutes
     ) {
         self.id = id
         self.name = name
@@ -40,6 +42,12 @@ struct Category: Identifiable, Equatable, Hashable {
         self.isSystem = isSystem
         self.parentCategoryId = parentCategoryId
         self.childId = childId
+        self.recommendedDuration = recommendedDuration
+    }
+
+    /// Duration formatted as minutes
+    var durationMinutes: Int {
+        Int(recommendedDuration / 60)
     }
 }
 
@@ -53,7 +61,8 @@ extension Category {
                 colorHex: "#4A90D9",
                 sortOrder: 0,
                 isSystem: true,
-                childId: childId
+                childId: childId,
+                recommendedDuration: 25 * 60  // 25 minutes
             ),
             Category(
                 name: "Reading",
@@ -61,7 +70,8 @@ extension Category {
                 colorHex: "#7B68EE",
                 sortOrder: 1,
                 isSystem: true,
-                childId: childId
+                childId: childId,
+                recommendedDuration: 30 * 60  // 30 minutes
             ),
             Category(
                 name: "Screen Time",
@@ -69,7 +79,8 @@ extension Category {
                 colorHex: "#FF6B6B",
                 sortOrder: 2,
                 isSystem: true,
-                childId: childId
+                childId: childId,
+                recommendedDuration: 45 * 60  // 45 minutes
             ),
             Category(
                 name: "Playing",
@@ -77,7 +88,8 @@ extension Category {
                 colorHex: "#4ECDC4",
                 sortOrder: 3,
                 isSystem: true,
-                childId: childId
+                childId: childId,
+                recommendedDuration: 60 * 60  // 60 minutes
             ),
             Category(
                 name: "Sports",
@@ -85,7 +97,8 @@ extension Category {
                 colorHex: "#45B7D1",
                 sortOrder: 4,
                 isSystem: true,
-                childId: childId
+                childId: childId,
+                recommendedDuration: 45 * 60  // 45 minutes
             ),
             Category(
                 name: "Music",
@@ -93,8 +106,45 @@ extension Category {
                 colorHex: "#F7DC6F",
                 sortOrder: 5,
                 isSystem: true,
-                childId: childId
+                childId: childId,
+                recommendedDuration: 30 * 60  // 30 minutes
             )
         ]
     }
+
+    /// Available icons for categories
+    static let availableIcons: [String] = [
+        "book.fill",
+        "text.book.closed.fill",
+        "tv.fill",
+        "gamecontroller.fill",
+        "figure.run",
+        "music.note",
+        "pencil",
+        "paintbrush.fill",
+        "brain.head.profile",
+        "puzzlepiece.fill",
+        "building.columns.fill",
+        "globe",
+        "star.fill",
+        "heart.fill",
+        "leaf.fill",
+        "cup.and.saucer.fill"
+    ]
+
+    /// Available colors for categories
+    static let availableColors: [String] = [
+        "#4A90D9",  // Blue
+        "#7B68EE",  // Purple
+        "#FF6B6B",  // Red
+        "#4ECDC4",  // Teal
+        "#45B7D1",  // Light Blue
+        "#F7DC6F",  // Yellow
+        "#82E0AA",  // Green
+        "#F8B500",  // Orange
+        "#E74C3C",  // Dark Red
+        "#9B59B6",  // Violet
+        "#1ABC9C",  // Turquoise
+        "#34495E"   // Dark Gray
+    ]
 }

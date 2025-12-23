@@ -29,7 +29,8 @@ extension CategoryEntity {
             sortOrder: Int(sortOrder),
             isSystem: isSystem,
             parentCategoryId: parentCategory?.id,
-            childId: childId
+            childId: childId,
+            recommendedDuration: recommendedDuration
         )
     }
 
@@ -42,6 +43,7 @@ extension CategoryEntity {
         self.isActive = model.isActive
         self.sortOrder = Int16(model.sortOrder)
         self.isSystem = model.isSystem
+        self.recommendedDuration = model.recommendedDuration
     }
 }
 

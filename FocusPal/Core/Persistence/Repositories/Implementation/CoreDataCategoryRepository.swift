@@ -123,6 +123,7 @@ class CoreDataCategoryRepository: CategoryRepositoryProtocol {
         entity.isActive = category.isActive
         entity.sortOrder = Int16(category.sortOrder)
         entity.isSystem = category.isSystem
+        entity.recommendedDuration = category.recommendedDuration
     }
 
     private func mapFromEntity(_ entity: CategoryEntity) -> Category {
@@ -135,7 +136,8 @@ class CoreDataCategoryRepository: CategoryRepositoryProtocol {
             sortOrder: Int(entity.sortOrder),
             isSystem: entity.isSystem,
             parentCategoryId: entity.parentCategory?.id,
-            childId: entity.child?.id ?? UUID()
+            childId: entity.child?.id ?? UUID(),
+            recommendedDuration: entity.recommendedDuration
         )
     }
 }

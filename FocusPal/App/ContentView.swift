@@ -30,6 +30,8 @@ struct ContentView: View {
 
 /// Main tab view for the primary app navigation
 struct MainTabView: View {
+    @EnvironmentObject var serviceContainer: ServiceContainer
+
     var body: some View {
         TabView {
             HomeView()
@@ -37,7 +39,10 @@ struct MainTabView: View {
                     Label("Home", systemImage: "house.fill")
                 }
 
-            TimerView()
+            TimerView(
+                timerService: serviceContainer.timerService,
+                activityService: serviceContainer.activityService
+            )
                 .tabItem {
                     Label("Timer", systemImage: "timer")
                 }

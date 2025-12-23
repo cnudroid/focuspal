@@ -40,7 +40,7 @@ struct ParentDashboardView: View {
                 // Categories section
                 Section("Categories") {
                     NavigationLink {
-                        CategoryManagementView()
+                        CategorySettingsView()
                     } label: {
                         Label("Manage Categories", systemImage: "folder")
                     }

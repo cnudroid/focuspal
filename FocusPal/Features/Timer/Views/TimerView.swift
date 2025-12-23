@@ -9,12 +9,20 @@ import SwiftUI
 
 /// Main timer view with visual countdown and controls.
 struct TimerView: View {
-    @StateObject private var viewModel = TimerViewModel()
+    @StateObject private var viewModel: TimerViewModel
+    @State private var showingParentControls = false
+
+    init(timerService: TimerServiceProtocol? = nil, activityService: ActivityServiceProtocol? = nil) {
+        _viewModel = StateObject(wrappedValue: TimerViewModel(
+            timerService: timerService,
+            activityService: activityService
+        ))
+    }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 32) {
-                // Category selector
+                // Category selector with duration display
                 CategorySelector(
                     categories: viewModel.categories,
                     selected: $viewModel.selectedCategory
@@ -61,6 +69,25 @@ struct TimerView: View {
             .padding()
             .navigationTitle("Timer")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    HStack(spacing: 12) {
+                        // Audio toggle
+                        Button {
+                            viewModel.toggleAudioCallouts()
+                        } label: {
+                            Image(systemName: viewModel.audioCalloutsEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+                                .foregroundColor(viewModel.audioCalloutsEnabled ? .primary : .secondary)
+                        }
+
+                        // Parent Controls / Settings
+                        Button {
+                            showingParentControls = true
+                        } label: {
+                            Image(systemName: "gearshape.fill")
+                        }
+                    }
+                }
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
                         ForEach(TimerVisualizationMode.allCases, id: \.self) { mode in
@@ -71,6 +98,22 @@ struct TimerView: View {
                     } label: {
                         Image(systemName: "paintbrush")
                     }
+                }
+            }
+            .sheet(isPresented: $showingParentControls, onDismiss: {
+                // Reload categories when returning from settings
+                viewModel.reloadCategories()
+            }) {
+                NavigationStack {
+                    CategorySettingsView()
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("Done") {
+                                    showingParentControls = false
+                                }
+                            }
+                        }
                 }
             }
         }
@@ -105,16 +148,23 @@ struct CategoryChip: View {
 
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: 6) {
-                Image(systemName: category.iconName)
-                Text(category.name)
+            VStack(spacing: 4) {
+                HStack(spacing: 6) {
+                    Image(systemName: category.iconName)
+                    Text(category.name)
+                }
+                .font(.subheadline.weight(.medium))
+
+                // Show duration
+                Text("\(category.durationMinutes) min")
+                    .font(.caption2)
+                    .opacity(0.8)
             }
-            .font(.subheadline)
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
             .background(isSelected ? Color(hex: category.colorHex) : Color(.systemGray5))
             .foregroundColor(isSelected ? .white : .primary)
-            .cornerRadius(20)
+            .cornerRadius(16)
         }
     }
 }
