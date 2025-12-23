@@ -137,7 +137,6 @@ class CoreDataActivityRepository: ActivityRepositoryProtocol {
         entity.id = activity.id
         entity.startTime = activity.startTime
         entity.endTime = activity.endTime
-        entity.duration = Int32(activity.duration)
         entity.notes = activity.notes
         entity.mood = Int16(activity.mood.rawValue)
         entity.isManualEntry = activity.isManualEntry
@@ -147,16 +146,16 @@ class CoreDataActivityRepository: ActivityRepositoryProtocol {
 
     private func mapFromEntity(_ entity: ActivityEntity) -> Activity {
         Activity(
-            id: entity.id,
-            categoryId: entity.category.id,
-            childId: entity.child.id,
-            startTime: entity.startTime,
-            endTime: entity.endTime,
+            id: entity.id ?? UUID(),
+            categoryId: entity.category?.id ?? UUID(),
+            childId: entity.child?.id ?? UUID(),
+            startTime: entity.startTime ?? Date(),
+            endTime: entity.endTime ?? Date(),
             notes: entity.notes,
             mood: Mood(rawValue: Int(entity.mood)) ?? .none,
             isManualEntry: entity.isManualEntry,
-            createdDate: entity.createdDate,
-            syncStatus: SyncStatus(rawValue: entity.syncStatus) ?? .pending
+            createdDate: entity.createdDate ?? Date(),
+            syncStatus: SyncStatus(rawValue: entity.syncStatus ?? "pending") ?? .pending
         )
     }
 }

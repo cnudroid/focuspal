@@ -127,15 +127,15 @@ class CoreDataCategoryRepository: CategoryRepositoryProtocol {
 
     private func mapFromEntity(_ entity: CategoryEntity) -> Category {
         Category(
-            id: entity.id,
-            name: entity.name,
-            iconName: entity.iconName,
-            colorHex: entity.colorHex,
+            id: entity.id ?? UUID(),
+            name: entity.name ?? "",
+            iconName: entity.iconName ?? "folder.fill",
+            colorHex: entity.colorHex ?? "#4A90D9",
             isActive: entity.isActive,
             sortOrder: Int(entity.sortOrder),
             isSystem: entity.isSystem,
             parentCategoryId: entity.parentCategory?.id,
-            childId: entity.child.id
+            childId: entity.child?.id ?? UUID()
         )
     }
 }

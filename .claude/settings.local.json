@@ -14,7 +14,10 @@
       "Bash(gh repo create:*)",
       "Bash(gh auth:*)",
       "Bash(gh issue create:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue close:*)",
+      "Bash(xcodebuild:*)"
     ]
   }
 }

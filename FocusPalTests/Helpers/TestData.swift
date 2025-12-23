@@ -49,8 +49,8 @@ enum TestData {
         isSystem: Bool = false,
         parentCategoryId: UUID? = nil,
         childId: UUID = UUID()
-    ) -> Category {
-        Category(
+    ) -> FocusPal.Category {
+        FocusPal.Category(
             id: id,
             name: name,
             iconName: iconName,

@@ -53,7 +53,7 @@ struct ActivityLogView: View {
             .task {
                 await viewModel.loadActivities()
             }
-            .onChange(of: viewModel.selectedDate) {
+            .onChange(of: viewModel.selectedDate) { _ in
                 Task {
                     await viewModel.loadActivities()
                 }

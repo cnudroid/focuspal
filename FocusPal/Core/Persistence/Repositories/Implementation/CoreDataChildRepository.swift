@@ -131,25 +131,25 @@ class CoreDataChildRepository: ChildRepositoryProtocol {
         entity.isActive = child.isActive
 
         if let preferencesData = try? JSONEncoder().encode(child.preferences) {
-            entity.preferencesJSON = preferencesData
+            entity.preferencesData = preferencesData
         }
     }
 
     private func mapFromEntity(_ entity: ChildEntity) -> Child {
         var preferences = ChildPreferences()
-        if let data = entity.preferencesJSON,
+        if let data = entity.preferencesData,
            let decoded = try? JSONDecoder().decode(ChildPreferences.self, from: data) {
             preferences = decoded
         }
 
         return Child(
-            id: entity.id,
-            name: entity.name,
+            id: entity.id ?? UUID(),
+            name: entity.name ?? "",
             age: Int(entity.age),
-            avatarId: entity.avatarId,
-            themeColor: entity.themeColor,
+            avatarId: entity.avatarId ?? "avatar_default",
+            themeColor: entity.themeColor ?? "blue",
             preferences: preferences,
-            createdDate: entity.createdDate,
+            createdDate: entity.createdDate ?? Date(),
             lastActiveDate: entity.lastActiveDate,
             isActive: entity.isActive
         )

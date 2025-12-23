@@ -29,7 +29,7 @@ final class CategoryTests: XCTestCase {
 
     func testDefaultCategories() {
         let childId = UUID()
-        let categories = Category.defaultCategories(for: childId)
+        let categories = FocusPal.Category.defaultCategories(for: childId)
 
         XCTAssertEqual(categories.count, 6)
 
@@ -52,7 +52,7 @@ final class CategoryTests: XCTestCase {
 
     func testCategorySortOrder() {
         let childId = UUID()
-        let categories = Category.defaultCategories(for: childId)
+        let categories = FocusPal.Category.defaultCategories(for: childId)
 
         // Verify sort order is sequential
         for (index, category) in categories.enumerated() {

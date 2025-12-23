@@ -26,51 +26,59 @@ final class MockTimerServiceTests: XCTestCase {
     }
 
     func testInitialState() {
-        XCTAssertEqual(sut.timerState, .idle)
-        XCTAssertEqual(sut.remainingTime, 0)
-        XCTAssertNil(sut.currentCategoryId)
+        XCTAssertEqual(sut.mockTimerState, .idle)
+        XCTAssertEqual(sut.mockRemainingTime, 0)
     }
 
     func testStartTimer() {
-        let categoryId = UUID()
+        sut.startTimer(duration: 300, mode: .countdown(duration: 300), category: nil)
 
-        sut.start(duration: 300, categoryId: categoryId)
-
-        XCTAssertEqual(sut.timerState, .running)
-        XCTAssertEqual(sut.remainingTime, 300)
-        XCTAssertEqual(sut.currentCategoryId, categoryId)
+        XCTAssertEqual(sut.mockTimerState, .running)
+        XCTAssertEqual(sut.mockRemainingTime, 300)
+        XCTAssertEqual(sut.startTimerCallCount, 1)
     }
 
     func testPauseTimer() {
-        sut.start(duration: 300, categoryId: UUID())
-        sut.pause()
+        sut.startTimer(duration: 300, mode: .countdown(duration: 300), category: nil)
+        sut.pauseTimer()
 
-        XCTAssertEqual(sut.timerState, .paused)
+        XCTAssertEqual(sut.mockTimerState, .paused)
+        XCTAssertEqual(sut.pauseTimerCallCount, 1)
     }
 
     func testResumeTimer() {
-        sut.start(duration: 300, categoryId: UUID())
-        sut.pause()
-        sut.resume()
+        sut.startTimer(duration: 300, mode: .countdown(duration: 300), category: nil)
+        sut.pauseTimer()
+        sut.resumeTimer()
 
-        XCTAssertEqual(sut.timerState, .running)
+        XCTAssertEqual(sut.mockTimerState, .running)
+        XCTAssertEqual(sut.resumeTimerCallCount, 1)
     }
 
     func testStopTimer() {
-        sut.start(duration: 300, categoryId: UUID())
-        sut.stop()
+        sut.startTimer(duration: 300, mode: .countdown(duration: 300), category: nil)
+        sut.stopTimer()
 
-        XCTAssertEqual(sut.timerState, .idle)
-        XCTAssertEqual(sut.remainingTime, 0)
+        XCTAssertEqual(sut.mockTimerState, .idle)
+        XCTAssertEqual(sut.mockRemainingTime, 0)
+        XCTAssertEqual(sut.stopTimerCallCount, 1)
     }
 
     func testReset() {
-        sut.start(duration: 300, categoryId: UUID())
-        sut.remainingTime = 100
+        sut.startTimer(duration: 300, mode: .countdown(duration: 300), category: nil)
         sut.reset()
 
-        XCTAssertEqual(sut.remainingTime, 300)
-        XCTAssertEqual(sut.timerState, .idle)
+        XCTAssertEqual(sut.mockTimerState, .idle)
+        XCTAssertEqual(sut.mockRemainingTime, 0)
+        XCTAssertEqual(sut.startTimerCallCount, 0)
+    }
+
+    func testSimulateTimerComplete() {
+        sut.startTimer(duration: 60, mode: .countdown(duration: 60), category: nil)
+        sut.simulateTimerComplete()
+
+        XCTAssertEqual(sut.mockTimerState, .completed)
+        XCTAssertEqual(sut.mockRemainingTime, 0)
     }
 
     func testTimerStatePublisher() {
@@ -86,7 +94,7 @@ final class MockTimerServiceTests: XCTestCase {
             }
             .store(in: &cancellables)
 
-        sut.start(duration: 60, categoryId: UUID())
+        sut.startTimer(duration: 60, mode: .countdown(duration: 60), category: nil)
 
         wait(for: [expectation], timeout: 1.0)
         XCTAssertTrue(states.contains(.idle))
