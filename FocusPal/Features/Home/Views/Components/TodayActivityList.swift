@@ -94,6 +94,25 @@ struct ActivityDisplayItem: Identifiable {
     let colorHex: String
     let durationMinutes: Int
     let timeRange: String
+    let startTime: Date // For sorting
+
+    init(
+        id: UUID,
+        categoryName: String,
+        iconName: String,
+        colorHex: String,
+        durationMinutes: Int,
+        timeRange: String,
+        startTime: Date = Date()
+    ) {
+        self.id = id
+        self.categoryName = categoryName
+        self.iconName = iconName
+        self.colorHex = colorHex
+        self.durationMinutes = durationMinutes
+        self.timeRange = timeRange
+        self.startTime = startTime
+    }
 }
 
 #Preview {

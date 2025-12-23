@@ -25,17 +25,22 @@ class ActivityLogViewModel: ObservableObject {
 
     private let activityService: ActivityServiceProtocol
     private let categoryService: CategoryServiceProtocol
+    private let currentChild: Child
 
     // MARK: - Initialization
 
     init(
         activityService: ActivityServiceProtocol? = nil,
-        categoryService: CategoryServiceProtocol? = nil
+        categoryService: CategoryServiceProtocol? = nil,
+        child: Child? = nil
     ) {
         self.activityService = activityService ?? MockActivityService()
         self.categoryService = categoryService ?? MockCategoryServiceImpl()
+        self.currentChild = child ?? Child(name: "Test", age: 8)
 
-        loadCategories()
+        Task {
+            await loadCategories()
+        }
     }
 
     // MARK: - Public Methods
@@ -45,14 +50,13 @@ class ActivityLogViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            let mockChild = Child(name: "Test", age: 8)
             let calendar = Calendar.current
             let startOfDay = calendar.startOfDay(for: selectedDate)
             let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
             let dateRange = DateInterval(start: startOfDay, end: endOfDay)
 
             let fetchedActivities = try await activityService.fetchActivities(
-                for: mockChild,
+                for: currentChild,
                 dateRange: dateRange
             )
 
@@ -75,11 +79,10 @@ class ActivityLogViewModel: ObservableObject {
 
     func logActivity(category: Category, duration: TimeInterval) async {
         do {
-            let mockChild = Child(name: "Test", age: 8)
             _ = try await activityService.logActivity(
                 category: category,
                 duration: duration,
-                child: mockChild
+                child: currentChild
             )
             await loadActivities()
         } catch {
@@ -94,8 +97,39 @@ class ActivityLogViewModel: ObservableObject {
         notes: String?,
         mood: Mood
     ) async {
-        // Manual entry implementation
-        await logActivity(category: category, duration: duration)
+        do {
+            let endTime = startTime.addingTimeInterval(duration)
+
+            // Clean up notes - treat empty string as nil
+            let cleanedNotes = notes?.trimmingCharacters(in: .whitespaces)
+            let finalNotes = (cleanedNotes?.isEmpty ?? true) ? nil : cleanedNotes
+
+            // First log the activity to create it in the system
+            let activity = try await activityService.logActivity(
+                category: category,
+                duration: duration,
+                child: currentChild
+            )
+
+            // Then update it with manual entry details
+            let manualActivity = Activity(
+                id: activity.id,
+                categoryId: category.id,
+                childId: currentChild.id,
+                startTime: startTime,
+                endTime: endTime,
+                notes: finalNotes,
+                mood: mood,
+                isManualEntry: true,
+                createdDate: activity.createdDate,
+                syncStatus: activity.syncStatus
+            )
+
+            _ = try await activityService.updateActivity(manualActivity)
+            await loadActivities()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     func deleteActivities(at offsets: IndexSet) {
@@ -110,15 +144,13 @@ class ActivityLogViewModel: ObservableObject {
 
     // MARK: - Private Methods
 
-    private func loadCategories() {
-        categories = [
-            Category(name: "Homework", iconName: "book.fill", colorHex: "#4A90D9", childId: UUID()),
-            Category(name: "Reading", iconName: "text.book.closed.fill", colorHex: "#7B68EE", childId: UUID()),
-            Category(name: "Screen Time", iconName: "tv.fill", colorHex: "#FF6B6B", childId: UUID()),
-            Category(name: "Playing", iconName: "gamecontroller.fill", colorHex: "#4ECDC4", childId: UUID()),
-            Category(name: "Sports", iconName: "figure.run", colorHex: "#45B7D1", childId: UUID()),
-            Category(name: "Music", iconName: "music.note", colorHex: "#F7DC6F", childId: UUID())
-        ]
+    private func loadCategories() async {
+        do {
+            categories = try await categoryService.fetchActiveCategories(for: currentChild)
+        } catch {
+            // Fallback to default categories if service fails
+            categories = Category.defaultCategories(for: currentChild.id)
+        }
     }
 
     private func categoryName(for categoryId: UUID) -> String {

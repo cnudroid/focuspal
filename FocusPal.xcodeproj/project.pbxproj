@@ -20,10 +20,12 @@
 		1CBB82EC8CC44D9D942EF89E /* CategoryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A545357F85890C83193F72 /* CategoryServiceProtocol.swift */; };
 		203681891B479C1826C585D3 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177E28672D8AA1E3E42EC0E /* AnalyticsService.swift */; };
 		20FE25E9CC8C01C8C40A6272 /* ChildEntityMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDAC4628BE8EE160AC1A5C6F /* ChildEntityMapper.swift */; };
+		239D464291901C63DA1B1252 /* PINEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D041839EE2B7B2E4300A56 /* PINEntryView.swift */; };
 		26CA52C0F60722059DB8D201 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA83B1A7D80275DBDF294EF6 /* Category.swift */; };
 		2720B342C50CF564854C1769 /* TimeGoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E96D5818DCBEFD2E5CD05 /* TimeGoalsView.swift */; };
 		2BA478D37A5DB8A2DB601C99 /* CategoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19444D8D2DC1C63530E080B5 /* CategoryService.swift */; };
 		2C4A9FA4ADD9188DAD1B4BDD /* ParentDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258796CCE9B3B29853806EC0 /* ParentDashboardViewModel.swift */; };
+		30884754A4224B9BF6394B87 /* ParentAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B54CD6BD518D1D080A037E /* ParentAuthViewModel.swift */; };
 		31D2B38B6907600F82F2558E /* ActivityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B24B24B645C40771C06297E /* ActivityCard.swift */; };
 		3227AD126F71ACA48D30D23F /* QuickActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7BC5EFE9095CBE29271DCA4 /* QuickActionButton.swift */; };
 		34041F741C71B3181D382C70 /* ChildTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5A14BFD054A58E007057B7 /* ChildTests.swift */; };
@@ -39,6 +41,7 @@
 		44978B209121AAE67B3FF6CA /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DCA56292456FBA2E322627E /* PrimaryButton.swift */; };
 		470E29C2C28748C317BDAE25 /* MockActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B89C5A0539BB7C6A3CD65D /* MockActivityService.swift */; };
 		4D58EF0003963B263CD71593 /* TimerServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109431C59F0FE565F2640A2F /* TimerServiceProtocol.swift */; };
+		4ECB436DA26843AB6A5D2EF3 /* ProgressRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56374FE9A742D59915B9E297 /* ProgressRingView.swift */; };
 		4F61003693EF54743568D042 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0472A820F5F0183194AFEF /* WelcomeView.swift */; };
 		514072906C8F2B0FA6FF83D4 /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9ED0D136F23B6EC94BFE57 /* ActivityLogView.swift */; };
 		57FD42125D107767B1118090 /* ActivityServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B97DB9A9BBE1ED4E3C4E6C /* ActivityServiceProtocol.swift */; };
@@ -49,6 +52,7 @@
 		5E99ADDE88A3697F40E0562B /* BarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BA8760399F1D8C442B19A0 /* BarChart.swift */; };
 		6570AF66E794C95D341561C8 /* CreatePINView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648F6F35BB8E4AF5F6BE5E58 /* CreatePINView.swift */; };
 		65FF324F17BD2913E76A7B28 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB65458FB96D898342776118 /* SyncService.swift */; };
+		679645D4AF745B5A6DFE3CF5 /* PINSetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F64302A541FD03A0C96E2B /* PINSetupViewModel.swift */; };
 		67FF772A4B55215B5A811537 /* TimeGoalEntityMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421DA6E5CE2510292A49ED5F /* TimeGoalEntityMapper.swift */; };
 		6CC29343312FF92A8EEE6A0F /* SyncServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377B39CA3709E5D7FE8448B1 /* SyncServiceProtocol.swift */; };
 		6E64F1C0C90C7C953AF62BF1 /* BarTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42029417E60C21CB22516EF0 /* BarTimerView.swift */; };
@@ -61,12 +65,13 @@
 		7F81683285EF251A5DAC33AE /* ActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BEFA0A254F5A41E6758D60 /* ActivityService.swift */; };
 		80BEBD4F3F2A05AC49271C73 /* CreateProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB443DB5855CEDB71783EEE8 /* CreateProfileView.swift */; };
 		8105EAEA48A7ABC4F8C6FD30 /* ChildRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AEF04F6686B5BE7FEDB4C6 /* ChildRepositoryProtocol.swift */; };
-		894FB4ABC8C54B983F996D88 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A47CBED6CE8B03B9AB7D5E /* ReportsView.swift */; };
-		B8C1C4AF4F6C4DB4B98C3E83 /* CategoryEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055FB880EDFA489286BF0B46 /* CategoryEditorView.swift */; };
+		83F64983B4F0FABFE58DAF76 /* PINServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DA45FF9690DB3CA344AAE3 /* PINServiceProtocol.swift */; };
 		85402C7F92DF45E48B6C489A /* CategorySettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7B6E5F9514BBABC89868A /* CategorySettingsViewModel.swift */; };
-		8B1EF528F0064FF39B4635A5 /* CategorySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDF2D0DEE284DA7BB227D13 /* CategorySettingsView.swift */; };
+		894FB4ABC8C54B983F996D88 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A47CBED6CE8B03B9AB7D5E /* ReportsView.swift */; };
 		8AD23ECBE803FD0616F1D360 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BD9567C0D9F95EB8F5724A /* TimerView.swift */; };
+		8B1EF528F0064FF39B4635A5 /* CategorySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDF2D0DEE284DA7BB227D13 /* CategorySettingsView.swift */; };
 		8F78571E6BD9A7557F6AB8B8 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96705FBF192E38C5460B4E86 /* LoadingView.swift */; };
+		91074E3AAA69D54756838DD2 /* PINChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6762415AA589914EE44AF2F5 /* PINChangeView.swift */; };
 		93D8352D1E06AB913D036782 /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D462712A4E8D96EC0B72E18B /* OnboardingContainerView.swift */; };
 		93F1C396EBCE0EFC1B22E6E7 /* ProfileSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157CC61C424E8E993ACE6CBF /* ProfileSelectionView.swift */; };
 		942ACB3A385E08D217DF2733 /* ActivityEntityMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B6F61C2CBD71553705A2C0 /* ActivityEntityMapper.swift */; };
@@ -75,7 +80,9 @@
 		95C5D7643DCE8294B2919775 /* ServiceContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A9845E227858E34D0D0809 /* ServiceContainer.swift */; };
 		96ED627A4650A0D543E5D947 /* BalanceMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB87110A92E14E11EE5B671D /* BalanceMeter.swift */; };
 		96F20D83C235CE053FAF12C2 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A5003AFE5357814DD0A7ED /* Persistence.swift */; };
+		98573D7D70B14391AB27B46F /* TimerAudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */; };
 		98D2D0865E9B467C739FEE1F /* ProfileSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C084BC47C8ED4EECA50CA9C /* ProfileSelectionViewModel.swift */; };
+		9B3D4F4EA3540B66FF52646C /* MockCategoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE04279B2BD18DD4B452D14 /* MockCategoryService.swift */; };
 		9E94FF5B6DB910D0605B33D7 /* AnalogTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926A0E075FF3510D9F7EF08E /* AnalogTimerView.swift */; };
 		9ECAC914E65D687A830B6497 /* Child.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963FE5B9D60DA6DB69827A7B /* Child.swift */; };
 		9FD751E69BF6A00F9E6E5AC9 /* IconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139AE7CF44ABEEE269A7C5E2 /* IconButton.swift */; };
@@ -90,9 +97,12 @@
 		AF3435994F856447484280BE /* DailyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51F1D3069A29D228CC59A24 /* DailyChartView.swift */; };
 		AFD996F48B7D7D06C7336923 /* ActivityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99638B08ED1ABFAA9B18224B /* ActivityTests.swift */; };
 		B61734A9C1DF304B4258F5DF /* CircularTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12394E58041C982A22B90AAF /* CircularTimerView.swift */; };
+		B8C1C4AF4F6C4DB4B98C3E83 /* CategoryEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055FB880EDFA489286BF0B46 /* CategoryEditorView.swift */; };
 		BA0ABA94F61252BCED7319BA /* CategoryEntityMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9846940F3612B0857BF9956 /* CategoryEntityMapper.swift */; };
 		BD6036A79A4E6EC67E359EA8 /* FocusPalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BCE2FD47E54210E5472011 /* FocusPalTests.swift */; };
+		BEB74EE5B538D9A522B32C8F /* PINSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693049ECB63A04E36E33232A /* PINSetupView.swift */; };
 		BF5F1C487759B0EAF21ED12F /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF207B61FE8E604C11FC9FED /* AchievementsView.swift */; };
+		C6BD4A31A98EEA772EA5247A /* ActivitySummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177C40D5AAFCB636A183A001 /* ActivitySummaryCard.swift */; };
 		C92ED7D656B8DA8D1A07D49A /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59DD8FF32A3E070CF9DCF61 /* Achievement.swift */; };
 		CCD1AE364D60A68962056286 /* CategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB227DC46F8B5447A797E33 /* CategoryTests.swift */; };
 		CE900A705FA2D34C83255867 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81752F679BE76FD4942305B7 /* TimerViewModel.swift */; };
@@ -105,12 +115,13 @@
 		E49A2966A37C07EAD1B7E402 /* MockTimerServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E2BE6DD85853F7F74406F /* MockTimerServiceTests.swift */; };
 		E53D6C5B16275EF9415F72F3 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2FD4BB6915ECD19621176B /* ErrorView.swift */; };
 		E84B9274E8C6C055F3460742 /* TimerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08B67CF15D8AB199DA0B115 /* TimerService.swift */; };
-98573D7D70B14391AB27B46F /* TimerAudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */; };
 		E86D06FC881B1356F3000453 /* TestCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD575E57E89CE91E6CDBB9A7 /* TestCoreDataStack.swift */; };
 		EA733FA735060A58AE938364 /* CategoryRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AE98D9683A602DE46D7EA3 /* CategoryRepositoryProtocol.swift */; };
 		EB34DF7F6466D3E00AD32D52 /* TimeGoalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5414B11DFB736F905098A0F4 /* TimeGoalTests.swift */; };
+		F016434EA52728CA9A967170 /* PINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D9462F92E756638293F443 /* PINService.swift */; };
 		F147BD554A5A356749083D9A /* TodayActivityList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4609EF8D21F9D1FBD0EC29A2 /* TodayActivityList.swift */; };
 		F2E65E7800EDC5FEE3E81D7B /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D5D8DEDAB640EF1BB88AA /* Colors.swift */; };
+		F3084A76A7709B02A67C93C7 /* StreakBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42C4B1AACA99C0451C3AA2C /* StreakBadge.swift */; };
 		F5C7ABBB6D7AFBB09922FDBF /* ActivityLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2232731181715B6D9DD896E8 /* ActivityLogViewModel.swift */; };
 		F7D1F1CB81693DC63BC66681 /* PieChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1768431FBCF6B4BF27F16E /* PieChart.swift */; };
 		FA7EEA16F77226D1E573D80C /* CoreDataActivityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31988FD5CA9BA477ECE1E4B /* CoreDataActivityRepository.swift */; };
@@ -130,6 +141,8 @@
 /* Begin PBXFileReference section */
 		00692154BF253017E1D30D07 /* FocusPal.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FocusPal.xcdatamodel; sourceTree = "<group>"; };
 		0325C75AC3959E38DF7A6C95 /* QuickStatsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickStatsCard.swift; sourceTree = "<group>"; };
+		03B54CD6BD518D1D080A037E /* ParentAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ParentAuthViewModel.swift; path = FocusPal/Features/ParentControls/ViewModels/ParentAuthViewModel.swift; sourceTree = SOURCE_ROOT; };
+		055FB880EDFA489286BF0B46 /* CategoryEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEditorView.swift; sourceTree = "<group>"; };
 		05BD9567C0D9F95EB8F5724A /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		0C73CD95B9325883421B00B1 /* ActivityRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRepositoryProtocol.swift; sourceTree = "<group>"; };
 		109431C59F0FE565F2640A2F /* TimerServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerServiceProtocol.swift; sourceTree = "<group>"; };
@@ -140,7 +153,9 @@
 		13CA3D424428E9C4CA25DF5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1521802C00BF97F826F9FB76 /* SecondaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryButton.swift; sourceTree = "<group>"; };
 		157CC61C424E8E993ACE6CBF /* ProfileSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSelectionView.swift; sourceTree = "<group>"; };
+		177C40D5AAFCB636A183A001 /* ActivitySummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ActivitySummaryCard.swift; path = FocusPal/Features/Home/Views/Components/ActivitySummaryCard.swift; sourceTree = SOURCE_ROOT; };
 		19444D8D2DC1C63530E080B5 /* CategoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryService.swift; sourceTree = "<group>"; };
+		1AF7B6E5F9514BBABC89868A /* CategorySettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsViewModel.swift; sourceTree = "<group>"; };
 		1B5A14BFD054A58E007057B7 /* ChildTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildTests.swift; sourceTree = "<group>"; };
 		20A6FC04F4839E1BECB4295E /* CoreDataChildRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataChildRepository.swift; sourceTree = "<group>"; };
 		2232731181715B6D9DD896E8 /* ActivityLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogViewModel.swift; sourceTree = "<group>"; };
@@ -159,16 +174,21 @@
 		47053AA286A82AD7CD4828DF /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		4AC12BF9006BB231285E3796 /* TimerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerControlsView.swift; sourceTree = "<group>"; };
 		4CF07CE53D3E155DA7FC51B5 /* MockActivityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockActivityRepository.swift; sourceTree = "<group>"; };
+		53D041839EE2B7B2E4300A56 /* PINEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PINEntryView.swift; path = FocusPal/Features/ParentControls/Views/PINEntryView.swift; sourceTree = SOURCE_ROOT; };
 		5414B11DFB736F905098A0F4 /* TimeGoalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalTests.swift; sourceTree = "<group>"; };
 		54B97DB9A9BBE1ED4E3C4E6C /* ActivityServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityServiceProtocol.swift; sourceTree = "<group>"; };
+		56374FE9A742D59915B9E297 /* ProgressRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProgressRingView.swift; path = FocusPal/DesignSystem/Components/Progress/ProgressRingView.swift; sourceTree = SOURCE_ROOT; };
 		57A5003AFE5357814DD0A7ED /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		57B6F61C2CBD71553705A2C0 /* ActivityEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEntityMapper.swift; sourceTree = "<group>"; };
 		5B24B24B645C40771C06297E /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
 		5C084BC47C8ED4EECA50CA9C /* ProfileSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSelectionViewModel.swift; sourceTree = "<group>"; };
 		5D4D71B34A2597CE896A65D8 /* NotificationServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceProtocol.swift; sourceTree = "<group>"; };
+		5EE04279B2BD18DD4B452D14 /* MockCategoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockCategoryService.swift; path = FocusPal/Core/Services/Mock/MockCategoryService.swift; sourceTree = SOURCE_ROOT; };
 		648F6F35BB8E4AF5F6BE5E58 /* CreatePINView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePINView.swift; sourceTree = "<group>"; };
 		6583C9029B317357067EF16D /* MockTimerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTimerService.swift; sourceTree = "<group>"; };
 		664612421D04044D3B3CB651 /* AchievementEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementEntityMapper.swift; sourceTree = "<group>"; };
+		6762415AA589914EE44AF2F5 /* PINChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PINChangeView.swift; path = FocusPal/Features/ParentControls/Views/PINChangeView.swift; sourceTree = SOURCE_ROOT; };
+		693049ECB63A04E36E33232A /* PINSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PINSetupView.swift; path = FocusPal/Features/ParentControls/Views/PINSetupView.swift; sourceTree = SOURCE_ROOT; };
 		69B89C5A0539BB7C6A3CD65D /* MockActivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockActivityService.swift; sourceTree = "<group>"; };
 		6DDDB2DCAD2C10DFBF9B7CF1 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		73015CB1783EB9094C1B70A6 /* FocusPal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FocusPal.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -188,6 +208,7 @@
 		94D1A25BEB5892D61F9728E6 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		963FE5B9D60DA6DB69827A7B /* Child.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Child.swift; sourceTree = "<group>"; };
 		96705FBF192E38C5460B4E86 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		96DA45FF9690DB3CA344AAE3 /* PINServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PINServiceProtocol.swift; path = FocusPal/Features/ParentControls/Services/PINServiceProtocol.swift; sourceTree = SOURCE_ROOT; };
 		972AD8776B35623C08E99EDB /* StatCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatCard.swift; sourceTree = "<group>"; };
 		981B357603A682A936FB405E /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		99638B08ED1ABFAA9B18224B /* ActivityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityTests.swift; sourceTree = "<group>"; };
@@ -202,7 +223,6 @@
 		AD76A7FF0CDAF1B42B87139F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AEB227DC46F8B5447A797E33 /* CategoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTests.swift; sourceTree = "<group>"; };
 		B08B67CF15D8AB199DA0B115 /* TimerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerService.swift; sourceTree = "<group>"; };
-ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerAudioService.swift; sourceTree = "<group>"; };
 		B34D7CC3B764C1DE8AF84BBC /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
 		B44DD33B5DFC9A8002475115 /* FocusPalTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FocusPalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6AEF04F6686B5BE7FEDB4C6 /* ChildRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRepositoryProtocol.swift; sourceTree = "<group>"; };
@@ -212,6 +232,7 @@ ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference
 		C1CC779DD20DAFD32E06C89E /* SyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinator.swift; sourceTree = "<group>"; };
 		C44CA5FB1381B381265E00D8 /* TimeGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoal.swift; sourceTree = "<group>"; };
 		C6B68ACCDD48A811853BF1D0 /* PermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
+		C6F64302A541FD03A0C96E2B /* PINSetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PINSetupViewModel.swift; path = FocusPal/Features/ParentControls/ViewModels/PINSetupViewModel.swift; sourceTree = SOURCE_ROOT; };
 		C9846940F3612B0857BF9956 /* CategoryEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEntityMapper.swift; sourceTree = "<group>"; };
 		C98492F4F78852D8F56EA230 /* CoreDataCategoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataCategoryRepository.swift; sourceTree = "<group>"; };
 		CB0472A820F5F0183194AFEF /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -220,7 +241,9 @@ ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference
 		CC204C1E79F45607C3BD7380 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		CF207B61FE8E604C11FC9FED /* AchievementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsView.swift; sourceTree = "<group>"; };
 		CF2FD4BB6915ECD19621176B /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		D42C4B1AACA99C0451C3AA2C /* StreakBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StreakBadge.swift; path = FocusPal/Features/Home/Views/Components/StreakBadge.swift; sourceTree = SOURCE_ROOT; };
 		D462712A4E8D96EC0B72E18B /* OnboardingContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContainerView.swift; sourceTree = "<group>"; };
+		D4D9462F92E756638293F443 /* PINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PINService.swift; path = FocusPal/Features/ParentControls/Services/PINService.swift; sourceTree = SOURCE_ROOT; };
 		D7BC5EFE9095CBE29271DCA4 /* QuickActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionButton.swift; sourceTree = "<group>"; };
 		D87417B24933571761E4572C /* MockChildRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockChildRepository.swift; sourceTree = "<group>"; };
 		DCB6387AA8876CA38500D5E6 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
@@ -231,14 +254,13 @@ ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference
 		E5BA8760399F1D8C442B19A0 /* BarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChart.swift; sourceTree = "<group>"; };
 		E8293F29EA47D58C462AEA6B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EB443DB5855CEDB71783EEE8 /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
+		ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerAudioService.swift; sourceTree = "<group>"; };
 		F0842B34DB269BD73E5DCCA7 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		F218887ED68C52E8FEEDA85B /* CategoryManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManagementViewModel.swift; sourceTree = "<group>"; };
 		F8A47CBED6CE8B03B9AB7D5E /* ReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsView.swift; sourceTree = "<group>"; };
-		055FB880EDFA489286BF0B46 /* CategoryEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEditorView.swift; sourceTree = "<group>"; };
-		1AF7B6E5F9514BBABC89868A /* CategorySettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsViewModel.swift; sourceTree = "<group>"; };
-		FEDF2D0DEE284DA7BB227D13 /* CategorySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsView.swift; sourceTree = "<group>"; };
 		FC9F1C760A9CAD49E8127C4C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FDAC4628BE8EE160AC1A5C6F /* ChildEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildEntityMapper.swift; sourceTree = "<group>"; };
+		FEDF2D0DEE284DA7BB227D13 /* CategorySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -466,6 +488,17 @@ ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference
 				83D84CCF9191812D29A3C31D /* FocusPal */,
 				65A35FC57144265C1AC42CF0 /* FocusPalTests */,
 				F9391C3BDADB63D11417AA76 /* Products */,
+				6762415AA589914EE44AF2F5 /* PINChangeView.swift */,
+				53D041839EE2B7B2E4300A56 /* PINEntryView.swift */,
+				693049ECB63A04E36E33232A /* PINSetupView.swift */,
+				C6F64302A541FD03A0C96E2B /* PINSetupViewModel.swift */,
+				03B54CD6BD518D1D080A037E /* ParentAuthViewModel.swift */,
+				D4D9462F92E756638293F443 /* PINService.swift */,
+				96DA45FF9690DB3CA344AAE3 /* PINServiceProtocol.swift */,
+				56374FE9A742D59915B9E297 /* ProgressRingView.swift */,
+				D42C4B1AACA99C0451C3AA2C /* StreakBadge.swift */,
+				177C40D5AAFCB636A183A001 /* ActivitySummaryCard.swift */,
+				5EE04279B2BD18DD4B452D14 /* MockCategoryService.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1041,6 +1074,17 @@ ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference
 				43CEF648FD8552C93ECDFF23 /* Typography.swift in Sources */,
 				A3C80342936E7451E5A58E8C /* WeeklyChartView.swift in Sources */,
 				4F61003693EF54743568D042 /* WelcomeView.swift in Sources */,
+				91074E3AAA69D54756838DD2 /* PINChangeView.swift in Sources */,
+				239D464291901C63DA1B1252 /* PINEntryView.swift in Sources */,
+				BEB74EE5B538D9A522B32C8F /* PINSetupView.swift in Sources */,
+				679645D4AF745B5A6DFE3CF5 /* PINSetupViewModel.swift in Sources */,
+				30884754A4224B9BF6394B87 /* ParentAuthViewModel.swift in Sources */,
+				F016434EA52728CA9A967170 /* PINService.swift in Sources */,
+				83F64983B4F0FABFE58DAF76 /* PINServiceProtocol.swift in Sources */,
+				4ECB436DA26843AB6A5D2EF3 /* ProgressRingView.swift in Sources */,
+				F3084A76A7709B02A67C93C7 /* StreakBadge.swift in Sources */,
+				C6BD4A31A98EEA772EA5247A /* ActivitySummaryCard.swift in Sources */,
+				9B3D4F4EA3540B66FF52646C /* MockCategoryService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1090,6 +1134,14 @@ ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/FocusPal/Features/ParentControls/Views",
+					"$(SRCROOT)/FocusPal/Features/ParentControls/ViewModels",
+					"$(SRCROOT)/FocusPal/Features/ParentControls/Services",
+					"$(SRCROOT)/FocusPal/DesignSystem/Components/Progress",
+					"$(SRCROOT)/FocusPal/Features/Home/Views/Components",
+					"$(SRCROOT)/FocusPal/Core/Services/Mock",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.focuspal.dev;
 				SDKROOT = iphoneos;
@@ -1169,6 +1221,14 @@ ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/FocusPal/Features/ParentControls/Views",
+					"$(SRCROOT)/FocusPal/Features/ParentControls/ViewModels",
+					"$(SRCROOT)/FocusPal/Features/ParentControls/Services",
+					"$(SRCROOT)/FocusPal/DesignSystem/Components/Progress",
+					"$(SRCROOT)/FocusPal/Features/Home/Views/Components",
+					"$(SRCROOT)/FocusPal/Core/Services/Mock",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.focuspal.dev.tests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1197,6 +1257,14 @@ ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/FocusPal/Features/ParentControls/Views",
+					"$(SRCROOT)/FocusPal/Features/ParentControls/ViewModels",
+					"$(SRCROOT)/FocusPal/Features/ParentControls/Services",
+					"$(SRCROOT)/FocusPal/DesignSystem/Components/Progress",
+					"$(SRCROOT)/FocusPal/Features/Home/Views/Components",
+					"$(SRCROOT)/FocusPal/Core/Services/Mock",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.focuspal.dev;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1214,6 +1282,14 @@ ED52AEF72BD5449E8D92768B /* TimerAudioService.swift */ = {isa = PBXFileReference
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/FocusPal/Features/ParentControls/Views",
+					"$(SRCROOT)/FocusPal/Features/ParentControls/ViewModels",
+					"$(SRCROOT)/FocusPal/Features/ParentControls/Services",
+					"$(SRCROOT)/FocusPal/DesignSystem/Components/Progress",
+					"$(SRCROOT)/FocusPal/Features/Home/Views/Components",
+					"$(SRCROOT)/FocusPal/Core/Services/Mock",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.focuspal.dev.tests;
 				SDKROOT = iphoneos;

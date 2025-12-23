@@ -19,7 +19,13 @@
       "Bash(gh issue close:*)",
       "Bash(xcodebuild:*)",
       "Bash(xcrun simctl:*)",
-      "Bash(open:*)"
+      "Bash(open:*)",
+      "Bash(git checkout:*)",
+      "Bash(pip3 list:*)",
+      "Bash(pip3 install:*)",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal diff --stat)",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal add -A)",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal status --short)"
     ]
   }
 }

@@ -8,119 +8,128 @@
 import SwiftUI
 import LocalAuthentication
 
-/// Parent authentication view with PIN and biometric options.
+/// Parent authentication view with PIN setup and entry, plus biometric options.
 struct AuthenticationView: View {
-    let onAuthenticated: (Bool) -> Void
+    let onAuthenticated: () -> Void
 
-    @StateObject private var viewModel = AuthenticationViewModel()
-    @State private var pin = ""
-    @State private var showError = false
+    @StateObject private var biometricViewModel = BiometricAuthViewModel()
+    // TODO: Implement ParentAuthViewModel
+    // @StateObject private var authViewModel = ParentAuthViewModel()
+    @State private var showSetup = false
+
+    // TODO: Implement PINService
+    // private let pinService = PINService()
 
     var body: some View {
-        VStack(spacing: 32) {
-            Spacer()
-
-            // Lock icon
-            Image(systemName: "lock.shield.fill")
-                .font(.system(size: 60))
-                .foregroundColor(.accentColor)
-
-            Text("Parent Controls")
-                .font(.title2)
-                .fontWeight(.bold)
-
-            Text("Enter PIN or use biometrics to access")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-
-            // PIN dots
-            HStack(spacing: 16) {
-                ForEach(0..<4, id: \.self) { index in
-                    Circle()
-                        .fill(index < pin.count ? Color.accentColor : Color(.systemGray4))
-                        .frame(width: 16, height: 16)
+        Group {
+            // Temporary stub - show authentication button
+            VStack {
+                Text("Parent Authentication")
+                    .font(.title)
+                Button("Authenticate") {
+                    onAuthenticated()
                 }
-            }
-            .padding()
-
-            // Number pad
-            VStack(spacing: 16) {
-                ForEach(0..<3) { row in
-                    HStack(spacing: 24) {
-                        ForEach(1...3, id: \.self) { col in
-                            let number = row * 3 + col
-                            NumberButton(number: number) {
-                                addDigit(number)
-                            }
-                        }
-                    }
-                }
-
-                HStack(spacing: 24) {
-                    // Biometric button
-                    Button {
-                        Task {
-                            await authenticateWithBiometrics()
-                        }
-                    } label: {
-                        Image(systemName: viewModel.biometricType == .faceID ? "faceid" : "touchid")
-                            .font(.title)
-                            .frame(width: 70, height: 70)
-                    }
-
-                    NumberButton(number: 0) {
-                        addDigit(0)
-                    }
-
-                    // Delete button
-                    Button {
-                        if !pin.isEmpty {
-                            pin.removeLast()
-                        }
-                    } label: {
-                        Image(systemName: "delete.left")
-                            .font(.title2)
-                            .frame(width: 70, height: 70)
-                    }
-                }
+                .padding()
             }
 
-            Spacer()
-        }
-        .padding()
-        .alert("Incorrect PIN", isPresented: $showError) {
-            Button("Try Again") {
-                pin = ""
+            // TODO: Uncomment when PINService is implemented
+            /*
+            if !pinService.isPinSet() {
+                PINSetupView(pinService: pinService) {
+                    onAuthenticated()
+                }
+            } else {
+                pinEntryWithBiometrics
             }
+            */
         }
         .task {
-            // Try biometrics on appear
-            await authenticateWithBiometrics()
+            await tryBiometrics()
         }
     }
 
-    private func addDigit(_ digit: Int) {
-        guard pin.count < 4 else { return }
-        pin += "\(digit)"
+    private var pinEntryWithBiometrics: some View {
+        VStack {
+            Text("PIN Entry")
+            // TODO: Implement PINEntryView
+            /*
+            ZStack(alignment: .topTrailing) {
+                PINEntryView(pinService: pinService) {
+                    onAuthenticated()
+                }
 
-        if pin.count == 4 {
-            verifyPIN()
+                // Biometric button overlay
+                if biometricViewModel.biometricType != .none {
+                    Button {
+                        Task {
+                            await tryBiometrics()
+                        }
+                    } label: {
+                        Image(systemName: biometricViewModel.biometricType == .faceID ? "faceid" : "touchid")
+                            .font(.title)
+                            .foregroundColor(.accentColor)
+                            .padding()
+                    }
+                    .padding(.top, 50)
+                }
+            }
+            */
         }
     }
 
-    private func verifyPIN() {
-        if viewModel.verifyPIN(pin) {
-            onAuthenticated(true)
-        } else {
-            showError = true
-        }
-    }
-
-    private func authenticateWithBiometrics() async {
-        let success = await viewModel.authenticateWithBiometrics()
+    private func tryBiometrics() async {
+        let success = await biometricViewModel.authenticate()
         if success {
-            onAuthenticated(true)
+            onAuthenticated()
+        }
+    }
+}
+
+// MARK: - Biometric Authentication ViewModel
+
+@MainActor
+class BiometricAuthViewModel: ObservableObject {
+    @Published var biometricType: BiometricType = .none
+
+    enum BiometricType {
+        case none
+        case touchID
+        case faceID
+    }
+
+    private let context = LAContext()
+
+    init() {
+        checkBiometricType()
+    }
+
+    private func checkBiometricType() {
+        var error: NSError?
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            biometricType = .none
+            return
+        }
+
+        switch context.biometryType {
+        case .faceID:
+            biometricType = .faceID
+        case .touchID:
+            biometricType = .touchID
+        default:
+            biometricType = .none
+        }
+    }
+
+    func authenticate() async -> Bool {
+        guard biometricType != .none else { return false }
+
+        do {
+            return try await context.evaluatePolicy(
+                .deviceOwnerAuthenticationWithBiometrics,
+                localizedReason: "Access Parent Controls"
+            )
+        } catch {
+            return false
         }
     }
 }
@@ -142,5 +151,5 @@ struct NumberButton: View {
 }
 
 #Preview {
-    AuthenticationView { _ in }
+    AuthenticationView { }
 }

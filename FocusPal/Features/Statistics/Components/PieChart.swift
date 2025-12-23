@@ -14,16 +14,45 @@ struct PieChartView: View {
     let categories: [CategoryBreakdownItem]
 
     var body: some View {
-        Chart(categories) { item in
-            SectorMark(
-                angle: .value("Minutes", item.minutes),
-                innerRadius: .ratio(0.5),
-                angularInset: 1.5
-            )
-            .foregroundStyle(Color(hex: item.colorHex))
-            .cornerRadius(4)
+        VStack(spacing: 16) {
+            // Pie Chart with donut style
+            Chart(categories) { item in
+                SectorMark(
+                    angle: .value("Minutes", item.minutes),
+                    innerRadius: .ratio(0.5),
+                    angularInset: 1.5
+                )
+                .foregroundStyle(Color(hex: item.colorHex))
+                .cornerRadius(4)
+                .annotation(position: .overlay) {
+                    if item.percentage >= 10 {
+                        Text("\(item.percentage)%")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                    }
+                }
+            }
+            .chartLegend(position: .bottom, alignment: .center, spacing: 16) {
+                LazyVGrid(columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible())
+                ], spacing: 12) {
+                    ForEach(categories) { item in
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(Color(hex: item.colorHex))
+                                .frame(width: 10, height: 10)
+
+                            Text(item.categoryName)
+                                .font(.caption)
+                                .lineLimit(1)
+                        }
+                    }
+                }
+            }
         }
-        .chartLegend(position: .bottom, alignment: .center)
+        .padding()
     }
 }
 

@@ -13,18 +13,61 @@ import Charts
 struct BarChartView: View {
     let dailyData: [DailyBarData]
 
+    private var maxMinutes: Int {
+        dailyData.map(\.minutes).max() ?? 0
+    }
+
     var body: some View {
-        Chart(dailyData) { item in
-            BarMark(
-                x: .value("Day", item.dayLabel),
-                y: .value("Minutes", item.minutes)
-            )
-            .foregroundStyle(Color.accentColor.gradient)
-            .cornerRadius(6)
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Daily Activity")
+                .font(.headline)
+                .padding(.horizontal)
+
+            Chart(dailyData) { item in
+                BarMark(
+                    x: .value("Day", item.dayLabel),
+                    y: .value("Minutes", item.minutes)
+                )
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [Color.accentColor, Color.accentColor.opacity(0.7)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .cornerRadius(6)
+                .annotation(position: .top) {
+                    if item.minutes > 0 {
+                        Text("\(item.minutes)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .chartYAxis {
+                AxisMarks(position: .leading) { value in
+                    AxisGridLine()
+                    AxisValueLabel {
+                        if let intValue = value.as(Int.self) {
+                            Text("\(intValue)")
+                                .font(.caption)
+                        }
+                    }
+                }
+            }
+            .chartXAxis {
+                AxisMarks { value in
+                    AxisValueLabel {
+                        if let stringValue = value.as(String.self) {
+                            Text(stringValue)
+                                .font(.caption)
+                        }
+                    }
+                }
+            }
+            .chartYScale(domain: 0...(maxMinutes + 20))
         }
-        .chartYAxis {
-            AxisMarks(position: .leading)
-        }
+        .padding()
     }
 }
 

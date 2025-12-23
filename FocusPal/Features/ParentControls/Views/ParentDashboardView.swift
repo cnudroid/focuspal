@@ -65,8 +65,7 @@ struct ParentDashboardView: View {
                     }
 
                     NavigationLink {
-                        // PIN management
-                        Text("Change PIN")
+                        PINChangeView()
                     } label: {
                         Label("Change PIN", systemImage: "lock")
                     }
@@ -74,8 +73,9 @@ struct ParentDashboardView: View {
             }
             .navigationTitle("Parent Controls")
             .fullScreenCover(isPresented: $showingAuth) {
-                AuthenticationView { success in
-                    showingAuth = !success
+                AuthenticationView {
+                    showingAuth = false
+                    viewModel.isAuthenticated = true
                 }
             }
             .onAppear {

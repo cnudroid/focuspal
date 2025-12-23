@@ -22,8 +22,9 @@ final class ChildTests: XCTestCase {
 
     func testChildEquality() {
         let id = UUID()
-        let child1 = TestData.makeChild(id: id, name: "Bob")
-        let child2 = TestData.makeChild(id: id, name: "Bob")
+        let fixedDate = Date()
+        let child1 = TestData.makeChild(id: id, name: "Bob", createdDate: fixedDate)
+        let child2 = TestData.makeChild(id: id, name: "Bob", createdDate: fixedDate)
 
         XCTAssertEqual(child1, child2)
     }
