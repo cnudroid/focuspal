@@ -28,6 +28,14 @@ class ServiceContainer: ObservableObject {
         CoreDataCategoryRepository(context: PersistenceController.shared.container.viewContext)
     }()
 
+    lazy var achievementRepository: AchievementRepositoryProtocol = {
+        CoreDataAchievementRepository(context: PersistenceController.shared.container.viewContext)
+    }()
+
+    lazy var timeGoalRepository: TimeGoalRepositoryProtocol = {
+        CoreDataTimeGoalRepository(context: PersistenceController.shared.container.viewContext)
+    }()
+
     // MARK: - Services
 
     lazy var timerService: TimerServiceProtocol = {
@@ -59,11 +67,6 @@ class ServiceContainer: ObservableObject {
             activityService: activityService,
             notificationService: notificationService
         )
-    }()
-
-    lazy var achievementRepository: AchievementRepositoryProtocol = {
-        // TODO: Replace with CoreDataAchievementRepository when implemented
-        MockAchievementRepository()
     }()
 
     lazy var achievementService: AchievementServiceProtocol = {

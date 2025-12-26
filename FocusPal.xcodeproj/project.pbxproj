@@ -27,6 +27,7 @@
 		1CBB82EC8CC44D9D942EF89E /* CategoryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A545357F85890C83193F72 /* CategoryServiceProtocol.swift */; };
 		203681891B479C1826C585D3 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177E28672D8AA1E3E42EC0E /* AnalyticsService.swift */; };
 		20FE25E9CC8C01C8C40A6272 /* ChildEntityMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDAC4628BE8EE160AC1A5C6F /* ChildEntityMapper.swift */; };
+		232A18605453C07976324880 /* TimeGoalRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2187F7249083C8255993AA34 /* TimeGoalRepositoryProtocol.swift */; };
 		26CA52C0F60722059DB8D201 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA83B1A7D80275DBDF294EF6 /* Category.swift */; };
 		2720B342C50CF564854C1769 /* TimeGoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E96D5818DCBEFD2E5CD05 /* TimeGoalsView.swift */; };
 		2BA478D37A5DB8A2DB601C99 /* CategoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19444D8D2DC1C63530E080B5 /* CategoryService.swift */; };
@@ -35,6 +36,7 @@
 		3227AD126F71ACA48D30D23F /* QuickActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7BC5EFE9095CBE29271DCA4 /* QuickActionButton.swift */; };
 		34041F741C71B3181D382C70 /* ChildTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5A14BFD054A58E007057B7 /* ChildTests.swift */; };
 		3544D6EF6F517A0D1968BD9D /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC204C1E79F45607C3BD7380 /* AuthenticationViewModel.swift */; };
+		36AFBCEBF0108091812D9091 /* CoreDataAchievementRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D242C98DD77DBF3D90CDE32F /* CoreDataAchievementRepository.swift */; };
 		385F169E2087D355BFCE5445 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9F1C760A9CAD49E8127C4C /* Constants.swift */; };
 		3BBC5EDC057931E02E9325B4 /* AchievementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2764F74A9E8606B51A0DECA6 /* AchievementTests.swift */; };
 		3C9ABFC4CDF98A5C52E4AD2F /* CategoryEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F72AA37C972262E8202CF7 /* CategoryEditorView.swift */; };
@@ -83,6 +85,7 @@
 		8A998E5D467258288FB8CF18 /* OnboardingViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8476CA9729744D7522AAE3 /* OnboardingViewModelTests.swift */; };
 		8AD23ECBE803FD0616F1D360 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BD9567C0D9F95EB8F5724A /* TimerView.swift */; };
 		8F78571E6BD9A7557F6AB8B8 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96705FBF192E38C5460B4E86 /* LoadingView.swift */; };
+		90A0DAA991788EF565EAE06E /* CoreDataTimeGoalRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52328E7D9B7970BD577B19BC /* CoreDataTimeGoalRepository.swift */; };
 		93D8352D1E06AB913D036782 /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D462712A4E8D96EC0B72E18B /* OnboardingContainerView.swift */; };
 		93F1C396EBCE0EFC1B22E6E7 /* ProfileSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157CC61C424E8E993ACE6CBF /* ProfileSelectionView.swift */; };
 		942ACB3A385E08D217DF2733 /* ActivityEntityMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B6F61C2CBD71553705A2C0 /* ActivityEntityMapper.swift */; };
@@ -119,7 +122,6 @@
 		BC593E979BD47351A03F7D1C /* TimeGoalServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153F0A5B32E07D63ED9DEC0A /* TimeGoalServiceProtocol.swift */; };
 		BD6036A79A4E6EC67E359EA8 /* FocusPalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BCE2FD47E54210E5472011 /* FocusPalTests.swift */; };
 		BF5F1C487759B0EAF21ED12F /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF207B61FE8E604C11FC9FED /* AchievementsView.swift */; };
-		C162B5EBF8A29EC65E0771D1 /* MockAchievementRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB18DE8F56011DE940D21F02 /* MockAchievementRepositoryTests.swift */; };
 		C92ED7D656B8DA8D1A07D49A /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59DD8FF32A3E070CF9DCF61 /* Achievement.swift */; };
 		C9AD0ED536935A6FFD4A5F19 /* PINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AF7409D5CA970E038ED768 /* PINService.swift */; };
 		CCD1AE364D60A68962056286 /* CategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB227DC46F8B5447A797E33 /* CategoryTests.swift */; };
@@ -181,6 +183,7 @@
 		1B5A14BFD054A58E007057B7 /* ChildTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildTests.swift; sourceTree = "<group>"; };
 		1EB32D35A3AC6B3652B919BD /* CategorySettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsViewModel.swift; sourceTree = "<group>"; };
 		20A6FC04F4839E1BECB4295E /* CoreDataChildRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataChildRepository.swift; sourceTree = "<group>"; };
+		2187F7249083C8255993AA34 /* TimeGoalRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalRepositoryProtocol.swift; sourceTree = "<group>"; };
 		2232731181715B6D9DD896E8 /* ActivityLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogViewModel.swift; sourceTree = "<group>"; };
 		258796CCE9B3B29853806EC0 /* ParentDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentDashboardViewModel.swift; sourceTree = "<group>"; };
 		2750D7B60786AB243429989E /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
@@ -204,6 +207,7 @@
 		4C8476CA9729744D7522AAE3 /* OnboardingViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModelTests.swift; sourceTree = "<group>"; };
 		4CF07CE53D3E155DA7FC51B5 /* MockActivityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockActivityRepository.swift; sourceTree = "<group>"; };
 		51016B107A06F80B3E9FAEFB /* PINSetupViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINSetupViewTests.swift; sourceTree = "<group>"; };
+		52328E7D9B7970BD577B19BC /* CoreDataTimeGoalRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTimeGoalRepository.swift; sourceTree = "<group>"; };
 		5414B11DFB736F905098A0F4 /* TimeGoalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalTests.swift; sourceTree = "<group>"; };
 		54B97DB9A9BBE1ED4E3C4E6C /* ActivityServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityServiceProtocol.swift; sourceTree = "<group>"; };
 		57A5003AFE5357814DD0A7ED /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -269,13 +273,13 @@
 		C9846940F3612B0857BF9956 /* CategoryEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEntityMapper.swift; sourceTree = "<group>"; };
 		C98492F4F78852D8F56EA230 /* CoreDataCategoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataCategoryRepository.swift; sourceTree = "<group>"; };
 		CB0472A820F5F0183194AFEF /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
-		CB18DE8F56011DE940D21F02 /* MockAchievementRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAchievementRepositoryTests.swift; sourceTree = "<group>"; };
 		CB65458FB96D898342776118 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
 		CC1768431FBCF6B4BF27F16E /* PieChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChart.swift; sourceTree = "<group>"; };
 		CC204C1E79F45607C3BD7380 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		CE997E29F2488D6A5EF08236 /* ActivitySummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySummaryCard.swift; sourceTree = "<group>"; };
 		CF207B61FE8E604C11FC9FED /* AchievementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsView.swift; sourceTree = "<group>"; };
 		CF2FD4BB6915ECD19621176B /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		D242C98DD77DBF3D90CDE32F /* CoreDataAchievementRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataAchievementRepository.swift; sourceTree = "<group>"; };
 		D462712A4E8D96EC0B72E18B /* OnboardingContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContainerView.swift; sourceTree = "<group>"; };
 		D7BC5EFE9095CBE29271DCA4 /* QuickActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionButton.swift; sourceTree = "<group>"; };
 		D87417B24933571761E4572C /* MockChildRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockChildRepository.swift; sourceTree = "<group>"; };
@@ -446,6 +450,7 @@
 				0C73CD95B9325883421B00B1 /* ActivityRepositoryProtocol.swift */,
 				91AE98D9683A602DE46D7EA3 /* CategoryRepositoryProtocol.swift */,
 				B6AEF04F6686B5BE7FEDB4C6 /* ChildRepositoryProtocol.swift */,
+				2187F7249083C8255993AA34 /* TimeGoalRepositoryProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -475,14 +480,6 @@
 				797D75BAE213A4E083117D2E /* Implementation */,
 				AA8F6ED75393FBC118E2B0E4 /* Mock */,
 				2AADEECD6A5E92ED154B12EC /* Protocols */,
-			);
-			path = Repositories;
-			sourceTree = "<group>";
-		};
-		3E2EB46A865FAA91970B51B1 /* Repositories */ = {
-			isa = PBXGroup;
-			children = (
-				CB18DE8F56011DE940D21F02 /* MockAchievementRepositoryTests.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -548,7 +545,6 @@
 				E28D040D16503C70F5376AC0 /* Helpers */,
 				656533DA231D43E072F687BA /* Integration */,
 				CCEA6AF3AB7A688999386414 /* Models */,
-				3E2EB46A865FAA91970B51B1 /* Repositories */,
 				1A3BC94E8EB97B04AA7C7E21 /* Services */,
 				DA932678884174B31F9A269D /* ViewModels */,
 				7DF4D8C6E2DDB9BB7DD0E2C6 /* Views */,
@@ -627,9 +623,11 @@
 		797D75BAE213A4E083117D2E /* Implementation */ = {
 			isa = PBXGroup;
 			children = (
+				D242C98DD77DBF3D90CDE32F /* CoreDataAchievementRepository.swift */,
 				E31988FD5CA9BA477ECE1E4B /* CoreDataActivityRepository.swift */,
 				C98492F4F78852D8F56EA230 /* CoreDataCategoryRepository.swift */,
 				20A6FC04F4839E1BECB4295E /* CoreDataChildRepository.swift */,
+				52328E7D9B7970BD577B19BC /* CoreDataTimeGoalRepository.swift */,
 			);
 			path = Implementation;
 			sourceTree = "<group>";
@@ -1139,9 +1137,11 @@
 				F2E65E7800EDC5FEE3E81D7B /* Colors.swift in Sources */,
 				385F169E2087D355BFCE5445 /* Constants.swift in Sources */,
 				9586423259A100BEDC908525 /* ContentView.swift in Sources */,
+				36AFBCEBF0108091812D9091 /* CoreDataAchievementRepository.swift in Sources */,
 				FA7EEA16F77226D1E573D80C /* CoreDataActivityRepository.swift in Sources */,
 				425103F7D7EE02D438476642 /* CoreDataCategoryRepository.swift in Sources */,
 				5E182479532A97A8A2700DEB /* CoreDataChildRepository.swift in Sources */,
+				90A0DAA991788EF565EAE06E /* CoreDataTimeGoalRepository.swift in Sources */,
 				6570AF66E794C95D341561C8 /* CreatePINView.swift in Sources */,
 				80BEBD4F3F2A05AC49271C73 /* CreateProfileView.swift in Sources */,
 				AF3435994F856447484280BE /* DailyChartView.swift in Sources */,
@@ -1199,6 +1199,7 @@
 				6CC29343312FF92A8EEE6A0F /* SyncServiceProtocol.swift in Sources */,
 				710603E33C98D160D3F122BD /* TimeGoal.swift in Sources */,
 				67FF772A4B55215B5A811537 /* TimeGoalEntityMapper.swift in Sources */,
+				232A18605453C07976324880 /* TimeGoalRepositoryProtocol.swift in Sources */,
 				1791D52CC67DE060965294CC /* TimeGoalService.swift in Sources */,
 				A98C16C9410FBE13DCE913DB /* TimeGoalServiceIntegrationExample.swift in Sources */,
 				BC593E979BD47351A03F7D1C /* TimeGoalServiceProtocol.swift in Sources */,
@@ -1227,7 +1228,6 @@
 				CCD1AE364D60A68962056286 /* CategoryTests.swift in Sources */,
 				34041F741C71B3181D382C70 /* ChildTests.swift in Sources */,
 				BD6036A79A4E6EC67E359EA8 /* FocusPalTests.swift in Sources */,
-				C162B5EBF8A29EC65E0771D1 /* MockAchievementRepositoryTests.swift in Sources */,
 				E49A2966A37C07EAD1B7E402 /* MockTimerServiceTests.swift in Sources */,
 				8A998E5D467258288FB8CF18 /* OnboardingViewModelTests.swift in Sources */,
 				D7E87018A1E9075DC2162DB6 /* PINAuthenticationIntegrationTests.swift in Sources */,
