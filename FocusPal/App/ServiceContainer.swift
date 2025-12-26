@@ -54,6 +54,22 @@ class ServiceContainer: ObservableObject {
         SyncService(cloudKitManager: CloudKitManager())
     }()
 
+    lazy var timeGoalService: TimeGoalServiceProtocol = {
+        TimeGoalService(
+            activityService: activityService,
+            notificationService: notificationService
+        )
+    }()
+
+    lazy var achievementRepository: AchievementRepositoryProtocol = {
+        // TODO: Replace with CoreDataAchievementRepository when implemented
+        MockAchievementRepository()
+    }()
+
+    lazy var achievementService: AchievementServiceProtocol = {
+        AchievementService(repository: achievementRepository)
+    }()
+
     // MARK: - Initialization
 
     init() {
