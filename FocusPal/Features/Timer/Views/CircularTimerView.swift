@@ -36,7 +36,7 @@ struct CircularTimerView: View {
             // This shrinks as time passes, making time visible
             TimeWedge(progress: progress)
                 .fill(wedgeColor)
-                .opacity(state == .idle ? 0.3 : 0.9)
+                .opacity(state == .idle ? 0.5 : 0.9)
                 .scaleEffect(isPulsing ? 1.02 : 1.0)
                 .animation(
                     state == .running ?
@@ -98,7 +98,7 @@ struct CircularTimerView: View {
     private var wedgeColor: Color {
         switch state {
         case .idle:
-            return .red.opacity(0.5)
+            return .red  // Full red, opacity handled separately
         case .running:
             // Gradient from red to orange based on progress
             if progress > 0.5 {

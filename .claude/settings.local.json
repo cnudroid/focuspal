@@ -25,7 +25,14 @@
       "Bash(pip3 install:*)",
       "Bash(git -C /Users/srinivasgurana/self/claude/focuspal diff --stat)",
       "Bash(git -C /Users/srinivasgurana/self/claude/focuspal add -A)",
-      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal status --short)"
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal status --short)",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal commit -m \"$\\(cat <<''EOF''\nfeat: Implement Activity Logging, Statistics, PIN Auth, and Home Dashboard\n\nActivity Logging:\n- Enhanced ActivityLogViewModel with manual entry support\n- Added category loading and date filtering\n- Improved async/await patterns\n\nStatistics View:\n- Added TimePeriod enum \\(today, week, month\\) for filtering\n- Implemented balance score calculation\n- Enhanced PieChartView and BarChartView with SwiftUI Charts\n- Added streak tracking and achievement display\n\nParent PIN Authentication:\n- Created secure PINService with Keychain storage\n- Implemented lockout logic after failed attempts\n- Added PINEntryView, PINSetupView, PINChangeView\n- Created ParentAuthViewModel with shake animation on wrong PIN\n- Comprehensive test coverage \\(67+ tests\\)\n\nHome Dashboard:\n- Updated HomeViewModel with real data loading\n- Created ProgressRingView for goal visualization\n- Added StreakBadge with dynamic colors\n- Created ActivitySummaryCard component\n\nBug Fixes:\n- Fixed iOS 16 compatibility \\(onChange API\\)\n- Fixed duplicate StreakCard definition\n- Fixed Child equality test flakiness\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal diff HEAD~1 -- **/*Timer*)",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal log --oneline --all -- \"FocusPal/Features/Timer/Views/CircularTimerView.swift\")",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal diff HEAD~2 -- \"**/CircularTimerView.swift\" \"**/TimeWedge*\")",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal show:*)",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal log --oneline --follow -- \"FocusPal/Features/Timer/Views/CircularTimerView.swift\")",
+      "Bash(git -C /Users/srinivasgurana/self/claude/focuspal commit -m \"$\\(cat <<''EOF''\nfix: Increase timer wedge red color visibility\n\nThe idle state timer wedge was nearly invisible due to compounding\nopacity \\(0.5 * 0.3 = 15%\\). Fixed by:\n- Using full red color for idle state\n- Increasing idle opacity from 0.3 to 0.5\n\nNow the red wedge is 50% visible when idle and 90% when running.\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
