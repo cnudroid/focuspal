@@ -230,15 +230,3 @@ final class PINSetupViewModelTests: XCTestCase {
     }
 }
 
-// MARK: - Enhanced Mock PINService
-
-extension MockPINService {
-    var shouldThrowError = false
-
-    func savePin(pin: String, throwError: Bool) throws {
-        if shouldThrowError {
-            throw PINServiceError.keychainError(status: -1)
-        }
-        try savePin(pin: pin)
-    }
-}

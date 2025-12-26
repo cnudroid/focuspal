@@ -9,12 +9,14 @@ import SwiftUI
 
 /// PIN creation screen in onboarding flow.
 struct CreatePINView: View {
+    @ObservedObject var viewModel: OnboardingViewModel
     let onComplete: () -> Void
 
     @State private var pin = ""
     @State private var confirmPin = ""
     @State private var isConfirming = false
     @State private var showError = false
+    @State private var isProcessing = false
 
     var body: some View {
         VStack(spacing: 32) {
@@ -45,10 +47,15 @@ struct CreatePINView: View {
             }
             .padding()
 
-            if showError {
-                Text("PINs don't match. Please try again.")
+            if showError || viewModel.errorMessage != nil {
+                Text(viewModel.errorMessage ?? "PINs don't match. Please try again.")
                     .font(.caption)
                     .foregroundColor(.red)
+            }
+
+            if isProcessing {
+                ProgressView()
+                    .padding(.top, 8)
             }
 
             Spacer()
@@ -122,14 +129,28 @@ struct CreatePINView: View {
     }
 
     private func validatePINs() {
-        if pin == confirmPin {
-            // Save PIN to Keychain
-            onComplete()
-        } else {
+        guard viewModel.confirmPIN(pin, confirmedPIN: confirmPin) else {
             showError = true
             pin = ""
             confirmPin = ""
             isConfirming = false
+            return
+        }
+
+        // Save PIN using view model
+        isProcessing = true
+        Task {
+            let success = await viewModel.savePIN(pin)
+            isProcessing = false
+
+            if success {
+                onComplete()
+            } else {
+                showError = true
+                pin = ""
+                confirmPin = ""
+                isConfirming = false
+            }
         }
     }
 }
@@ -151,5 +172,8 @@ struct NumberPadButton: View {
 }
 
 #Preview {
-    CreatePINView { }
+    CreatePINView(
+        viewModel: OnboardingViewModel(childRepository: MockChildRepository()),
+        onComplete: { }
+    )
 }

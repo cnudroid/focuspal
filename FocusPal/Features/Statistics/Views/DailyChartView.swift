@@ -131,22 +131,6 @@ struct DailyStatistics {
     static let empty = DailyStatistics()
 }
 
-struct CategoryBreakdownItem: Identifiable {
-    let id = UUID()
-    let categoryName: String
-    let colorHex: String
-    let minutes: Int
-    let percentage: Int
-}
-
 #Preview {
-    DailyChartView(data: DailyStatistics(
-        totalMinutes: 180,
-        categoryBreakdown: [
-            CategoryBreakdownItem(categoryName: "Homework", colorHex: "#4A90D9", minutes: 60, percentage: 33),
-            CategoryBreakdownItem(categoryName: "Reading", colorHex: "#7B68EE", minutes: 45, percentage: 25),
-            CategoryBreakdownItem(categoryName: "Screen Time", colorHex: "#FF6B6B", minutes: 75, percentage: 42)
-        ],
-        balanceScore: 72
-    ))
+    DailyChartView(data: DailyStatistics.empty)
 }

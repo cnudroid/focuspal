@@ -17,12 +17,34 @@ class OnboardingViewModel: ObservableObject {
     @Published var currentStep: OnboardingStep = .welcome
     @Published var childName = ""
     @Published var childAge = 8
-    @Published var selectedAvatar = "avatar_default"
+    @Published var selectedAvatar = "person.circle.fill"
     @Published var selectedTheme = "blue"
+    @Published var errorMessage: String?
+
+    // MARK: - Dependencies
+
+    private let pinService: PINServiceProtocol
+    private let childRepository: ChildRepositoryProtocol
 
     // MARK: - App Storage
 
-    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding = false
+
+    // MARK: - Validation Constants
+
+    private let minAge = 4
+    private let maxAge = 16
+    private let pinLength = 4
+
+    // MARK: - Initialization
+
+    init(
+        pinService: PINServiceProtocol = PINService(),
+        childRepository: ChildRepositoryProtocol
+    ) {
+        self.pinService = pinService
+        self.childRepository = childRepository
+    }
 
     // MARK: - Navigation
 
@@ -40,24 +62,124 @@ class OnboardingViewModel: ObservableObject {
         currentStep = prevStep
     }
 
-    func completeOnboarding() {
-        // Save all data
-        saveChildProfile()
+    // MARK: - PIN Management
+
+    /// Validate PIN format and length
+    /// - Parameter pin: The PIN to validate
+    /// - Returns: true if PIN is valid, false otherwise
+    func validatePIN(_ pin: String) -> Bool {
+        clearError()
+
+        // Check length
+        guard pin.count == pinLength else {
+            errorMessage = "PIN must be exactly 4 digits"
+            return false
+        }
+
+        // Check numeric format
+        guard pin.allSatisfy({ $0.isNumber }) else {
+            errorMessage = "PIN must contain only numbers"
+            return false
+        }
+
+        return true
+    }
+
+    /// Save PIN to secure storage
+    /// - Parameter pin: The PIN to save
+    /// - Returns: true if save succeeded, false otherwise
+    func savePIN(_ pin: String) async -> Bool {
+        // Validate first
+        guard validatePIN(pin) else {
+            return false
+        }
+
+        do {
+            try pinService.savePin(pin: pin)
+            clearError()
+            return true
+        } catch {
+            errorMessage = "Failed to save PIN: \(error.localizedDescription)"
+            return false
+        }
+    }
+
+    /// Confirm PIN matches the original
+    /// - Parameters:
+    ///   - pin: Original PIN
+    ///   - confirmedPIN: Confirmation PIN
+    /// - Returns: true if PINs match, false otherwise
+    func confirmPIN(_ pin: String, confirmedPIN: String) -> Bool {
+        clearError()
+
+        guard pin == confirmedPIN else {
+            errorMessage = "PINs do not match. Please try again."
+            return false
+        }
+
+        return true
+    }
+
+    // MARK: - Profile Management
+
+    /// Validate child profile data
+    /// - Returns: true if profile data is valid, false otherwise
+    func validateProfile() -> Bool {
+        clearError()
+
+        // Validate name
+        let trimmedName = childName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else {
+            errorMessage = "Please enter a name for your child"
+            return false
+        }
+
+        // Validate age range
+        guard childAge >= minAge && childAge <= maxAge else {
+            errorMessage = "Age must be between \(minAge) and \(maxAge)"
+            return false
+        }
+
+        return true
+    }
+
+    /// Save child profile to repository
+    /// - Returns: true if save succeeded, false otherwise
+    func saveChildProfile() async -> Bool {
+        // Validate first
+        guard validateProfile() else {
+            return false
+        }
+
+        let child = Child(
+            name: childName.trimmingCharacters(in: .whitespacesAndNewlines),
+            age: childAge,
+            avatarId: selectedAvatar,
+            themeColor: selectedTheme,
+            isActive: true
+        )
+
+        do {
+            _ = try await childRepository.create(child)
+            clearError()
+            return true
+        } catch {
+            errorMessage = "Failed to save profile: \(error.localizedDescription)"
+            return false
+        }
+    }
+
+    // MARK: - Onboarding Completion
+
+    func completeOnboarding() async {
+        // Save profile if not already saved
+        _ = await saveChildProfile()
         hasCompletedOnboarding = true
     }
 
-    // MARK: - Private Methods
+    // MARK: - Error Handling
 
-    private func saveChildProfile() {
-        let child = Child(
-            name: childName,
-            age: childAge,
-            avatarId: selectedAvatar,
-            themeColor: selectedTheme
-        )
-
-        // Save to repository
-        // In production, use ChildRepository
-        print("Saving child profile: \(child.name)")
+    func clearError() {
+        errorMessage = nil
     }
 }

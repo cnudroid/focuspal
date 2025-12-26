@@ -301,12 +301,16 @@ class MockPINService: PINServiceProtocol {
     var verifyPinCalled = false
     var savePinCalled = false
     var savedPin: String?
+    var shouldThrowError = false
 
     func isPinSet() -> Bool {
         return isPinSetValue
     }
 
     func savePin(pin: String) throws {
+        if shouldThrowError {
+            throw PINServiceError.keychainError(status: -1)
+        }
         savePinCalled = true
         savedPin = pin
         isPinSetValue = true

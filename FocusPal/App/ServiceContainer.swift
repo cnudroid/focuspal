@@ -42,6 +42,10 @@ class ServiceContainer: ObservableObject {
         CategoryService(repository: categoryRepository)
     }()
 
+    lazy var analyticsService: AnalyticsServiceProtocol = {
+        AnalyticsService(activityService: activityService, categoryService: categoryService)
+    }()
+
     lazy var notificationService: NotificationServiceProtocol = {
         NotificationService()
     }()

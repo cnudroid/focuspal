@@ -9,12 +9,10 @@ import SwiftUI
 
 /// Child profile creation screen in onboarding flow.
 struct CreateProfileView: View {
+    @ObservedObject var viewModel: OnboardingViewModel
     let onComplete: () -> Void
 
-    @State private var name = ""
-    @State private var age = 8
-    @State private var selectedAvatar = "avatar_default"
-    @State private var selectedColor = "blue"
+    @State private var isProcessing = false
 
     let avatars = ["person.circle.fill", "face.smiling.fill", "star.circle.fill", "heart.circle.fill"]
     let colors = ["blue", "pink", "green", "purple", "orange"]
@@ -30,21 +28,21 @@ struct CreateProfileView: View {
                 // Avatar selection
                 VStack(spacing: 12) {
                     // Selected avatar preview
-                    Image(systemName: selectedAvatar)
+                    Image(systemName: viewModel.selectedAvatar)
                         .font(.system(size: 80))
-                        .foregroundColor(Color(colorHex(for: selectedColor)))
+                        .foregroundColor(Color(colorHex(for: viewModel.selectedTheme)))
 
                     // Avatar options
                     HStack(spacing: 16) {
                         ForEach(avatars, id: \.self) { avatar in
                             Button {
-                                selectedAvatar = avatar
+                                viewModel.selectedAvatar = avatar
                             } label: {
                                 Image(systemName: avatar)
                                     .font(.title)
-                                    .foregroundColor(selectedAvatar == avatar ? .accentColor : .secondary)
+                                    .foregroundColor(viewModel.selectedAvatar == avatar ? .accentColor : .secondary)
                                     .frame(width: 50, height: 50)
-                                    .background(selectedAvatar == avatar ? Color.accentColor.opacity(0.2) : Color(.systemGray6))
+                                    .background(viewModel.selectedAvatar == avatar ? Color.accentColor.opacity(0.2) : Color(.systemGray6))
                                     .cornerRadius(25)
                             }
                         }
@@ -57,7 +55,7 @@ struct CreateProfileView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
 
-                    TextField("Child's name", text: $name)
+                    TextField("Child's name", text: $viewModel.childName)
                         .font(.title3)
                         .padding()
                         .background(Color(.systemGray6))
@@ -71,7 +69,7 @@ struct CreateProfileView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
 
-                    Picker("Age", selection: $age) {
+                    Picker("Age", selection: $viewModel.childAge) {
                         ForEach(4...16, id: \.self) { age in
                             Text("\(age) years").tag(age)
                         }
@@ -90,14 +88,14 @@ struct CreateProfileView: View {
                     HStack(spacing: 16) {
                         ForEach(colors, id: \.self) { color in
                             Button {
-                                selectedColor = color
+                                viewModel.selectedTheme = color
                             } label: {
                                 Circle()
                                     .fill(Color(colorHex(for: color)))
                                     .frame(width: 44, height: 44)
                                     .overlay(
                                         Circle()
-                                            .stroke(selectedColor == color ? Color.primary : Color.clear, lineWidth: 3)
+                                            .stroke(viewModel.selectedTheme == color ? Color.primary : Color.clear, lineWidth: 3)
                                     )
                             }
                         }
@@ -105,22 +103,44 @@ struct CreateProfileView: View {
                 }
                 .padding(.horizontal)
 
+                // Error message
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                }
+
                 Spacer(minLength: 40)
 
                 // Continue button
                 Button(action: {
-                    // Save profile
-                    onComplete()
+                    isProcessing = true
+                    Task {
+                        let success = await viewModel.saveChildProfile()
+                        isProcessing = false
+
+                        if success {
+                            onComplete()
+                        }
+                    }
                 }) {
-                    Text("Continue")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(name.isEmpty ? Color.gray : Color.accentColor)
-                        .cornerRadius(14)
+                    HStack {
+                        if isProcessing {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        } else {
+                            Text("Continue")
+                                .font(.headline)
+                        }
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(viewModel.childName.isEmpty || isProcessing ? Color.gray : Color.accentColor)
+                    .cornerRadius(14)
                 }
-                .disabled(name.isEmpty)
+                .disabled(viewModel.childName.isEmpty || isProcessing)
                 .padding(.horizontal, 24)
                 .padding(.bottom, 32)
             }
@@ -140,5 +160,8 @@ struct CreateProfileView: View {
 }
 
 #Preview {
-    CreateProfileView { }
+    CreateProfileView(
+        viewModel: OnboardingViewModel(childRepository: MockChildRepository()),
+        onComplete: { }
+    )
 }

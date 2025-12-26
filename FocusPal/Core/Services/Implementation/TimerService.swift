@@ -66,7 +66,7 @@ class TimerService: TimerServiceProtocol {
         switch mode {
         case .countdown(let duration):
             remainingTime = duration
-            scheduleTimerNotification(duration: duration)
+            scheduleTimerNotifications(duration: duration)
         case .stopwatch:
             elapsedTime = 0
         }
@@ -87,7 +87,7 @@ class TimerService: TimerServiceProtocol {
         }
 
         timerState = .paused
-        notificationService.cancelNotifications(withIdentifier: "timer_completion")
+        notificationService.cancelTimerNotifications()
     }
 
     func resumeTimer() {
@@ -98,7 +98,7 @@ class TimerService: TimerServiceProtocol {
         startTimerLoop()
 
         if case .countdown = currentMode {
-            scheduleTimerNotification(duration: remainingTime)
+            scheduleTimerNotifications(duration: remainingTime)
         }
     }
 
@@ -111,7 +111,7 @@ class TimerService: TimerServiceProtocol {
         pausedTime = 0
         startTime = nil
 
-        notificationService.cancelNotifications(withIdentifier: "timer_completion")
+        notificationService.cancelTimerNotifications()
         endBackgroundTask()
     }
 
@@ -129,8 +129,8 @@ class TimerService: TimerServiceProtocol {
 
         // Reschedule notification if running
         if timerState == .running {
-            notificationService.cancelNotifications(withIdentifier: "timer_completion")
-            scheduleTimerNotification(duration: remainingTime)
+            notificationService.cancelTimerNotifications()
+            scheduleTimerNotifications(duration: remainingTime)
         }
     }
 
@@ -172,9 +172,21 @@ class TimerService: TimerServiceProtocol {
         endBackgroundTask()
     }
 
-    private func scheduleTimerNotification(duration: TimeInterval) {
+    private func scheduleTimerNotifications(duration: TimeInterval) {
         let categoryName = currentCategory?.name ?? "Activity"
+
+        // Schedule timer completion notification
         notificationService.scheduleTimerCompletion(in: duration, categoryName: categoryName)
+
+        // Schedule 5-minute warning if timer is longer than 5 minutes
+        if duration > 300 {
+            notificationService.scheduleFiveMinuteWarning(in: duration - 300, categoryName: categoryName)
+        }
+
+        // Schedule 1-minute warning if timer is longer than 1 minute
+        if duration > 60 {
+            notificationService.scheduleOneMinuteWarning(in: duration - 60, categoryName: categoryName)
+        }
     }
 
     private func setupBackgroundHandling() {

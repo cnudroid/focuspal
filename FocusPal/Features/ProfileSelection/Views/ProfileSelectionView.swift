@@ -9,8 +9,12 @@ import SwiftUI
 
 /// View for selecting between child profiles.
 struct ProfileSelectionView: View {
-    @StateObject private var viewModel = ProfileSelectionViewModel()
+    @StateObject private var viewModel: ProfileSelectionViewModel
     @Environment(\.dismiss) private var dismiss
+
+    init(childRepository: ChildRepositoryProtocol? = nil) {
+        _viewModel = StateObject(wrappedValue: ProfileSelectionViewModel(childRepository: childRepository))
+    }
 
     var body: some View {
         NavigationStack {
@@ -26,15 +30,29 @@ struct ProfileSelectionView: View {
                     GridItem(.flexible())
                 ], spacing: 20) {
                     ForEach(viewModel.children) { child in
-                        ProfileCard(child: child) {
-                            viewModel.selectChild(child)
-                            dismiss()
-                        }
+                        ProfileCard(
+                            child: child,
+                            isSelected: viewModel.isChildSelected(child),
+                            onSelect: {
+                                Task {
+                                    await viewModel.selectChild(child)
+                                    dismiss()
+                                }
+                            },
+                            onEdit: {
+                                viewModel.startEditingChild(child)
+                            },
+                            onDelete: {
+                                viewModel.startDeleteChild(child)
+                            }
+                        )
                     }
 
                     // Add profile button (parent only)
-                    AddProfileCard {
-                        viewModel.showAddProfile = true
+                    if viewModel.canAddMoreChildren {
+                        AddProfileCard {
+                            viewModel.showAddProfile = true
+                        }
                     }
                 }
                 .padding()
@@ -42,9 +60,41 @@ struct ProfileSelectionView: View {
                 Spacer()
             }
             .navigationBarTitleDisplayMode(.inline)
+            .task {
+                await viewModel.loadChildren()
+            }
+            .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
+                Button("OK") {
+                    viewModel.clearError()
+                }
+            } message: {
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                }
+            }
+            .alert("Delete Profile", isPresented: $viewModel.showDeleteConfirmation) {
+                Button("Cancel", role: .cancel) {
+                    viewModel.cancelDelete()
+                }
+                Button("Delete", role: .destructive) {
+                    Task {
+                        await viewModel.confirmDelete()
+                    }
+                }
+            } message: {
+                if let child = viewModel.childToDelete {
+                    Text("Are you sure you want to delete \(child.name)'s profile? This action cannot be undone.")
+                }
+            }
             .sheet(isPresented: $viewModel.showAddProfile) {
                 // Add profile flow
                 Text("Add Child Profile")
+            }
+            .sheet(isPresented: $viewModel.showEditProfile) {
+                // Edit profile flow
+                if let childToEdit = viewModel.childToEdit {
+                    Text("Edit \(childToEdit.name)'s Profile")
+                }
             }
         }
     }
@@ -52,7 +102,10 @@ struct ProfileSelectionView: View {
 
 struct ProfileCard: View {
     let child: Child
+    let isSelected: Bool
     let onSelect: () -> Void
+    let onEdit: () -> Void
+    let onDelete: () -> Void
 
     var body: some View {
         Button(action: onSelect) {
@@ -71,8 +124,25 @@ struct ProfileCard: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 24)
-            .background(Color(.systemGray6))
+            .background(isSelected ? Color(hex: colorHex(for: child.themeColor)).opacity(0.15) : Color(.systemGray6))
             .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(isSelected ? Color(hex: colorHex(for: child.themeColor)) : Color.clear, lineWidth: 3)
+            )
+        }
+        .contextMenu {
+            Button {
+                onEdit()
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+
+            Button(role: .destructive) {
+                onDelete()
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
         }
     }
 

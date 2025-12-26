@@ -9,21 +9,35 @@ import SwiftUI
 
 /// Container view managing the onboarding flow.
 struct OnboardingContainerView: View {
-    @StateObject private var viewModel = OnboardingViewModel()
+    @StateObject private var viewModel: OnboardingViewModel
+
+    init(childRepository: ChildRepositoryProtocol = MockChildRepository()) {
+        _viewModel = StateObject(wrappedValue: OnboardingViewModel(childRepository: childRepository))
+    }
 
     var body: some View {
         TabView(selection: $viewModel.currentStep) {
             WelcomeView(onContinue: viewModel.nextStep)
                 .tag(OnboardingStep.welcome)
 
-            CreatePINView(onComplete: viewModel.nextStep)
-                .tag(OnboardingStep.createPIN)
+            CreatePINView(
+                viewModel: viewModel,
+                onComplete: viewModel.nextStep
+            )
+            .tag(OnboardingStep.createPIN)
 
-            CreateProfileView(onComplete: viewModel.nextStep)
-                .tag(OnboardingStep.createProfile)
+            CreateProfileView(
+                viewModel: viewModel,
+                onComplete: viewModel.nextStep
+            )
+            .tag(OnboardingStep.createProfile)
 
-            PermissionsView(onComplete: viewModel.completeOnboarding)
-                .tag(OnboardingStep.permissions)
+            PermissionsView(onComplete: {
+                Task {
+                    await viewModel.completeOnboarding()
+                }
+            })
+            .tag(OnboardingStep.permissions)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .animation(.easeInOut, value: viewModel.currentStep)
