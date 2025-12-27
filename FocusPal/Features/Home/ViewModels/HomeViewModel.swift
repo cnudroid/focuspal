@@ -36,6 +36,8 @@ class HomeViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var categoryCache: [UUID: Category] = [:]
 
+    private static let globalCategoryKey = "globalCategories"
+
     // MARK: - Computed Properties
 
     var greetingText: String {
@@ -83,9 +85,8 @@ class HomeViewModel: ObservableObject {
         currentChild = child
 
         do {
-            // Use default categories with deterministic UUIDs to ensure consistency
-            // with TimerViewModel and ActivityLogViewModel
-            let categories = Category.defaultCategories(for: child.id)
+            // Load categories from shared storage first, then fall back to defaults
+            let categories = loadCategoriesFromStorage(for: child.id)
             categoryCache = Dictionary(uniqueKeysWithValues: categories.map { ($0.id, $0) })
 
             // Load today's activities
@@ -204,6 +205,43 @@ class HomeViewModel: ObservableObject {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return "\(formatter.string(from: start)) - \(formatter.string(from: end))"
+    }
+
+    private func loadCategoriesFromStorage(for childId: UUID) -> [Category] {
+        // Try to load from shared UserDefaults storage
+        if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
+           let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
+            return decoded.map { $0.toCategory(childId: childId) }
+        }
+        // Fall back to default categories
+        return Category.defaultCategories(for: childId)
+    }
+}
+
+// MARK: - CategoryData for UserDefaults persistence
+
+private struct CategoryData: Codable {
+    let id: UUID
+    let name: String
+    let iconName: String
+    let colorHex: String
+    let isActive: Bool
+    let sortOrder: Int
+    let isSystem: Bool
+    let recommendedDuration: TimeInterval
+
+    func toCategory(childId: UUID) -> Category {
+        Category(
+            id: id,
+            name: name,
+            iconName: iconName,
+            colorHex: colorHex,
+            isActive: isActive,
+            sortOrder: sortOrder,
+            isSystem: isSystem,
+            childId: childId,
+            recommendedDuration: recommendedDuration
+        )
     }
 }
 

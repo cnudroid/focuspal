@@ -33,6 +33,15 @@ class ParentControlsViewModel: ObservableObject {
         }
         isLoading = false
     }
+
+    func deleteChild(_ child: Child) async {
+        do {
+            try await childRepository.delete(child.id)
+            children.removeAll { $0.id == child.id }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
 }
 
 /// ViewModel for adding a new child profile.
@@ -69,6 +78,55 @@ class AddChildViewModel: ObservableObject {
 
         do {
             _ = try await childRepository.create(child)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+/// ViewModel for editing an existing child profile.
+@MainActor
+class EditChildViewModel: ObservableObject {
+
+    @Published var name: String
+    @Published var age: Int
+    @Published var selectedAvatar: String
+    @Published var selectedTheme: String
+    @Published var errorMessage: String?
+    @Published var showDeleteConfirmation = false
+
+    private let childId: UUID
+    private let childRepository: ChildRepositoryProtocol
+
+    init(child: Child, childRepository: ChildRepositoryProtocol? = nil) {
+        self.childId = child.id
+        self.name = child.name
+        self.age = child.age
+        self.selectedAvatar = child.avatarId
+        self.selectedTheme = child.themeColor
+        self.childRepository = childRepository ?? CoreDataChildRepository(
+            context: PersistenceController.shared.container.viewContext
+        )
+    }
+
+    func saveChild() async {
+        let trimmedName = name.trimmingCharacters(in: .whitespaces)
+        guard !trimmedName.isEmpty else {
+            errorMessage = "Please enter a name"
+            return
+        }
+
+        let updatedChild = Child(
+            id: childId,
+            name: trimmedName,
+            age: age,
+            avatarId: selectedAvatar,
+            themeColor: selectedTheme,
+            isActive: true
+        )
+
+        do {
+            _ = try await childRepository.update(updatedChild)
         } catch {
             errorMessage = error.localizedDescription
         }

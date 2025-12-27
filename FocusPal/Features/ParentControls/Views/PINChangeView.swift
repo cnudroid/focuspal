@@ -17,109 +17,100 @@ struct PINChangeView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 32) {
-                Spacer()
+        VStack(spacing: 32) {
+            Spacer()
 
-                // Lock icon
-                Image(systemName: "lock.rotation")
-                    .font(.system(size: 60))
-                    .foregroundColor(.accentColor)
+            // Lock icon
+            Image(systemName: "lock.rotation")
+                .font(.system(size: 60))
+                .foregroundColor(.accentColor)
 
-                Text(viewModel.instructionText)
-                    .font(.title3)
-                    .fontWeight(.bold)
+            Text(viewModel.instructionText)
+                .font(.title3)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+
+            // PIN dots with shake animation
+            HStack(spacing: 16) {
+                ForEach(0..<4, id: \.self) { index in
+                    Circle()
+                        .fill(index < viewModel.currentPin.count ? Color.accentColor : Color(.systemGray4))
+                        .frame(width: 16, height: 16)
+                }
+            }
+            .padding()
+            .modifier(ShakeEffect(shakes: viewModel.shouldShake ? 3 : 0))
+
+            // Error message
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundColor(.red)
                     .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
 
-                // PIN dots with shake animation
-                HStack(spacing: 16) {
-                    ForEach(0..<4, id: \.self) { index in
-                        Circle()
-                            .fill(index < viewModel.currentPin.count ? Color.accentColor : Color(.systemGray4))
-                            .frame(width: 16, height: 16)
-                    }
-                }
-                .padding()
-                .modifier(ShakeEffect(shakes: viewModel.shouldShake ? 3 : 0))
+            // Success message
+            if viewModel.isComplete {
+                Text("PIN changed successfully!")
+                    .font(.caption)
+                    .foregroundColor(.green)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
 
-                // Error message
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
-
-                // Success message
-                if viewModel.isComplete {
-                    Text("PIN changed successfully!")
-                        .font(.caption)
-                        .foregroundColor(.green)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
-
-                // Number pad
-                VStack(spacing: 16) {
-                    ForEach(0..<3) { row in
-                        HStack(spacing: 24) {
-                            ForEach(1...3, id: \.self) { col in
-                                let number = row * 3 + col
-                                NumberButton(number: number) {
-                                    viewModel.addDigit(number)
-                                }
-                            }
-                        }
-                    }
-
+            // Number pad
+            VStack(spacing: 16) {
+                ForEach(0..<3) { row in
                     HStack(spacing: 24) {
-                        // Back button (when in new/confirm steps)
-                        if viewModel.step != .verifyOld {
-                            Button {
-                                viewModel.goBack()
-                            } label: {
-                                Image(systemName: "arrow.left")
-                                    .font(.title2)
-                                    .frame(width: 70, height: 70)
+                        ForEach(1...3, id: \.self) { col in
+                            let number = row * 3 + col
+                            NumberButton(number: number) {
+                                viewModel.addDigit(number)
                             }
-                        } else {
-                            Spacer()
-                                .frame(width: 70, height: 70)
                         }
+                    }
+                }
 
-                        NumberButton(number: 0) {
-                            viewModel.addDigit(0)
-                        }
-
-                        // Delete button
+                HStack(spacing: 24) {
+                    // Back button (when in new/confirm steps)
+                    if viewModel.step != .verifyOld {
                         Button {
-                            viewModel.deleteDigit()
+                            viewModel.goBack()
                         } label: {
-                            Image(systemName: "delete.left")
+                            Image(systemName: "arrow.left")
                                 .font(.title2)
                                 .frame(width: 70, height: 70)
                         }
+                    } else {
+                        Spacer()
+                            .frame(width: 70, height: 70)
                     }
-                }
 
-                Spacer()
-            }
-            .padding()
-            .navigationTitle("Change PIN")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
+                    NumberButton(number: 0) {
+                        viewModel.addDigit(0)
+                    }
+
+                    // Delete button
+                    Button {
+                        viewModel.deleteDigit()
+                    } label: {
+                        Image(systemName: "delete.left")
+                            .font(.title2)
+                            .frame(width: 70, height: 70)
                     }
                 }
             }
-            .onChange(of: viewModel.isComplete) { isComplete in
-                if isComplete {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        dismiss()
-                    }
+
+            Spacer()
+        }
+        .padding()
+        .navigationTitle("Change PIN")
+        .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: viewModel.isComplete) { isComplete in
+            if isComplete {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    dismiss()
                 }
             }
         }

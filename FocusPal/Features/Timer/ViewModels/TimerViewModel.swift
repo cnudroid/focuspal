@@ -110,10 +110,18 @@ class TimerViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
+    private static let globalCategoryKey = "globalCategories"
+
     private func loadCategories() {
-        // Always use default categories with deterministic UUIDs
-        // This ensures category IDs are consistent across the app
-        categories = Category.defaultCategories(for: currentChild.id)
+        // Try to load categories from shared storage first
+        if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
+           let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
+            // Filter to only active categories
+            categories = decoded.map { $0.toCategory(childId: currentChild.id) }.filter { $0.isActive }
+        } else {
+            // Fall back to default categories
+            categories = Category.defaultCategories(for: currentChild.id)
+        }
 
         // Select first category and set its duration
         if let firstCategory = categories.first {
@@ -126,12 +134,24 @@ class TimerViewModel: ObservableObject {
     /// Reload categories (call when returning from settings)
     func reloadCategories() {
         let currentSelectedId = selectedCategory?.id
-        loadCategories()
+
+        // Reload from shared storage
+        if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
+           let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
+            categories = decoded.map { $0.toCategory(childId: currentChild.id) }.filter { $0.isActive }
+        } else {
+            categories = Category.defaultCategories(for: currentChild.id)
+        }
 
         // Try to keep the same category selected
         if let id = currentSelectedId,
            let category = categories.first(where: { $0.id == id }) {
             selectedCategory = category
+        } else if let firstCategory = categories.first {
+            // If previously selected category is gone, select first one
+            selectedCategory = firstCategory
+            defaultDuration = firstCategory.recommendedDuration
+            remainingTime = defaultDuration
         }
     }
 

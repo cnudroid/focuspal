@@ -20,13 +20,13 @@ class CategorySettingsViewModel: ObservableObject {
 
     // MARK: - Private Properties
 
-    private let childId: UUID
+    // Use a fixed key for global category settings
+    private static let globalCategoryKey = "globalCategories"
 
     // MARK: - Initialization
 
-    init(childId: UUID = UUID()) {
-        self.childId = childId
-        // Load default categories for now
+    init() {
+        // Load categories on init
         loadDefaultCategories()
     }
 
@@ -40,9 +40,11 @@ class CategorySettingsViewModel: ObservableObject {
         isLoading = false
     }
 
+    // Fixed UUID for global categories
+    private static let globalChildId = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
+
     func addCategory(_ category: Category) {
-        var newCategory = category
-        newCategory = Category(
+        let newCategory = Category(
             id: category.id,
             name: category.name,
             iconName: category.iconName,
@@ -51,7 +53,7 @@ class CategorySettingsViewModel: ObservableObject {
             sortOrder: categories.count,
             isSystem: false,
             parentCategoryId: category.parentCategoryId,
-            childId: childId,
+            childId: Self.globalChildId,
             recommendedDuration: category.recommendedDuration
         )
         categories.append(newCategory)
@@ -73,7 +75,7 @@ class CategorySettingsViewModel: ObservableObject {
     func moveCategories(from source: IndexSet, to destination: Int) {
         categories.move(fromOffsets: source, toOffset: destination)
         // Update sort orders
-        for (index, _) in categories.enumerated() {
+        for index in categories.indices {
             categories[index] = Category(
                 id: categories[index].id,
                 name: categories[index].name,
@@ -94,18 +96,19 @@ class CategorySettingsViewModel: ObservableObject {
 
     private func loadDefaultCategories() {
         // Check UserDefaults for saved categories first
-        if let data = UserDefaults.standard.data(forKey: "savedCategories_\(childId.uuidString)"),
+        if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
            let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
-            categories = decoded.map { $0.toCategory(childId: childId) }
+            categories = decoded.map { $0.toCategory() }
         } else {
-            categories = Category.defaultCategories(for: childId)
+            // Use default categories with a nil childId for global settings
+            categories = Category.defaultCategories(for: nil)
         }
     }
 
     private func saveCategories() {
         let categoryData = categories.map { CategoryData(from: $0) }
         if let encoded = try? JSONEncoder().encode(categoryData) {
-            UserDefaults.standard.set(encoded, forKey: "savedCategories_\(childId.uuidString)")
+            UserDefaults.standard.set(encoded, forKey: Self.globalCategoryKey)
         }
     }
 }
@@ -132,7 +135,7 @@ private struct CategoryData: Codable {
         self.recommendedDuration = category.recommendedDuration
     }
 
-    func toCategory(childId: UUID) -> Category {
+    func toCategory() -> Category {
         Category(
             id: id,
             name: name,
@@ -141,7 +144,7 @@ private struct CategoryData: Codable {
             isActive: isActive,
             sortOrder: sortOrder,
             isSystem: isSystem,
-            childId: childId,
+            childId: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!,
             recommendedDuration: recommendedDuration
         )
     }

@@ -9,19 +9,183 @@ import SwiftUI
 
 /// View for managing time goals per category.
 struct TimeGoalsView: View {
-    @State private var goals: [TimeGoalItem] = TimeGoalItem.sampleGoals
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = TimeGoalsViewModel()
 
     var body: some View {
-        List {
-            Section {
-                ForEach($goals) { $goal in
-                    TimeGoalRow(goal: $goal)
+        NavigationStack {
+            Form {
+                Section {
+                    ForEach($viewModel.goals) { $goal in
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Image(systemName: goal.iconName)
+                                    .foregroundColor(.white)
+                                    .frame(width: 32, height: 32)
+                                    .background(Color(hex: goal.colorHex))
+                                    .cornerRadius(6)
+
+                                Text(goal.categoryName)
+                                    .font(.headline)
+
+                                Spacer()
+
+                                Toggle("", isOn: $goal.isActive)
+                                    .labelsHidden()
+                            }
+
+                            if goal.isActive {
+                                HStack {
+                                    Text("Daily Limit:")
+                                        .font(.subheadline)
+
+                                    Spacer()
+
+                                    Stepper(
+                                        "\(goal.recommendedMinutes) min",
+                                        value: $goal.recommendedMinutes,
+                                        in: 15...240,
+                                        step: 15
+                                    )
+                                    .fixedSize()
+                                }
+                                .padding(.leading, 40)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                } footer: {
+                    Text("Set daily time limits for each category. You'll receive notifications when approaching these goals.")
                 }
-            } footer: {
-                Text("Set recommended daily time limits for each category. You'll receive notifications when approaching these goals.")
+
+                Section {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("• Toggle categories on/off to track them")
+                        Text("• Adjust stepper to set daily limits")
+                    }
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                } header: {
+                    Label("How it works", systemImage: "info.circle.fill")
+                }
+            }
+            .navigationTitle("Time Goals")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        viewModel.saveGoals()
+                        dismiss()
+                    }
+                }
+            }
+            .onAppear {
+                viewModel.loadGoals()
             }
         }
-        .navigationTitle("Time Goals")
+    }
+}
+
+/// ViewModel for TimeGoalsView that loads categories from shared storage
+@MainActor
+class TimeGoalsViewModel: ObservableObject {
+    @Published var goals: [TimeGoalItem] = []
+
+    private static let globalCategoryKey = "globalCategories"
+    private static let timeGoalsKey = "timeGoals"
+
+    func loadGoals() {
+        // Load categories from shared storage
+        var categories: [Category] = []
+
+        if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
+           let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
+            categories = decoded.map { $0.toCategory() }
+        } else {
+            categories = Category.defaultCategories(for: nil)
+        }
+
+        // Load saved time goal settings
+        let savedGoals = loadSavedGoalSettings()
+
+        // Convert categories to TimeGoalItems, preserving saved settings
+        goals = categories.map { category in
+            if let saved = savedGoals[category.id] {
+                return TimeGoalItem(
+                    id: category.id,
+                    categoryName: category.name,
+                    iconName: category.iconName,
+                    colorHex: category.colorHex,
+                    recommendedMinutes: saved.minutes,
+                    isActive: saved.isActive
+                )
+            } else {
+                return TimeGoalItem(
+                    id: category.id,
+                    categoryName: category.name,
+                    iconName: category.iconName,
+                    colorHex: category.colorHex,
+                    recommendedMinutes: category.durationMinutes,
+                    isActive: true
+                )
+            }
+        }
+    }
+
+    func saveGoals() {
+        var settings: [String: TimeGoalSetting] = [:]
+        for goal in goals {
+            settings[goal.id.uuidString] = TimeGoalSetting(minutes: goal.recommendedMinutes, isActive: goal.isActive)
+        }
+        if let encoded = try? JSONEncoder().encode(settings) {
+            UserDefaults.standard.set(encoded, forKey: Self.timeGoalsKey)
+        }
+    }
+
+    private func loadSavedGoalSettings() -> [UUID: TimeGoalSetting] {
+        guard let data = UserDefaults.standard.data(forKey: Self.timeGoalsKey),
+              let decoded = try? JSONDecoder().decode([String: TimeGoalSetting].self, from: data) else {
+            return [:]
+        }
+        var result: [UUID: TimeGoalSetting] = [:]
+        for (key, value) in decoded {
+            if let uuid = UUID(uuidString: key) {
+                result[uuid] = value
+            }
+        }
+        return result
+    }
+}
+
+/// Saved time goal settings
+private struct TimeGoalSetting: Codable {
+    let minutes: Int
+    let isActive: Bool
+}
+
+/// Codable wrapper for Category persistence (matches CategorySettingsViewModel)
+private struct CategoryData: Codable {
+    let id: UUID
+    let name: String
+    let iconName: String
+    let colorHex: String
+    let isActive: Bool
+    let sortOrder: Int
+    let isSystem: Bool
+    let recommendedDuration: TimeInterval
+
+    func toCategory() -> Category {
+        Category(
+            id: id,
+            name: name,
+            iconName: iconName,
+            colorHex: colorHex,
+            isActive: isActive,
+            sortOrder: sortOrder,
+            isSystem: isSystem,
+            childId: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!,
+            recommendedDuration: recommendedDuration
+        )
     }
 }
 
@@ -84,20 +248,21 @@ struct TimeGoalRow: View {
 }
 
 struct TimeGoalItem: Identifiable {
-    let id = UUID()
+    let id: UUID
     let categoryName: String
     let iconName: String
     let colorHex: String
     var recommendedMinutes: Int
     var isActive: Bool
 
-    static let sampleGoals: [TimeGoalItem] = [
-        TimeGoalItem(categoryName: "Homework", iconName: "book.fill", colorHex: "#4A90D9", recommendedMinutes: 60, isActive: true),
-        TimeGoalItem(categoryName: "Reading", iconName: "text.book.closed.fill", colorHex: "#7B68EE", recommendedMinutes: 30, isActive: true),
-        TimeGoalItem(categoryName: "Screen Time", iconName: "tv.fill", colorHex: "#FF6B6B", recommendedMinutes: 60, isActive: true),
-        TimeGoalItem(categoryName: "Playing", iconName: "gamecontroller.fill", colorHex: "#4ECDC4", recommendedMinutes: 90, isActive: false),
-        TimeGoalItem(categoryName: "Sports", iconName: "figure.run", colorHex: "#45B7D1", recommendedMinutes: 60, isActive: false)
-    ]
+    init(id: UUID = UUID(), categoryName: String, iconName: String, colorHex: String, recommendedMinutes: Int, isActive: Bool) {
+        self.id = id
+        self.categoryName = categoryName
+        self.iconName = iconName
+        self.colorHex = colorHex
+        self.recommendedMinutes = recommendedMinutes
+        self.isActive = isActive
+    }
 }
 
 #Preview {

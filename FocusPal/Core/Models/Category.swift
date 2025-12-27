@@ -72,66 +72,68 @@ extension Category {
         return uuid
     }
 
-    static func defaultCategories(for childId: UUID) -> [Category] {
-        [
+    static func defaultCategories(for childId: UUID?) -> [Category] {
+        // Use a fixed UUID for global categories when childId is nil
+        let effectiveId = childId ?? UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
+        return [
             Category(
-                id: deterministicId(name: "Homework", childId: childId),
+                id: deterministicId(name: "Homework", childId: effectiveId),
                 name: "Homework",
                 iconName: "book.fill",
                 colorHex: "#4A90D9",
                 sortOrder: 0,
                 isSystem: true,
-                childId: childId,
+                childId: effectiveId,
                 recommendedDuration: 25 * 60  // 25 minutes
             ),
             Category(
-                id: deterministicId(name: "Reading", childId: childId),
+                id: deterministicId(name: "Reading", childId: effectiveId),
                 name: "Reading",
                 iconName: "text.book.closed.fill",
                 colorHex: "#7B68EE",
                 sortOrder: 1,
                 isSystem: true,
-                childId: childId,
+                childId: effectiveId,
                 recommendedDuration: 30 * 60  // 30 minutes
             ),
             Category(
-                id: deterministicId(name: "Screen Time", childId: childId),
+                id: deterministicId(name: "Screen Time", childId: effectiveId),
                 name: "Screen Time",
                 iconName: "tv.fill",
                 colorHex: "#FF6B6B",
                 sortOrder: 2,
                 isSystem: true,
-                childId: childId,
+                childId: effectiveId,
                 recommendedDuration: 45 * 60  // 45 minutes
             ),
             Category(
-                id: deterministicId(name: "Playing", childId: childId),
+                id: deterministicId(name: "Playing", childId: effectiveId),
                 name: "Playing",
                 iconName: "gamecontroller.fill",
                 colorHex: "#4ECDC4",
                 sortOrder: 3,
                 isSystem: true,
-                childId: childId,
+                childId: effectiveId,
                 recommendedDuration: 60 * 60  // 60 minutes
             ),
             Category(
-                id: deterministicId(name: "Sports", childId: childId),
+                id: deterministicId(name: "Sports", childId: effectiveId),
                 name: "Sports",
                 iconName: "figure.run",
                 colorHex: "#45B7D1",
                 sortOrder: 4,
                 isSystem: true,
-                childId: childId,
+                childId: effectiveId,
                 recommendedDuration: 45 * 60  // 45 minutes
             ),
             Category(
-                id: deterministicId(name: "Music", childId: childId),
+                id: deterministicId(name: "Music", childId: effectiveId),
                 name: "Music",
                 iconName: "music.note",
                 colorHex: "#F7DC6F",
                 sortOrder: 5,
                 isSystem: true,
-                childId: childId,
+                childId: effectiveId,
                 recommendedDuration: 30 * 60  // 30 minutes
             )
         ]

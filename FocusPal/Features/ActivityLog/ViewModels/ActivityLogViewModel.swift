@@ -27,6 +27,8 @@ class ActivityLogViewModel: ObservableObject {
     private let categoryService: CategoryServiceProtocol
     private let currentChild: Child
 
+    private static let globalCategoryKey = "globalCategories"
+
     // MARK: - Initialization
 
     init(
@@ -157,9 +159,13 @@ class ActivityLogViewModel: ObservableObject {
     // MARK: - Private Methods
 
     private func loadCategories() async {
-        // Always use default categories with deterministic UUIDs
-        // This ensures category IDs match those used by TimerViewModel
-        categories = Category.defaultCategories(for: currentChild.id)
+        // Load categories from shared storage first, then fall back to defaults
+        if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
+           let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
+            categories = decoded.map { $0.toCategory(childId: currentChild.id) }
+        } else {
+            categories = Category.defaultCategories(for: currentChild.id)
+        }
     }
 
     private func categoryName(for categoryId: UUID) -> String {
@@ -178,6 +184,33 @@ class ActivityLogViewModel: ObservableObject {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return "\(formatter.string(from: start)) - \(formatter.string(from: end))"
+    }
+}
+
+// MARK: - CategoryData for UserDefaults persistence
+
+private struct CategoryData: Codable {
+    let id: UUID
+    let name: String
+    let iconName: String
+    let colorHex: String
+    let isActive: Bool
+    let sortOrder: Int
+    let isSystem: Bool
+    let recommendedDuration: TimeInterval
+
+    func toCategory(childId: UUID) -> Category {
+        Category(
+            id: id,
+            name: name,
+            iconName: iconName,
+            colorHex: colorHex,
+            isActive: isActive,
+            sortOrder: sortOrder,
+            isSystem: isSystem,
+            childId: childId,
+            recommendedDuration: recommendedDuration
+        )
     }
 }
 

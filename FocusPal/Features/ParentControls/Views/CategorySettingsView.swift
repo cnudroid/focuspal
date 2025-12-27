@@ -9,73 +9,111 @@ import SwiftUI
 
 /// Parent view for managing activity categories and their timer durations.
 struct CategorySettingsView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = CategorySettingsViewModel()
     @State private var showingAddCategory = false
     @State private var categoryToEdit: Category?
 
     var body: some View {
-        List {
-            // Categories list
-            Section {
-                ForEach(viewModel.categories) { category in
-                    CategoryRowView(category: category) {
-                        categoryToEdit = category
+        NavigationStack {
+            Form {
+                // Categories list
+                Section {
+                    ForEach(viewModel.categories) { category in
+                        Button {
+                            categoryToEdit = category
+                        } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: category.iconName)
+                                    .font(.title3)
+                                    .foregroundColor(.white)
+                                    .frame(width: 36, height: 36)
+                                    .background(Color(hex: category.colorHex))
+                                    .cornerRadius(8)
+
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack {
+                                        Text(category.name)
+                                            .font(.body)
+                                            .foregroundColor(.primary)
+                                        if category.isSystem {
+                                            Text("SYSTEM")
+                                                .font(.caption2)
+                                                .padding(.horizontal, 4)
+                                                .padding(.vertical, 2)
+                                                .background(Color.secondary.opacity(0.2))
+                                                .cornerRadius(4)
+                                        }
+                                    }
+                                    Text("\(category.durationMinutes) min")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+
+                                Spacer()
+
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                } header: {
+                    Text("Activity Categories")
+                } footer: {
+                    Text("Tap a category to edit its timer duration.")
+                }
+
+                // Add button
+                Section {
+                    Button {
+                        showingAddCategory = true
+                    } label: {
+                        Label("Add New Category", systemImage: "plus.circle.fill")
                     }
                 }
-                .onDelete(perform: deleteCategories)
-                .onMove(perform: moveCategories)
-            } header: {
-                Text("Activity Categories")
-            } footer: {
-                Text("Set timer duration for each activity. Tap to edit.")
-            }
 
-            // Add button
-            Section {
-                Button {
-                    showingAddCategory = true
-                } label: {
-                    Label("Add New Category", systemImage: "plus.circle.fill")
+                // Tips
+                Section {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("• Tap a category to edit settings")
+                        Text("• System categories cannot be deleted")
+                    }
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                } header: {
+                    Label("Tips", systemImage: "lightbulb.fill")
                 }
             }
-        }
-        .navigationTitle("Categories")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                EditButton()
+            .navigationTitle("Categories")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+            .sheet(isPresented: $showingAddCategory) {
+                CategoryEditorView(mode: .add) { newCategory in
+                    viewModel.addCategory(newCategory)
+                }
+            }
+            .sheet(item: $categoryToEdit) { category in
+                CategoryEditorView(mode: .edit(category)) { updatedCategory in
+                    viewModel.updateCategory(updatedCategory)
+                }
+            }
+            .task {
+                await viewModel.loadCategories()
             }
         }
-        .sheet(isPresented: $showingAddCategory) {
-            CategoryEditorView(mode: .add) { newCategory in
-                viewModel.addCategory(newCategory)
-            }
-        }
-        .sheet(item: $categoryToEdit) { category in
-            CategoryEditorView(mode: .edit(category)) { updatedCategory in
-                viewModel.updateCategory(updatedCategory)
-            }
-        }
-        .task {
-            await viewModel.loadCategories()
-        }
-    }
-
-    private func deleteCategories(at offsets: IndexSet) {
-        for index in offsets {
-            let category = viewModel.categories[index]
-            if !category.isSystem {
-                viewModel.deleteCategory(category)
-            }
-        }
-    }
-
-    private func moveCategories(from source: IndexSet, to destination: Int) {
-        viewModel.moveCategories(from: source, to: destination)
     }
 }
 
-/// Row view for displaying a single category
-struct CategoryRowView: View {
+/// Card view for displaying a single category
+struct CategoryCardView: View {
     let category: Category
     let onTap: () -> Void
 
@@ -120,7 +158,9 @@ struct CategoryRowView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            .padding(.vertical, 4)
+            .padding()
+            .background(Color(.systemBackground))
+            .cornerRadius(12)
         }
         .buttonStyle(.plain)
     }
