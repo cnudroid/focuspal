@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		01DC311BE01F2FAAD1B66BC4 /* PINChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30E821473B121C6DDB6B77B /* PINChangeView.swift */; };
 		0358424197A3A7B9FE8537F5 /* MockActivityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF07CE53D3E155DA7FC51B5 /* MockActivityRepository.swift */; };
+		0368F4C3A8B194ECAAADB572 /* ParentControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9568FD4143193AFDBD1953E /* ParentControlsView.swift */; };
 		03B2FDC2E5C167861091650D /* NotificationServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4D71B34A2597CE896A65D8 /* NotificationServiceProtocol.swift */; };
 		04544D8965D0AB9899E5F778 /* TimerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC12BF9006BB231285E3796 /* TimerControlsView.swift */; };
 		04C91F7427B3C02C5C573636 /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B68ACCDD48A811853BF1D0 /* PermissionsView.swift */; };
@@ -43,6 +44,7 @@
 		3E054C2845372BDE85194AED /* ActivitySummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE997E29F2488D6A5EF08236 /* ActivitySummaryCard.swift */; };
 		41D5633367F74AF218D00411 /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB458A93284E8A973DF9871 /* StatisticsViewModel.swift */; };
 		420EEA04157A0180C616F1EA /* ManualEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75821F4560E13C2B64FCF5AE /* ManualEntryView.swift */; };
+		42303565416011ED476EA870 /* ParentAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4D95B0012CF70FF64A17A2 /* ParentAuthView.swift */; };
 		425103F7D7EE02D438476642 /* CoreDataCategoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98492F4F78852D8F56EA230 /* CoreDataCategoryRepository.swift */; };
 		4284FB963595335AE599BB9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD76A7FF0CDAF1B42B87139F /* Assets.xcassets */; };
 		437334C4026F2019D33F6B75 /* QuickLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D828FF0ECDDF95C9F4CC4 /* QuickLogView.swift */; };
@@ -50,10 +52,12 @@
 		44978B209121AAE67B3FF6CA /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DCA56292456FBA2E322627E /* PrimaryButton.swift */; };
 		470E29C2C28748C317BDAE25 /* MockActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B89C5A0539BB7C6A3CD65D /* MockActivityService.swift */; };
 		4881666D65C6EF71B739CF13 /* CategorySettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB32D35A3AC6B3652B919BD /* CategorySettingsViewModel.swift */; };
+		49F64C044CD6C2C93C92F3F4 /* LandingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB92EBFBE730AE8E701ABAC6 /* LandingViewModel.swift */; };
 		4D58EF0003963B263CD71593 /* TimerServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109431C59F0FE565F2640A2F /* TimerServiceProtocol.swift */; };
 		4F61003693EF54743568D042 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0472A820F5F0183194AFEF /* WelcomeView.swift */; };
 		514072906C8F2B0FA6FF83D4 /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9ED0D136F23B6EC94BFE57 /* ActivityLogView.swift */; };
 		546753A82FE4300E807439A3 /* SharedMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BE216ED6085C362AB1135B /* SharedMocks.swift */; };
+		549257F919B89A5526EED0F0 /* ParentControlsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A130207B74F105447AD04A /* ParentControlsViewModel.swift */; };
 		56E74E3CD5F23468C654DFD0 /* AnalyticsService+Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5887B1CE7000F95A38FA7F /* AnalyticsService+Notifications.swift */; };
 		57FD42125D107767B1118090 /* ActivityServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B97DB9A9BBE1ED4E3C4E6C /* ActivityServiceProtocol.swift */; };
 		5AC57DAA56CAE2CE470EA467 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A103EE99BBAC485EDA9741C4 /* AppCoordinator.swift */; };
@@ -149,6 +153,7 @@
 		F5C7ABBB6D7AFBB09922FDBF /* ActivityLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2232731181715B6D9DD896E8 /* ActivityLogViewModel.swift */; };
 		F7D1F1CB81693DC63BC66681 /* PieChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1768431FBCF6B4BF27F16E /* PieChart.swift */; };
 		FA7EEA16F77226D1E573D80C /* CoreDataActivityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31988FD5CA9BA477ECE1E4B /* CoreDataActivityRepository.swift */; };
+		FB626E6E8A3AAACFB5386BE7 /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFBDCAA5C69C46877C28245 /* LandingView.swift */; };
 		FC214444EDD0263A43C4213C /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399485656A65B5F2A5CEE706 /* NotificationService.swift */; };
 		FC42E6BAD0CC3C5D38C2C108 /* ParentAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F81B675925CBA456883AD9 /* ParentAuthViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -214,6 +219,7 @@
 		54B97DB9A9BBE1ED4E3C4E6C /* ActivityServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityServiceProtocol.swift; sourceTree = "<group>"; };
 		57A5003AFE5357814DD0A7ED /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		57B6F61C2CBD71553705A2C0 /* ActivityEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEntityMapper.swift; sourceTree = "<group>"; };
+		5AFBDCAA5C69C46877C28245 /* LandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingView.swift; sourceTree = "<group>"; };
 		5B24B24B645C40771C06297E /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
 		5C084BC47C8ED4EECA50CA9C /* ProfileSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSelectionViewModel.swift; sourceTree = "<group>"; };
 		5D4D71B34A2597CE896A65D8 /* NotificationServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceProtocol.swift; sourceTree = "<group>"; };
@@ -223,6 +229,7 @@
 		664612421D04044D3B3CB651 /* AchievementEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementEntityMapper.swift; sourceTree = "<group>"; };
 		67D931B42E22E204EEBCD159 /* PINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINServiceTests.swift; sourceTree = "<group>"; };
 		69B89C5A0539BB7C6A3CD65D /* MockActivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockActivityService.swift; sourceTree = "<group>"; };
+		6B4D95B0012CF70FF64A17A2 /* ParentAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentAuthView.swift; sourceTree = "<group>"; };
 		6DDDB2DCAD2C10DFBF9B7CF1 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		73015CB1783EB9094C1B70A6 /* FocusPal.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = FocusPal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7470D536420BEB275B871DB8 /* AchievementRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementRepositoryProtocol.swift; sourceTree = "<group>"; };
@@ -269,6 +276,7 @@
 		B9BEFA0A254F5A41E6758D60 /* ActivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityService.swift; sourceTree = "<group>"; };
 		BA83B1A7D80275DBDF294EF6 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		BB87110A92E14E11EE5B671D /* BalanceMeter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceMeter.swift; sourceTree = "<group>"; };
+		BB92EBFBE730AE8E701ABAC6 /* LandingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewModel.swift; sourceTree = "<group>"; };
 		C1CC779DD20DAFD32E06C89E /* SyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinator.swift; sourceTree = "<group>"; };
 		C44CA5FB1381B381265E00D8 /* TimeGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoal.swift; sourceTree = "<group>"; };
 		C5DB2E5D36463C98CA73A06B /* PINEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINEntryView.swift; sourceTree = "<group>"; };
@@ -287,9 +295,11 @@
 		D462712A4E8D96EC0B72E18B /* OnboardingContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContainerView.swift; sourceTree = "<group>"; };
 		D7BC5EFE9095CBE29271DCA4 /* QuickActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionButton.swift; sourceTree = "<group>"; };
 		D87417B24933571761E4572C /* MockChildRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockChildRepository.swift; sourceTree = "<group>"; };
+		D9568FD4143193AFDBD1953E /* ParentControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentControlsView.swift; sourceTree = "<group>"; };
 		DA5887B1CE7000F95A38FA7F /* AnalyticsService+Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnalyticsService+Notifications.swift"; sourceTree = "<group>"; };
 		DAC1ABA3E71150881AC9AAEA /* MockCategoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCategoryService.swift; sourceTree = "<group>"; };
 		DCB6387AA8876CA38500D5E6 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
+		E0A130207B74F105447AD04A /* ParentControlsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentControlsViewModel.swift; sourceTree = "<group>"; };
 		E30E821473B121C6DDB6B77B /* PINChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINChangeView.swift; sourceTree = "<group>"; };
 		E31988FD5CA9BA477ECE1E4B /* CoreDataActivityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataActivityRepository.swift; sourceTree = "<group>"; };
 		E4553CAD06F9551DCF5D477C /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
@@ -370,6 +380,15 @@
 				E289F8EACB750E35E5431FF6 /* Tokens */,
 			);
 			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		0E919CB5750698F3CF1860DA /* Landing */ = {
+			isa = PBXGroup;
+			children = (
+				8E794891A36A97A2318D2257 /* ViewModels */,
+				E51A8B873D77114F7D604283 /* Views */,
+			);
+			path = Landing;
 			sourceTree = "<group>";
 		};
 		0F47FC7BF3942FB6BA75DD97 /* Views */ = {
@@ -729,6 +748,15 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		8E794891A36A97A2318D2257 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				BB92EBFBE730AE8E701ABAC6 /* LandingViewModel.swift */,
+				E0A130207B74F105447AD04A /* ParentControlsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		9275D84A91186654E70E748A /* Timer */ = {
 			isa = PBXGroup;
 			children = (
@@ -869,6 +897,7 @@
 			children = (
 				B23B1B0869D1D19547EAA678 /* ActivityLog */,
 				C06ABCD8F08F4141BC594A6F /* Home */,
+				0E919CB5750698F3CF1860DA /* Landing */,
 				23777566CBF852D87F4DA904 /* Onboarding */,
 				7E1B65C215B24D5B0BC41999 /* ParentControls */,
 				4F501028C7DA394D2F9572DA /* ProfileSelection */,
@@ -954,6 +983,16 @@
 				85C0158B0FE9BF6A1BDC871C /* TestData.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		E51A8B873D77114F7D604283 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5AFBDCAA5C69C46877C28245 /* LandingView.swift */,
+				6B4D95B0012CF70FF64A17A2 /* ParentAuthView.swift */,
+				D9568FD4143193AFDBD1953E /* ParentControlsView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		E605BB575E385534FDFDF5F3 /* Resources */ = {
@@ -1166,6 +1205,8 @@
 				5C4009BC32EF0D3A5D58096E /* HomeView.swift in Sources */,
 				D829F700E78BD5A82EDA92E6 /* HomeViewModel.swift in Sources */,
 				9FD751E69BF6A00F9E6E5AC9 /* IconButton.swift in Sources */,
+				FB626E6E8A3AAACFB5386BE7 /* LandingView.swift in Sources */,
+				49F64C044CD6C2C93C92F3F4 /* LandingViewModel.swift in Sources */,
 				8F78571E6BD9A7557F6AB8B8 /* LoadingView.swift in Sources */,
 				420EEA04157A0180C616F1EA /* ManualEntryView.swift in Sources */,
 				64F408854A0F4D3AA2868831 /* MockAchievementRepository.swift in Sources */,
@@ -1185,7 +1226,10 @@
 				15566CD2C59B1250F66B06C6 /* PINServiceProtocol.swift in Sources */,
 				8220350B9FBB94BA8C0E9969 /* PINSetupView.swift in Sources */,
 				B816D4A7F906140FD3007560 /* PINSetupViewModel.swift in Sources */,
+				42303565416011ED476EA870 /* ParentAuthView.swift in Sources */,
 				FC42E6BAD0CC3C5D38C2C108 /* ParentAuthViewModel.swift in Sources */,
+				0368F4C3A8B194ECAAADB572 /* ParentControlsView.swift in Sources */,
+				549257F919B89A5526EED0F0 /* ParentControlsViewModel.swift in Sources */,
 				122C48A2CD8F22A3DDD5061D /* ParentDashboardView.swift in Sources */,
 				2C4A9FA4ADD9188DAD1B4BDD /* ParentDashboardViewModel.swift in Sources */,
 				04C91F7427B3C02C5C573636 /* PermissionsView.swift in Sources */,

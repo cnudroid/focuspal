@@ -64,6 +64,10 @@ struct PersistenceController {
             forKey: NSPersistentStoreFileProtectionKey
         )
 
+        // Enable lightweight migration for schema changes
+        description.shouldMigrateStoreAutomatically = true
+        description.shouldInferMappingModelAutomatically = true
+
         // Enable persistent history tracking for CloudKit
         description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
         description.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)

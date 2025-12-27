@@ -16,6 +16,9 @@
         <relationship name="timeGoals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TimeGoalEntity" inverseName="child" inverseEntity="TimeGoalEntity"/>
     </entity>
     <entity name="ActivityEntity" representedClassName="ActivityEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="categoryId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="categoryName" optional="YES" attributeType="String"/>
+        <attribute name="childId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>

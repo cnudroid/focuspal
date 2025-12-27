@@ -9,8 +9,12 @@ import SwiftUI
 
 /// Main statistics view with charts and insights.
 struct StatisticsView: View {
-    @StateObject private var viewModel = StatisticsViewModel()
+    @StateObject private var viewModel: StatisticsViewModel
     @State private var selectedTab = 0
+
+    init(currentChild: Child? = nil) {
+        _viewModel = StateObject(wrappedValue: StatisticsViewModel(child: currentChild))
+    }
 
     var body: some View {
         NavigationStack {

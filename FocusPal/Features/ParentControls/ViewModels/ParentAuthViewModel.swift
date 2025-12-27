@@ -92,7 +92,10 @@ class ParentAuthViewModel: ObservableObject {
                 lockoutEndTime = Date().addingTimeInterval(lockoutDuration)
             }
 
-            await resetShake()
+            // Reset shake animation after a delay (non-blocking)
+            Task {
+                await resetShake()
+            }
         }
     }
 

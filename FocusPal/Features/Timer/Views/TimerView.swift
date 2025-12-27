@@ -13,10 +13,11 @@ struct TimerView: View {
     @State private var showingParentControls = false
     @State private var showingNameEditor = false
 
-    init(timerService: TimerServiceProtocol? = nil, activityService: ActivityServiceProtocol? = nil) {
+    init(timerService: TimerServiceProtocol? = nil, activityService: ActivityServiceProtocol? = nil, currentChild: Child? = nil) {
         _viewModel = StateObject(wrappedValue: TimerViewModel(
             timerService: timerService,
-            activityService: activityService
+            activityService: activityService,
+            currentChild: currentChild
         ))
     }
 

@@ -171,9 +171,9 @@ class OnboardingViewModel: ObservableObject {
 
     // MARK: - Onboarding Completion
 
-    func completeOnboarding() async {
-        // Save profile if not already saved
-        _ = await saveChildProfile()
+    func completeOnboarding() {
+        // Just mark onboarding as complete
+        // Child profiles are added via Parent Controls after onboarding
         hasCompletedOnboarding = true
     }
 

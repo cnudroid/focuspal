@@ -9,8 +9,16 @@ import SwiftUI
 
 /// View displaying the activity log with quick logging options.
 struct ActivityLogView: View {
-    @StateObject private var viewModel = ActivityLogViewModel()
+    @EnvironmentObject var serviceContainer: ServiceContainer
+    @StateObject private var viewModel: ActivityLogViewModel
     @State private var showingQuickLog = false
+    let currentChild: Child?
+
+    init(currentChild: Child? = nil) {
+        self.currentChild = currentChild
+        // Create with placeholder - will be replaced in task
+        _viewModel = StateObject(wrappedValue: ActivityLogViewModel(child: currentChild))
+    }
 
     var body: some View {
         NavigationStack {

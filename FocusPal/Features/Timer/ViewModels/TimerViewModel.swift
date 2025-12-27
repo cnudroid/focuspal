@@ -47,37 +47,35 @@ class TimerViewModel: ObservableObject {
     private let audioService = TimerAudioService()
     private var cancellables = Set<AnyCancellable>()
     private var totalDuration: TimeInterval = 0
-    private let childId: UUID
+    private let currentChild: Child
 
     // MARK: - Initialization
 
     init(
         timerService: TimerServiceProtocol? = nil,
         activityService: ActivityServiceProtocol? = nil,
-        childId: UUID = UUID()
+        currentChild: Child? = nil
     ) {
+        // Use real services by default
+        let activityRepo = CoreDataActivityRepository(context: PersistenceController.shared.container.viewContext)
+
         self.timerService = timerService ?? MockTimerService()
-        self.activityService = activityService ?? MockActivityService()
-        self.childId = childId
+        self.activityService = activityService ?? ActivityService(repository: activityRepo)
+        self.currentChild = currentChild ?? Child(name: "Buddy", age: 8)
 
         setupBindings()
         loadCategories()
-        loadChildName()
-    }
 
-    private func loadChildName() {
-        // Load child name from UserDefaults (set during onboarding)
-        if let name = UserDefaults.standard.string(forKey: "childName_\(childId.uuidString)") {
-            childName = name
-        } else if let name = UserDefaults.standard.string(forKey: "childName") {
-            childName = name
+        // Set child name from the current child
+        if let child = currentChild {
+            self.childName = child.name
         }
     }
 
     func setChildName(_ name: String) {
         childName = name
         UserDefaults.standard.set(name, forKey: "childName")
-        UserDefaults.standard.set(name, forKey: "childName_\(childId.uuidString)")
+        UserDefaults.standard.set(name, forKey: "childName_\(currentChild.id.uuidString)")
     }
 
     // MARK: - Setup
@@ -113,14 +111,9 @@ class TimerViewModel: ObservableObject {
     }
 
     private func loadCategories() {
-        // Try to load saved categories from UserDefaults
-        if let data = UserDefaults.standard.data(forKey: "savedCategories_\(childId.uuidString)"),
-           let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
-            categories = decoded.map { $0.toCategory(childId: childId) }
-        } else {
-            // Use default categories
-            categories = Category.defaultCategories(for: childId)
-        }
+        // Always use default categories with deterministic UUIDs
+        // This ensures category IDs are consistent across the app
+        categories = Category.defaultCategories(for: currentChild.id)
 
         // Select first category and set its duration
         if let firstCategory = categories.first {
@@ -255,30 +248,37 @@ class TimerViewModel: ObservableObject {
     }
 
     private func logCompletedActivity(wasCompletedEarly: Bool) {
-        guard let category = selectedCategory else { return }
+        guard let category = selectedCategory else {
+            print("❌ No category selected, cannot log activity")
+            return
+        }
 
         // Use actual duration if available, otherwise calculate from timer
         let duration = actualDuration > 0 ? actualDuration : (totalDuration - remainingTime)
 
-        Task {
-            let child = Child(name: childName, age: 8)
-            _ = try? await activityService.logActivity(
-                category: category,
-                duration: duration,
-                child: child
-            )
-        }
-
-        // Log for debugging
+        // Log for debugging BEFORE the async call
         let plannedMinutes = Int(totalDuration / 60)
         let actualMinutes = Int(duration / 60)
         let actualSeconds = Int(duration) % 60
-        print("📊 Activity logged: \(category.name)")
+        print("📊 LOGGING Activity for \(currentChild.name): \(category.name)")
+        print("   Child ID: \(currentChild.id)")
+        print("   Category ID: \(category.id)")
         print("   Planned: \(plannedMinutes) min")
         print("   Actual: \(actualMinutes)m \(actualSeconds)s")
         print("   Completed early: \(wasCompletedEarly)")
-        if timeAdded > 0 {
-            print("   Extra time added: \(Int(timeAdded / 60)) min")
+
+        Task {
+            do {
+                // Use the actual current child instead of creating a new one
+                let activity = try await activityService.logActivity(
+                    category: category,
+                    duration: duration,
+                    child: currentChild
+                )
+                print("✅ Activity logged successfully: \(activity.id)")
+            } catch {
+                print("❌ Failed to log activity: \(error)")
+            }
         }
     }
 

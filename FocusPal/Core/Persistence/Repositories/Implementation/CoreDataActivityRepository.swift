@@ -28,6 +28,11 @@ class CoreDataActivityRepository: ActivityRepositoryProtocol {
             let entity = ActivityEntity(context: self.context)
             self.mapToEntity(activity, entity: entity)
             try self.context.save()
+            print("✅ Activity SAVED to CoreData:")
+            print("   ID: \(activity.id)")
+            print("   ChildID: \(activity.childId)")
+            print("   CategoryID: \(activity.categoryId)")
+            print("   Duration: \(activity.durationMinutes) min")
             return activity
         }
     }
@@ -35,8 +40,9 @@ class CoreDataActivityRepository: ActivityRepositoryProtocol {
     func fetch(for childId: UUID, dateRange: DateInterval) async throws -> [Activity] {
         return try await context.perform {
             let request = ActivityEntity.fetchRequest()
+            // Use direct childId attribute instead of relationship
             request.predicate = NSPredicate(
-                format: "child.id == %@ AND startTime >= %@ AND startTime <= %@",
+                format: "childId == %@ AND startTime >= %@ AND startTime <= %@",
                 childId as CVarArg,
                 dateRange.start as CVarArg,
                 dateRange.end as CVarArg
@@ -45,6 +51,12 @@ class CoreDataActivityRepository: ActivityRepositoryProtocol {
             request.fetchBatchSize = 20
 
             let entities = try self.context.fetch(request)
+            print("🔍 FETCH activities for childId: \(childId)")
+            print("   Date range: \(dateRange.start) to \(dateRange.end)")
+            print("   Found: \(entities.count) activities")
+            for entity in entities {
+                print("   - \(entity.id?.uuidString ?? "no id"), childId: \(entity.childId?.uuidString ?? "nil")")
+            }
             return entities.map { self.mapFromEntity($0) }
         }
     }
@@ -94,8 +106,9 @@ class CoreDataActivityRepository: ActivityRepositoryProtocol {
     func fetch(for childId: UUID, categoryId: UUID) async throws -> [Activity] {
         return try await context.perform {
             let request = ActivityEntity.fetchRequest()
+            // Use direct attributes instead of relationships
             request.predicate = NSPredicate(
-                format: "child.id == %@ AND category.id == %@",
+                format: "childId == %@ AND categoryId == %@",
                 childId as CVarArg,
                 categoryId as CVarArg
             )
@@ -142,13 +155,33 @@ class CoreDataActivityRepository: ActivityRepositoryProtocol {
         entity.isManualEntry = activity.isManualEntry
         entity.createdDate = activity.createdDate
         entity.syncStatus = activity.syncStatus.rawValue
+
+        // Store IDs directly as attributes (more reliable than relationships)
+        entity.childId = activity.childId
+        entity.categoryId = activity.categoryId
+
+        // Also try to link relationships if entities exist
+        let childRequest = ChildEntity.fetchRequest()
+        childRequest.predicate = NSPredicate(format: "id == %@", activity.childId as CVarArg)
+        childRequest.fetchLimit = 1
+        if let childEntity = try? context.fetch(childRequest).first {
+            entity.child = childEntity
+        }
+
+        let categoryRequest = CategoryEntity.fetchRequest()
+        categoryRequest.predicate = NSPredicate(format: "id == %@", activity.categoryId as CVarArg)
+        categoryRequest.fetchLimit = 1
+        if let categoryEntity = try? context.fetch(categoryRequest).first {
+            entity.category = categoryEntity
+        }
     }
 
     private func mapFromEntity(_ entity: ActivityEntity) -> Activity {
         Activity(
             id: entity.id ?? UUID(),
-            categoryId: entity.category?.id ?? UUID(),
-            childId: entity.child?.id ?? UUID(),
+            // Prefer direct attributes, fall back to relationships
+            categoryId: entity.categoryId ?? entity.category?.id ?? UUID(),
+            childId: entity.childId ?? entity.child?.id ?? UUID(),
             startTime: entity.startTime ?? Date(),
             endTime: entity.endTime ?? Date(),
             notes: entity.notes,

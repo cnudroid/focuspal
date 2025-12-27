@@ -76,11 +76,15 @@ class StatisticsViewModel: ObservableObject {
         categoryService: CategoryServiceProtocol? = nil,
         child: Child? = nil
     ) {
-        self.activityService = activityService ?? MockActivityService()
-        // Create a simple mock inline
-        self.categoryService = categoryService ?? SimpleMockCategoryService()
-        // For preview/testing purposes, create a default child if none provided
+        // Use real services with CoreData repositories by default
+        let activityRepo = CoreDataActivityRepository(context: PersistenceController.shared.container.viewContext)
+        let categoryRepo = CoreDataCategoryRepository(context: PersistenceController.shared.container.viewContext)
+
+        self.activityService = activityService ?? ActivityService(repository: activityRepo)
+        self.categoryService = categoryService ?? CategoryService(repository: categoryRepo)
         self.child = child ?? Child(name: "Test Child", age: 8)
+
+        print("📊 StatisticsViewModel initialized for child: \(self.child.name) (\(self.child.id))")
     }
 
     // MARK: - Public Methods

@@ -34,9 +34,15 @@ class ActivityLogViewModel: ObservableObject {
         categoryService: CategoryServiceProtocol? = nil,
         child: Child? = nil
     ) {
-        self.activityService = activityService ?? MockActivityService()
-        self.categoryService = categoryService ?? MockCategoryServiceImpl()
+        // Use real services with CoreData repositories by default
+        let activityRepo = CoreDataActivityRepository(context: PersistenceController.shared.container.viewContext)
+        let categoryRepo = CoreDataCategoryRepository(context: PersistenceController.shared.container.viewContext)
+
+        self.activityService = activityService ?? ActivityService(repository: activityRepo)
+        self.categoryService = categoryService ?? CategoryService(repository: categoryRepo)
         self.currentChild = child ?? Child(name: "Test", age: 8)
+
+        print("📋 ActivityLogViewModel initialized for child: \(self.currentChild.name) (\(self.currentChild.id))")
 
         Task {
             await loadCategories()
@@ -55,10 +61,15 @@ class ActivityLogViewModel: ObservableObject {
             let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
             let dateRange = DateInterval(start: startOfDay, end: endOfDay)
 
+            print("📋 Loading activities for child: \(currentChild.id)")
+            print("   Date range: \(startOfDay) to \(endOfDay)")
+
             let fetchedActivities = try await activityService.fetchActivities(
                 for: currentChild,
                 dateRange: dateRange
             )
+
+            print("📋 Fetched \(fetchedActivities.count) activities")
 
             activities = fetchedActivities.map { activity in
                 ActivityDisplayItem(
@@ -71,6 +82,7 @@ class ActivityLogViewModel: ObservableObject {
                 )
             }
         } catch {
+            print("❌ Error loading activities: \(error)")
             errorMessage = error.localizedDescription
         }
 
@@ -145,12 +157,9 @@ class ActivityLogViewModel: ObservableObject {
     // MARK: - Private Methods
 
     private func loadCategories() async {
-        do {
-            categories = try await categoryService.fetchActiveCategories(for: currentChild)
-        } catch {
-            // Fallback to default categories if service fails
-            categories = Category.defaultCategories(for: currentChild.id)
-        }
+        // Always use default categories with deterministic UUIDs
+        // This ensures category IDs match those used by TimerViewModel
+        categories = Category.defaultCategories(for: currentChild.id)
     }
 
     private func categoryName(for categoryId: UUID) -> String {
