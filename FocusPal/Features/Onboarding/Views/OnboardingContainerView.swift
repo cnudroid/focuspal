@@ -11,8 +11,12 @@ import SwiftUI
 struct OnboardingContainerView: View {
     @StateObject private var viewModel: OnboardingViewModel
 
-    init(childRepository: ChildRepositoryProtocol = MockChildRepository()) {
-        _viewModel = StateObject(wrappedValue: OnboardingViewModel(childRepository: childRepository))
+    init(childRepository: ChildRepositoryProtocol? = nil) {
+        // Use real CoreData repository by default
+        let repository = childRepository ?? CoreDataChildRepository(
+            context: PersistenceController.shared.container.viewContext
+        )
+        _viewModel = StateObject(wrappedValue: OnboardingViewModel(childRepository: repository))
     }
 
     var body: some View {
@@ -26,16 +30,8 @@ struct OnboardingContainerView: View {
             )
             .tag(OnboardingStep.createPIN)
 
-            CreateProfileView(
-                viewModel: viewModel,
-                onComplete: viewModel.nextStep
-            )
-            .tag(OnboardingStep.createProfile)
-
             PermissionsView(onComplete: {
-                Task {
-                    await viewModel.completeOnboarding()
-                }
+                viewModel.completeOnboarding()
             })
             .tag(OnboardingStep.permissions)
         }
@@ -48,8 +44,7 @@ struct OnboardingContainerView: View {
 enum OnboardingStep: Int, CaseIterable {
     case welcome = 0
     case createPIN = 1
-    case createProfile = 2
-    case permissions = 3
+    case permissions = 2
 }
 
 #Preview {

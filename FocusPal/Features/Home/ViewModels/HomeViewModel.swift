@@ -60,9 +60,12 @@ class HomeViewModel: ObservableObject {
         activityService: ActivityServiceProtocol? = nil,
         categoryService: CategoryServiceProtocol? = nil
     ) {
-        // Use provided services or get from ServiceContainer
-        self.activityService = activityService ?? MockActivityService()
-        self.categoryService = categoryService ?? SimpleMockCategoryService()
+        // Use real services with CoreData repositories by default
+        let activityRepo = CoreDataActivityRepository(context: PersistenceController.shared.container.viewContext)
+        let categoryRepo = CoreDataCategoryRepository(context: PersistenceController.shared.container.viewContext)
+
+        self.activityService = activityService ?? ActivityService(repository: activityRepo)
+        self.categoryService = categoryService ?? CategoryService(repository: categoryRepo)
     }
 
     // MARK: - Public Methods
@@ -80,8 +83,9 @@ class HomeViewModel: ObservableObject {
         currentChild = child
 
         do {
-            // Load categories first to build cache
-            let categories = try await categoryService.fetchActiveCategories(for: child)
+            // Use default categories with deterministic UUIDs to ensure consistency
+            // with TimerViewModel and ActivityLogViewModel
+            let categories = Category.defaultCategories(for: child.id)
             categoryCache = Dictionary(uniqueKeysWithValues: categories.map { ($0.id, $0) })
 
             // Load today's activities
@@ -167,9 +171,13 @@ class HomeViewModel: ObservableObject {
         let totalMinutes = Double(activities.reduce(0) { $0 + $1.durationMinutes })
         let categoryCount = Double(categoryMinutes.count)
 
-        guard categoryCount > 0 else { return 0 }
+        guard categoryCount > 0, totalMinutes > 0 else { return 0 }
 
         let averagePerCategory = totalMinutes / categoryCount
+
+        // Guard against zero average (shouldn't happen with totalMinutes > 0, but be safe)
+        guard averagePerCategory > 0 else { return 0 }
+
         let variance = categoryMinutes.values.reduce(0.0) { sum, minutes in
             let diff = Double(minutes) - averagePerCategory
             return sum + (diff * diff)
@@ -178,9 +186,17 @@ class HomeViewModel: ObservableObject {
         // Convert variance to a score (0-100)
         // Lower variance = higher score
         let maxVariance = averagePerCategory * averagePerCategory
-        let normalizedVariance = min(variance / maxVariance, 1.0)
-        let score = Int((1.0 - normalizedVariance) * 100)
 
+        // Guard against division by zero
+        guard maxVariance > 0 else { return 100 }
+
+        let normalizedVariance = min(variance / maxVariance, 1.0)
+
+        // Safely convert to Int, handling NaN/infinite values
+        let scoreDouble = (1.0 - normalizedVariance) * 100
+        guard scoreDouble.isFinite else { return 0 }
+
+        let score = Int(scoreDouble)
         return max(0, min(100, score))
     }
 

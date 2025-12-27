@@ -9,7 +9,17 @@ import SwiftUI
 
 /// Main home screen view displaying today's summary and quick actions.
 struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel: HomeViewModel
+    @StateObject private var activityLogViewModel: ActivityLogViewModel
+    @Binding var selectedTab: AppTab
+    let currentChild: Child
+
+    init(selectedTab: Binding<AppTab>, currentChild: Child) {
+        _selectedTab = selectedTab
+        self.currentChild = currentChild
+        _viewModel = StateObject(wrappedValue: HomeViewModel())
+        _activityLogViewModel = StateObject(wrappedValue: ActivityLogViewModel(child: currentChild))
+    }
 
     var body: some View {
         NavigationStack {
@@ -25,7 +35,7 @@ struct HomeView: View {
                             icon: "timer",
                             color: .blue
                         ) {
-                            viewModel.startTimerTapped()
+                            selectedTab = .timer
                         }
 
                         QuickActionButton(
@@ -45,15 +55,19 @@ struct HomeView: View {
             }
             .navigationTitle("FocusPal")
             .task {
-                await viewModel.loadData()
+                await viewModel.loadData(for: currentChild)
+                await activityLogViewModel.loadActivities()
             }
             .refreshable {
-                await viewModel.loadData()
+                await viewModel.loadData(for: currentChild)
+            }
+            .sheet(isPresented: $viewModel.showingQuickLog) {
+                QuickLogView(viewModel: activityLogViewModel)
             }
         }
     }
 }
 
 #Preview {
-    HomeView()
+    HomeView(selectedTab: .constant(.home), currentChild: Child(name: "Test", age: 8))
 }

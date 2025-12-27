@@ -63,20 +63,9 @@ final class OnboardingViewModelTests: XCTestCase {
         XCTAssertEqual(sut.currentStep, .createPIN)
     }
 
-    func testNextStep_FromCreatePIN_MovesToCreateProfile() {
+    func testNextStep_FromCreatePIN_MovesToPermissions() {
         // Given: View model on createPIN step
         sut.currentStep = .createPIN
-
-        // When: Moving to next step
-        sut.nextStep()
-
-        // Then: Should move to createProfile step
-        XCTAssertEqual(sut.currentStep, .createProfile)
-    }
-
-    func testNextStep_FromCreateProfile_MovesToPermissions() {
-        // Given: View model on createProfile step
-        sut.currentStep = .createProfile
 
         // When: Moving to next step
         sut.nextStep()
@@ -366,16 +355,16 @@ final class OnboardingViewModelTests: XCTestCase {
         XCTAssertTrue(sut.hasCompletedOnboarding)
     }
 
-    func testCompleteOnboarding_SavesProfile() async {
-        // Given: Valid profile data
+    func testCompleteOnboarding_DoesNotSaveProfile() {
+        // Given: Profile data (but we don't save during onboarding anymore)
         sut.childName = "Emma"
         sut.childAge = 10
 
         // When: Completing onboarding
-        await sut.completeOnboarding()
+        sut.completeOnboarding()
 
-        // Then: Profile should be saved
-        XCTAssertEqual(mockChildRepository.createCallCount, 1)
+        // Then: Profile should NOT be saved (children added via Parent Controls)
+        XCTAssertEqual(mockChildRepository.createCallCount, 0)
     }
 
     // MARK: - Integration Tests
@@ -389,31 +378,18 @@ final class OnboardingViewModelTests: XCTestCase {
         sut.nextStep()
         XCTAssertEqual(sut.currentStep, .createPIN)
 
-        // Step 2: Save PIN
+        // Step 2: Save PIN and move to permissions
         let pinSaved = await sut.savePIN("1234")
         XCTAssertTrue(pinSaved)
         sut.nextStep()
-        XCTAssertEqual(sut.currentStep, .createProfile)
-
-        // Step 3: Fill and save profile
-        sut.childName = "Emma"
-        sut.childAge = 10
-        sut.selectedAvatar = "star.circle.fill"
-        sut.selectedTheme = "pink"
-
-        let profileSaved = await sut.saveChildProfile()
-        XCTAssertTrue(profileSaved)
-        sut.nextStep()
         XCTAssertEqual(sut.currentStep, .permissions)
 
-        // Step 4: Complete onboarding
-        await sut.completeOnboarding()
+        // Step 3: Complete onboarding
+        sut.completeOnboarding()
 
         // Then: Verify complete state
         XCTAssertTrue(sut.hasCompletedOnboarding)
         XCTAssertEqual(mockPINService.savedPin, "1234")
-        XCTAssertEqual(mockChildRepository.createdChild?.name, "Emma")
-        XCTAssertEqual(mockChildRepository.createdChild?.age, 10)
         XCTAssertNil(sut.errorMessage)
     }
 
@@ -422,9 +398,6 @@ final class OnboardingViewModelTests: XCTestCase {
         sut.currentStep = .permissions
 
         // When: Navigating back through steps
-        sut.previousStep()
-        XCTAssertEqual(sut.currentStep, .createProfile)
-
         sut.previousStep()
         XCTAssertEqual(sut.currentStep, .createPIN)
 
