@@ -13,11 +13,11 @@ import XCTest
 final class PINChangeViewModelTests: XCTestCase {
 
     var sut: PINChangeViewModel!
-    var mockPinService: MockPINService!
+    var mockPinService: SharedMockPINService!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        mockPinService = MockPINService()
+        mockPinService = SharedMockPINService()
         mockPinService.isPinSetValue = true
         try? mockPinService.savePin(pin: "1234")
         mockPinService.verifyPinReturnValue = true

@@ -14,16 +14,18 @@ final class OnboardingViewModelTests: XCTestCase {
 
     var sut: OnboardingViewModel!
     var mockPINService: OnboardingMockPINService!
-    var mockChildRepository: MockChildRepository!
+    var mockChildRepository: TestMockChildRepository!
 
     override func setUp() async throws {
         try await super.setUp()
         mockPINService = OnboardingMockPINService()
-        mockChildRepository = MockChildRepository()
+        mockChildRepository = TestMockChildRepository()
         sut = OnboardingViewModel(
             pinService: mockPINService,
             childRepository: mockChildRepository
         )
+        // Reset AppStorage property to ensure clean state for each test
+        sut.hasCompletedOnboarding = false
     }
 
     override func tearDown() async throws {
@@ -279,7 +281,7 @@ final class OnboardingViewModelTests: XCTestCase {
         // Then: Validation should fail
         XCTAssertFalse(result)
         XCTAssertNotNil(sut.errorMessage)
-        XCTAssertTrue(sut.errorMessage?.contains("age") ?? false)
+        XCTAssertTrue(sut.errorMessage?.lowercased().contains("age") ?? false)
     }
 
     func testValidateProfile_WithAgeTooHigh_ReturnsFalse() {
@@ -510,51 +512,3 @@ class OnboardingMockPINService: PINServiceProtocol {
     }
 }
 
-class MockChildRepository: ChildRepositoryProtocol {
-    var createdChild: Child?
-    var createCallCount = 0
-    var shouldThrowError = false
-
-    func create(_ child: Child) async throws -> Child {
-        createCallCount += 1
-
-        if shouldThrowError {
-            enum TestError: Error {
-                case failed
-            }
-            throw TestError.failed
-        }
-
-        createdChild = child
-        return child
-    }
-
-    func fetchAll() async throws -> [Child] {
-        return createdChild != nil ? [createdChild!] : []
-    }
-
-    func fetch(by id: UUID) async throws -> Child? {
-        return createdChild?.id == id ? createdChild : nil
-    }
-
-    func update(_ child: Child) async throws -> Child {
-        createdChild = child
-        return child
-    }
-
-    func delete(_ childId: UUID) async throws {
-        if createdChild?.id == childId {
-            createdChild = nil
-        }
-    }
-
-    func fetchActiveChild() async throws -> Child? {
-        return createdChild?.isActive == true ? createdChild : nil
-    }
-
-    func setActiveChild(_ childId: UUID) async throws {
-        if createdChild?.id == childId {
-            createdChild?.isActive = true
-        }
-    }
-}

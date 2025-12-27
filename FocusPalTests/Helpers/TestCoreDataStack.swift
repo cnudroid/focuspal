@@ -48,14 +48,22 @@ final class TestCoreDataStack {
         let entities = persistentContainer.managedObjectModel.entities
         for entity in entities {
             guard let entityName = entity.name else { continue }
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
 
             do {
-                try viewContext.execute(deleteRequest)
+                let objects = try viewContext.fetch(fetchRequest)
+                for object in objects {
+                    viewContext.delete(object)
+                }
             } catch {
                 print("Failed to clear \(entityName): \(error)")
             }
+        }
+
+        do {
+            try viewContext.save()
+        } catch {
+            print("Failed to save after clearing: \(error)")
         }
 
         viewContext.reset()

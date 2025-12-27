@@ -13,11 +13,11 @@ import XCTest
 final class ParentAuthViewModelTests: XCTestCase {
 
     var sut: ParentAuthViewModel!
-    var mockPinService: MockPINService!
+    var mockPinService: SharedMockPINService!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        mockPinService = MockPINService()
+        mockPinService = SharedMockPINService()
         sut = ParentAuthViewModel(pinService: mockPinService)
     }
 
@@ -293,36 +293,3 @@ final class ParentAuthViewModelTests: XCTestCase {
     }
 }
 
-// MARK: - Mock PINService
-
-class MockPINService: PINServiceProtocol {
-    var isPinSetValue = false
-    var verifyPinReturnValue = false
-    var verifyPinCalled = false
-    var savePinCalled = false
-    var savedPin: String?
-    var shouldThrowError = false
-
-    func isPinSet() -> Bool {
-        return isPinSetValue
-    }
-
-    func savePin(pin: String) throws {
-        if shouldThrowError {
-            throw PINServiceError.keychainError(status: -1)
-        }
-        savePinCalled = true
-        savedPin = pin
-        isPinSetValue = true
-    }
-
-    func verifyPin(pin: String) -> Bool {
-        verifyPinCalled = true
-        return verifyPinReturnValue
-    }
-
-    func resetPin() {
-        isPinSetValue = false
-        savedPin = nil
-    }
-}

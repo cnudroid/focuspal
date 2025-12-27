@@ -14,11 +14,11 @@ import SwiftUI
 final class PINSetupViewModelTests: XCTestCase {
 
     var sut: PINSetupViewModel!
-    var mockPinService: MockPINService!
+    var mockPinService: SharedMockPINService!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        mockPinService = MockPINService()
+        mockPinService = SharedMockPINService()
         sut = PINSetupViewModel(pinService: mockPinService)
     }
 
