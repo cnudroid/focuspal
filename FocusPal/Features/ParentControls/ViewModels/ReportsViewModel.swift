@@ -16,7 +16,7 @@ class ReportsViewModel: ObservableObject {
 
     @Published var selectedChild: Child?
     @Published var selectedDateRange: DateRange = .week
-    @Published var weeklySummary: WeeklySummary?
+    @Published var weeklySummary: AnalyticsWeeklySummary?
     @Published var categoryBreakdown: [CategoryBreakdownItem] = []
     @Published var dailyBreakdown: [DailyBreakdownItem] = []
     @Published var balanceInsights: BalanceScore?
@@ -137,7 +137,7 @@ class ReportsViewModel: ObservableObject {
         }
     }
 
-    private func loadWeeklySummary(for child: Child?, in dateRange: DateInterval) async throws -> WeeklySummary {
+    private func loadWeeklySummary(for child: Child?, in dateRange: DateInterval) async throws -> AnalyticsWeeklySummary {
         return try await analyticsService.calculateWeeklySummary(for: child, weekOf: dateRange.start)
     }
 

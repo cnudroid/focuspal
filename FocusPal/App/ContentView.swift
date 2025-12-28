@@ -88,6 +88,7 @@ enum AppTab: Hashable {
     case timer
     case log
     case stats
+    case rewards
 }
 
 /// Main tab view for the primary app navigation
@@ -107,6 +108,7 @@ struct MainTabView: View {
             TimerView(
                 timerManager: serviceContainer.multiChildTimerManager,
                 activityService: serviceContainer.activityService,
+                pointsService: serviceContainer.pointsService,
                 currentChild: currentChild
             )
                 .id(currentChild.id)  // Force recreation when child changes
@@ -128,6 +130,15 @@ struct MainTabView: View {
                     Label("Stats", systemImage: "chart.bar.fill")
                 }
                 .tag(AppTab.stats)
+
+            RewardsView(
+                rewardsService: serviceContainer.rewardsService,
+                currentChild: currentChild
+            )
+                .tabItem {
+                    Label("Rewards", systemImage: "trophy.fill")
+                }
+                .tag(AppTab.rewards)
         }
     }
 }

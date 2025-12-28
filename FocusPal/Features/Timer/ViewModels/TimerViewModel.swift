@@ -40,16 +40,22 @@ class TimerViewModel: ObservableObject {
 
     private let timerManager: MultiChildTimerManager
     private let activityService: ActivityServiceProtocol
+    private let pointsService: PointsServiceProtocol?
     private let audioService = TimerAudioService()
     private var cancellables = Set<AnyCancellable>()
     private var updateTimer: Timer?
     private let currentChild: Child
+
+    // MARK: - Points Tracking
+
+    private var consecutiveIncompleteCount: Int = 0
 
     // MARK: - Initialization
 
     init(
         timerManager: MultiChildTimerManager? = nil,
         activityService: ActivityServiceProtocol? = nil,
+        pointsService: PointsServiceProtocol? = nil,
         currentChild: Child? = nil
     ) {
         // Use real services by default
@@ -61,6 +67,7 @@ class TimerViewModel: ObservableObject {
 
         self.timerManager = manager
         self.activityService = activityService ?? ActivityService(repository: activityRepo)
+        self.pointsService = pointsService
         self.currentChild = child
 
         // Check for existing timer state BEFORE setting initial values
@@ -293,7 +300,7 @@ class TimerViewModel: ObservableObject {
 
         // Get current state for logging - marked as complete since user said they finished
         if let state = timerManager.timerState(for: currentChild.id) {
-            logCompletedActivity(state: state, isComplete: true)
+            logCompletedActivity(state: state, isComplete: true, checkEarlyBonus: true)
         }
 
         timerManager.stopTimer(for: currentChild.id)
@@ -333,7 +340,7 @@ class TimerViewModel: ObservableObject {
 
     // MARK: - Private Methods
 
-    private func logCompletedActivity(state: ChildTimerState, isComplete: Bool) {
+    private func logCompletedActivity(state: ChildTimerState, isComplete: Bool, checkEarlyBonus: Bool = false) {
         let duration = state.elapsedTime
         let category = categories.first { $0.id == state.categoryId }
 
@@ -359,6 +366,15 @@ class TimerViewModel: ObservableObject {
                     isComplete: isComplete
                 )
                 print("✅ Activity logged successfully: \(activity.id)")
+
+                // Handle points if service is available
+                await handlePointsForActivity(
+                    activityId: activity.id,
+                    isComplete: isComplete,
+                    elapsedTime: duration,
+                    recommendedDuration: category.recommendedDuration,
+                    checkEarlyBonus: checkEarlyBonus
+                )
             } catch {
                 print("❌ Failed to log activity: \(error)")
             }
@@ -379,6 +395,80 @@ class TimerViewModel: ObservableObject {
         guard timeAdded > 0 else { return "" }
         let minutes = Int(timeAdded / 60)
         return "+\(minutes) min"
+    }
+
+    // MARK: - Points Management
+
+    /// Handle points awarding/deduction for an activity
+    private func handlePointsForActivity(
+        activityId: UUID,
+        isComplete: Bool,
+        elapsedTime: TimeInterval,
+        recommendedDuration: TimeInterval,
+        checkEarlyBonus: Bool = false
+    ) async {
+        // Skip if points service is not available
+        guard let pointsService = pointsService else {
+            print("⚠️ Points service not available, skipping points handling")
+            return
+        }
+
+        do {
+            if isComplete {
+                // Award points for completing the activity
+                try await pointsService.awardPoints(
+                    childId: currentChild.id,
+                    amount: 10,
+                    reason: .activityComplete,
+                    activityId: activityId
+                )
+                print("✅ Awarded 10 points for activity completion")
+
+                // Reset consecutive incomplete counter on success
+                consecutiveIncompleteCount = 0
+
+                // Check for early finish bonus if requested
+                if checkEarlyBonus {
+                    let percentageCompleted = elapsedTime / recommendedDuration
+                    if percentageCompleted < 0.8 {
+                        try await pointsService.awardPoints(
+                            childId: currentChild.id,
+                            amount: 5,
+                            reason: .earlyFinishBonus,
+                            activityId: activityId
+                        )
+                        print("🎉 Awarded 5 bonus points for early finish!")
+                    }
+                }
+            } else {
+                // Deduct points for incomplete activity
+                try await pointsService.deductPoints(
+                    childId: currentChild.id,
+                    amount: 5,
+                    reason: .activityIncomplete
+                )
+                print("⚠️ Deducted 5 points for incomplete activity")
+
+                // Track consecutive incomplete activities
+                consecutiveIncompleteCount += 1
+
+                // Apply three-strike penalty if applicable
+                if consecutiveIncompleteCount >= 3 {
+                    try await pointsService.deductPoints(
+                        childId: currentChild.id,
+                        amount: 15,
+                        reason: .threeStrikePenalty
+                    )
+                    print("❌ Applied 15-point three-strike penalty")
+
+                    // Reset counter after applying penalty
+                    consecutiveIncompleteCount = 0
+                }
+            }
+        } catch {
+            print("❌ Failed to handle points: \(error)")
+            // Continue gracefully - don't let points errors break the app
+        }
     }
 }
 

@@ -12,6 +12,7 @@ struct AchievementCard: View {
     let name: String
     let description: String
     let icon: String
+    let emoji: String
     let isUnlocked: Bool
     let progress: Double?
     let unlockedDate: Date?
@@ -20,6 +21,7 @@ struct AchievementCard: View {
         name: String,
         description: String,
         icon: String,
+        emoji: String = "",
         isUnlocked: Bool,
         progress: Double? = nil,
         unlockedDate: Date? = nil
@@ -27,6 +29,7 @@ struct AchievementCard: View {
         self.name = name
         self.description = description
         self.icon = icon
+        self.emoji = emoji
         self.isUnlocked = isUnlocked
         self.progress = progress
         self.unlockedDate = unlockedDate
@@ -44,9 +47,15 @@ struct AchievementCard: View {
                     )
                     .frame(width: 56, height: 56)
 
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundColor(isUnlocked ? .white : .secondary)
+                if !emoji.isEmpty {
+                    Text(emoji)
+                        .font(.title)
+                        .opacity(isUnlocked ? 1.0 : 0.5)
+                } else {
+                    Image(systemName: icon)
+                        .font(.title2)
+                        .foregroundColor(isUnlocked ? .white : .secondary)
+                }
             }
 
             // Info
@@ -95,6 +104,7 @@ struct AchievementCard: View {
             name: "First Timer",
             description: "Complete your first timed activity",
             icon: "star.fill",
+            emoji: "🎯",
             isUnlocked: true,
             unlockedDate: Date()
         )
@@ -103,6 +113,7 @@ struct AchievementCard: View {
             name: "3-Day Streak",
             description: "Log activities for 3 days in a row",
             icon: "flame.fill",
+            emoji: "🔥",
             isUnlocked: false,
             progress: 66
         )

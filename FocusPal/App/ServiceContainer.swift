@@ -36,6 +36,18 @@ class ServiceContainer: ObservableObject {
         CoreDataTimeGoalRepository(context: PersistenceController.shared.container.viewContext)
     }()
 
+    lazy var pointsRepository: PointsRepositoryProtocol = {
+        CoreDataPointsRepository(context: PersistenceController.shared.container.viewContext)
+    }()
+
+    lazy var rewardsRepository: RewardsRepositoryProtocol = {
+        CoreDataRewardsRepository(context: PersistenceController.shared.container.viewContext)
+    }()
+
+    lazy var parentRepository: ParentRepositoryProtocol = {
+        CoreDataParentRepository(context: PersistenceController.shared.container.viewContext)
+    }()
+
     // MARK: - Services
 
     lazy var timerService: TimerServiceProtocol = {
@@ -77,9 +89,54 @@ class ServiceContainer: ObservableObject {
         AchievementService(repository: achievementRepository)
     }()
 
+    lazy var pointsService: PointsServiceProtocol = {
+        PointsService(repository: pointsRepository)
+    }()
+
+    lazy var rewardsService: RewardsServiceProtocol = {
+        RewardsService(repository: rewardsRepository)
+    }()
+
+    lazy var weeklySummaryService: WeeklySummaryService = {
+        WeeklySummaryService(
+            activityRepository: activityRepository,
+            childRepository: childRepository,
+            categoryRepository: categoryRepository,
+            pointsRepository: pointsRepository,
+            rewardsRepository: rewardsRepository,
+            achievementRepository: achievementRepository
+        )
+    }()
+
+    lazy var emailService: EmailService = {
+        EmailService()
+    }()
+
+    lazy var emailContentBuilder: EmailContentBuilder = {
+        EmailContentBuilder()
+    }()
+
+    lazy var weeklyEmailScheduler: WeeklyEmailScheduler = {
+        WeeklyEmailScheduler(
+            summaryService: weeklySummaryService,
+            contentBuilder: emailContentBuilder,
+            emailService: emailService,
+            parentRepository: parentRepository
+        )
+    }()
+
     // MARK: - Initialization
 
     init() {
         // Additional setup can be performed here
+    }
+
+    // MARK: - App Lifecycle
+
+    /// Call this on app launch to check and send weekly emails if due
+    func checkWeeklyEmailOnLaunch() {
+        Task {
+            await weeklyEmailScheduler.checkAndSendIfDue()
+        }
     }
 }

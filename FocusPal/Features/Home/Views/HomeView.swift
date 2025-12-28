@@ -25,6 +25,21 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
+                    // Points display card at the top
+                    PointsDisplayCard(
+                        points: viewModel.todayPoints,
+                        trend: viewModel.pointsTrend
+                    ) {
+                        viewModel.pointsDetailTapped()
+                    }
+                    .padding(.horizontal)
+
+                    // Weekly progress card
+                    WeeklyProgressCard(weeklyPoints: viewModel.weeklyPoints) {
+                        viewModel.pointsDetailTapped()
+                    }
+                    .padding(.horizontal)
+
                     // Quick stats section
                     QuickStatsCard(stats: viewModel.todayStats)
 
@@ -56,10 +71,12 @@ struct HomeView: View {
             .navigationTitle("FocusPal")
             .task {
                 await viewModel.loadData(for: currentChild)
+                await viewModel.loadPoints()
                 await activityLogViewModel.loadActivities()
             }
             .refreshable {
                 await viewModel.loadData(for: currentChild)
+                await viewModel.loadPoints()
             }
             .sheet(isPresented: $viewModel.showingQuickLog) {
                 QuickLogView(viewModel: activityLogViewModel)

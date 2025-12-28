@@ -16,6 +16,7 @@ struct ParentControlsView: View {
     @State private var showCategories = false
     @State private var showReports = false
     @State private var showPINChange = false
+    @State private var showParentProfilePrompt = false
     var onAddChild: (() -> Void)?
 
     var body: some View {
@@ -126,6 +127,7 @@ struct ParentControlsView: View {
             }
             .task {
                 await viewModel.loadChildren()
+                await checkAndShowParentProfilePrompt()
             }
             // All sub-views presented as sheets
             .sheet(isPresented: $viewModel.showAddChild) {
@@ -165,6 +167,32 @@ struct ParentControlsView: View {
             .sheet(isPresented: $showPINChange) {
                 PINChangeSheetView()
             }
+            .sheet(isPresented: $showParentProfilePrompt) {
+                ParentProfilePromptView(onComplete: {
+                    Task {
+                        await viewModel.checkParentProfile()
+                    }
+                })
+            }
+        }
+    }
+
+    // MARK: - Helper Methods
+
+    /// Checks if parent profile exists and shows prompt if needed
+    private func checkAndShowParentProfilePrompt() async {
+        // Don't show if we've already shown it and user skipped
+        let hasShownPrompt = UserDefaults.standard.bool(forKey: "hasShownParentProfilePrompt")
+        if hasShownPrompt {
+            return
+        }
+
+        // Check if parent profile exists
+        await viewModel.checkParentProfile()
+
+        // Show prompt if no parent profile exists
+        if !viewModel.hasParentProfile {
+            showParentProfilePrompt = true
         }
     }
 }

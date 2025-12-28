@@ -13,7 +13,11 @@
         <relationship name="achievements" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AchievementEntity" inverseName="child" inverseEntity="AchievementEntity"/>
         <relationship name="activities" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActivityEntity" inverseName="child" inverseEntity="ActivityEntity"/>
         <relationship name="categories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CategoryEntity" inverseName="child" inverseEntity="CategoryEntity"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ParentEntity" inverseName="children" inverseEntity="ParentEntity"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ChildPointsEntity" inverseName="child" inverseEntity="ChildPointsEntity"/>
         <relationship name="timeGoals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TimeGoalEntity" inverseName="child" inverseEntity="TimeGoalEntity"/>
+        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PointsTransactionEntity" inverseName="child" inverseEntity="PointsTransactionEntity"/>
+        <relationship name="weeklyRewards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WeeklyRewardEntity" inverseName="child" inverseEntity="WeeklyRewardEntity"/>
     </entity>
     <entity name="ActivityEntity" representedClassName="ActivityEntity" syncable="YES" codeGenerationType="class">
         <attribute name="categoryId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -62,5 +66,42 @@
         <attribute name="targetValue" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="unlockedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="child" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ChildEntity" inverseName="achievements" inverseEntity="ChildEntity"/>
+    </entity>
+    <entity name="ChildPointsEntity" representedClassName="ChildPointsEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="bonusPoints" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="childId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="pointsDeducted" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pointsEarned" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="child" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ChildEntity" inverseName="points" inverseEntity="ChildEntity"/>
+    </entity>
+    <entity name="PointsTransactionEntity" representedClassName="PointsTransactionEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="activityId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="amount" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="childId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="reason" attributeType="String" defaultValueString=""/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="child" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ChildEntity" inverseName="transactions" inverseEntity="ChildEntity"/>
+    </entity>
+    <entity name="WeeklyRewardEntity" representedClassName="WeeklyRewardEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isRedeemed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="redeemedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="tierRaw" optional="YES" attributeType="String"/>
+        <attribute name="totalPoints" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="weekEndDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="weekStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="child" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ChildEntity" inverseName="weeklyRewards" inverseEntity="ChildEntity"/>
+    </entity>
+    <entity name="ParentEntity" representedClassName="ParentEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="email" attributeType="String" defaultValueString=""/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastLoginDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String" defaultValueString=""/>
+        <attribute name="notificationPreferencesData" optional="YES" attributeType="Binary"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChildEntity" inverseName="parent" inverseEntity="ChildEntity"/>
     </entity>
 </model>

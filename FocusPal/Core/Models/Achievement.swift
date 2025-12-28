@@ -91,6 +91,19 @@ enum AchievementType: String, CaseIterable {
         }
     }
 
+    var emoji: String {
+        switch self {
+        case .firstTimer: return "🎯"
+        case .streak3Day: return "🔥"
+        case .streak7Day: return "⚔️"
+        case .streak30Day: return "👑"
+        case .homeworkHero: return "📚"
+        case .readingChampion: return "📖"
+        case .balanceMaster: return "⚖️"
+        case .earlyBird: return "🌅"
+        }
+    }
+
     var targetValue: Int {
         switch self {
         case .streak3Day: return 3

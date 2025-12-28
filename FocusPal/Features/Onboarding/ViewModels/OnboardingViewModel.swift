@@ -21,10 +21,16 @@ class OnboardingViewModel: ObservableObject {
     @Published var selectedTheme = "blue"
     @Published var errorMessage: String?
 
+    // Parent profile properties
+    @Published var parentName = ""
+    @Published var parentEmail = ""
+    @Published var weeklyEmailEnabled = true
+
     // MARK: - Dependencies
 
     private let pinService: PINServiceProtocol
     private let childRepository: ChildRepositoryProtocol
+    private let parentRepository: ParentRepositoryProtocol
 
     // MARK: - App Storage
 
@@ -40,10 +46,12 @@ class OnboardingViewModel: ObservableObject {
 
     init(
         pinService: PINServiceProtocol = PINService(),
-        childRepository: ChildRepositoryProtocol
+        childRepository: ChildRepositoryProtocol,
+        parentRepository: ParentRepositoryProtocol
     ) {
         self.pinService = pinService
         self.childRepository = childRepository
+        self.parentRepository = parentRepository
     }
 
     // MARK: - Navigation
@@ -121,6 +129,73 @@ class OnboardingViewModel: ObservableObject {
     }
 
     // MARK: - Profile Management
+
+    /// Validate parent profile data
+    /// - Returns: true if profile data is valid, false otherwise
+    func validateParentProfile() -> Bool {
+        clearError()
+
+        // Validate name
+        let trimmedName = parentName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else {
+            errorMessage = "Please enter your name"
+            return false
+        }
+
+        // Validate email
+        let trimmedEmail = parentEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedEmail.isEmpty else {
+            errorMessage = "Please enter your email"
+            return false
+        }
+
+        guard isValidEmail(trimmedEmail) else {
+            errorMessage = "Please enter a valid email address"
+            return false
+        }
+
+        return true
+    }
+
+    /// Validate email format using regex
+    /// - Parameter email: The email to validate
+    /// - Returns: true if email format is valid, false otherwise
+    func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
+    }
+
+    /// Save parent profile to repository
+    /// - Returns: true if save succeeded, false otherwise
+    func saveParentProfile() async -> Bool {
+        // Validate first
+        guard validateParentProfile() else {
+            return false
+        }
+
+        let preferences = ParentNotificationPreferences(
+            weeklyEmailEnabled: weeklyEmailEnabled,
+            weeklyEmailDay: 1,
+            weeklyEmailTime: 9,
+            achievementAlertsEnabled: true
+        )
+
+        let parent = Parent(
+            name: parentName.trimmingCharacters(in: .whitespacesAndNewlines),
+            email: parentEmail.trimmingCharacters(in: .whitespacesAndNewlines),
+            notificationPreferences: preferences
+        )
+
+        do {
+            _ = try await parentRepository.create(parent)
+            clearError()
+            return true
+        } catch {
+            errorMessage = "Failed to save parent profile: \(error.localizedDescription)"
+            return false
+        }
+    }
 
     /// Validate child profile data
     /// - Returns: true if profile data is valid, false otherwise

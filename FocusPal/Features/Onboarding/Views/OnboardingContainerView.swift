@@ -11,18 +11,30 @@ import SwiftUI
 struct OnboardingContainerView: View {
     @StateObject private var viewModel: OnboardingViewModel
 
-    init(childRepository: ChildRepositoryProtocol? = nil) {
-        // Use real CoreData repository by default
-        let repository = childRepository ?? CoreDataChildRepository(
+    init(childRepository: ChildRepositoryProtocol? = nil, parentRepository: ParentRepositoryProtocol? = nil) {
+        // Use real CoreData repositories by default
+        let childRepo = childRepository ?? CoreDataChildRepository(
             context: PersistenceController.shared.container.viewContext
         )
-        _viewModel = StateObject(wrappedValue: OnboardingViewModel(childRepository: repository))
+        let parentRepo = parentRepository ?? CoreDataParentRepository(
+            context: PersistenceController.shared.container.viewContext
+        )
+        _viewModel = StateObject(wrappedValue: OnboardingViewModel(
+            childRepository: childRepo,
+            parentRepository: parentRepo
+        ))
     }
 
     var body: some View {
         TabView(selection: $viewModel.currentStep) {
             WelcomeView(onContinue: viewModel.nextStep)
                 .tag(OnboardingStep.welcome)
+
+            ParentProfileView(
+                viewModel: viewModel,
+                onComplete: viewModel.nextStep
+            )
+            .tag(OnboardingStep.parentProfile)
 
             CreatePINView(
                 viewModel: viewModel,
@@ -43,8 +55,9 @@ struct OnboardingContainerView: View {
 /// Onboarding steps
 enum OnboardingStep: Int, CaseIterable {
     case welcome = 0
-    case createPIN = 1
-    case permissions = 2
+    case parentProfile = 1
+    case createPIN = 2
+    case permissions = 3
 }
 
 #Preview {

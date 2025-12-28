@@ -15,6 +15,7 @@ class MockAchievementRepository: AchievementRepositoryProtocol {
 
     private var achievements: [UUID: Achievement] = [:]
     private let queue = DispatchQueue(label: "com.focuspal.mockachievementrepository")
+    var achievementsToReturn: [Achievement] = []
 
     // MARK: - AchievementRepositoryProtocol
 
@@ -72,10 +73,18 @@ class MockAchievementRepository: AchievementRepositoryProtocol {
     func fetchUnlocked(for childId: UUID) async throws -> [Achievement] {
         return await withCheckedContinuation { continuation in
             queue.async {
-                let unlocked = self.achievements.values.filter {
-                    $0.childId == childId && $0.isUnlocked
+                // If achievementsToReturn is set, use that; otherwise use achievements dict
+                if !self.achievementsToReturn.isEmpty {
+                    let filtered = self.achievementsToReturn.filter {
+                        $0.childId == childId && $0.isUnlocked
+                    }
+                    continuation.resume(returning: filtered)
+                } else {
+                    let unlocked = self.achievements.values.filter {
+                        $0.childId == childId && $0.isUnlocked
+                    }
+                    continuation.resume(returning: Array(unlocked))
                 }
-                continuation.resume(returning: Array(unlocked))
             }
         }
     }

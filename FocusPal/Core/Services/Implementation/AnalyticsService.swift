@@ -26,7 +26,7 @@ class AnalyticsService: AnalyticsServiceProtocol {
     // MARK: - Analytics Methods
 
     /// Calculate weekly summary for a child or all children
-    func calculateWeeklySummary(for child: Child?, weekOf date: Date) async throws -> WeeklySummary {
+    func calculateWeeklySummary(for child: Child?, weekOf date: Date) async throws -> AnalyticsWeeklySummary {
         let calendar = Calendar.current
         let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date))!
         let weekEnd = calendar.date(byAdding: .day, value: 7, to: weekStart)!
@@ -44,7 +44,7 @@ class AnalyticsService: AnalyticsServiceProtocol {
         let totalMinutes = activities.reduce(0) { $0 + $1.durationMinutes }
         let activityDays = Set(activities.map { calendar.startOfDay(for: $0.startTime) }).count
 
-        return WeeklySummary(
+        return AnalyticsWeeklySummary(
             weekStart: weekStart,
             totalMinutes: totalMinutes,
             activityCount: activities.count,
@@ -186,8 +186,8 @@ class AnalyticsService: AnalyticsServiceProtocol {
     }
 }
 
-/// Weekly summary data structure
-struct WeeklySummary {
+/// Weekly summary data structure for analytics
+struct AnalyticsWeeklySummary {
     let weekStart: Date
     let totalMinutes: Int
     let activityCount: Int

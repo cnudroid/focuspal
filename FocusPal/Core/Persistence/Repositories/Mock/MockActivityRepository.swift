@@ -14,6 +14,7 @@ class MockActivityRepository: ActivityRepositoryProtocol {
 
     var mockActivities: [Activity] = []
     var mockError: Error?
+    var activitiesToReturn: [Activity] = []
 
     // MARK: - ActivityRepositoryProtocol
 
@@ -25,7 +26,9 @@ class MockActivityRepository: ActivityRepositoryProtocol {
 
     func fetch(for childId: UUID, dateRange: DateInterval) async throws -> [Activity] {
         if let error = mockError { throw error }
-        return mockActivities.filter { activity in
+        // If activitiesToReturn is set, use that; otherwise use mockActivities
+        let source = activitiesToReturn.isEmpty ? mockActivities : activitiesToReturn
+        return source.filter { activity in
             activity.childId == childId &&
             activity.startTime >= dateRange.start &&
             activity.endTime <= dateRange.end

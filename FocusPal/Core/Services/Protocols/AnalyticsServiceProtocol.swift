@@ -11,7 +11,7 @@ import Foundation
 /// Provides analytics calculations and insights.
 protocol AnalyticsServiceProtocol {
     /// Calculate weekly summary for a child
-    func calculateWeeklySummary(for child: Child?, weekOf date: Date) async throws -> WeeklySummary
+    func calculateWeeklySummary(for child: Child?, weekOf date: Date) async throws -> AnalyticsWeeklySummary
 
     /// Calculate balance score based on activity distribution
     func calculateBalanceScore(for child: Child?, in dateRange: DateInterval) async throws -> BalanceScore

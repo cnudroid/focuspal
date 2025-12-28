@@ -173,7 +173,10 @@ struct NumberPadButton: View {
 
 #Preview {
     CreatePINView(
-        viewModel: OnboardingViewModel(childRepository: MockChildRepository()),
+        viewModel: OnboardingViewModel(
+            childRepository: MockChildRepository(),
+            parentRepository: MockParentRepository()
+        ),
         onComplete: { }
     )
 }

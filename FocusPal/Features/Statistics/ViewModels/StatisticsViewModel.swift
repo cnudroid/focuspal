@@ -170,6 +170,7 @@ class StatisticsViewModel: ObservableObject {
                 name: type.name,
                 description: type.description,
                 iconName: type.iconName,
+                emoji: type.emoji,
                 isUnlocked: isUnlocked,
                 progress: progress,
                 unlockedDate: isUnlocked ? Date() : nil

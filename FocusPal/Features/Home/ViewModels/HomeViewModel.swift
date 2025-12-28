@@ -25,14 +25,22 @@ class HomeViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
+    // Points-related properties
+    @Published var todayPoints: ChildPoints?
+    @Published var weeklyPoints: Int = 0
+    @Published var pointsTrend: PointsTrend = .neutral
+    @Published var recentTransactions: [PointsTransaction] = []
+
     // Navigation state
     @Published var shouldNavigateToTimer = false
     @Published var showingQuickLog = false
+    @Published var showingPointsDetail = false
 
     // MARK: - Dependencies
 
     private let activityService: ActivityServiceProtocol
     private let categoryService: CategoryServiceProtocol
+    private var pointsService: PointsServiceProtocol?
     private var cancellables = Set<AnyCancellable>()
     private var categoryCache: [UUID: Category] = [:]
 
@@ -60,7 +68,8 @@ class HomeViewModel: ObservableObject {
 
     init(
         activityService: ActivityServiceProtocol? = nil,
-        categoryService: CategoryServiceProtocol? = nil
+        categoryService: CategoryServiceProtocol? = nil,
+        pointsService: PointsServiceProtocol? = nil
     ) {
         // Use real services with CoreData repositories by default
         let activityRepo = CoreDataActivityRepository(context: PersistenceController.shared.container.viewContext)
@@ -68,6 +77,7 @@ class HomeViewModel: ObservableObject {
 
         self.activityService = activityService ?? ActivityService(repository: activityRepo)
         self.categoryService = categoryService ?? CategoryService(repository: categoryRepo)
+        self.pointsService = pointsService
     }
 
     // MARK: - Public Methods
@@ -140,6 +150,65 @@ class HomeViewModel: ObservableObject {
     func resetNavigation() {
         shouldNavigateToTimer = false
         showingQuickLog = false
+        showingPointsDetail = false
+    }
+
+    func pointsDetailTapped() {
+        showingPointsDetail = true
+    }
+
+    /// Load points data for the current child
+    /// Handles nil pointsService gracefully (service may not be initialized yet)
+    func loadPoints() async {
+        guard let child = currentChild else { return }
+
+        // Handle nil pointsService gracefully - service may not be implemented yet
+        guard let pointsService = pointsService else {
+            // Set default values when service is not available
+            todayPoints = nil
+            weeklyPoints = 0
+            pointsTrend = .neutral
+            recentTransactions = []
+            return
+        }
+
+        do {
+            // Load today's points
+            let points = try await pointsService.getTodayPoints(for: child.id)
+            todayPoints = points
+
+            // Load weekly points
+            weeklyPoints = try await pointsService.getWeeklyPoints(for: child.id)
+
+            // Load recent transactions to determine trend
+            recentTransactions = try await pointsService.getTransactionHistory(for: child.id, limit: 5)
+
+            // Determine trend based on recent transactions
+            pointsTrend = determineTrend(from: recentTransactions)
+
+        } catch {
+            // Handle errors gracefully - don't crash, just use default values
+            todayPoints = nil
+            weeklyPoints = 0
+            pointsTrend = .neutral
+            recentTransactions = []
+        }
+    }
+
+    /// Determine points trend based on recent transactions
+    private func determineTrend(from transactions: [PointsTransaction]) -> PointsTrend {
+        guard !transactions.isEmpty else { return .neutral }
+
+        // Look at the net of recent transactions
+        let netPoints = transactions.reduce(0) { $0 + $1.amount }
+
+        if netPoints > 0 {
+            return .up
+        } else if netPoints < 0 {
+            return .down
+        } else {
+            return .neutral
+        }
     }
 
     // MARK: - Private Methods

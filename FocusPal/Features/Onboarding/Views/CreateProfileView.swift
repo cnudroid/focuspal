@@ -161,7 +161,10 @@ struct CreateProfileView: View {
 
 #Preview {
     CreateProfileView(
-        viewModel: OnboardingViewModel(childRepository: MockChildRepository()),
+        viewModel: OnboardingViewModel(
+            childRepository: MockChildRepository(),
+            parentRepository: MockParentRepository()
+        ),
         onComplete: { }
     )
 }

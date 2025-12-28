@@ -15,6 +15,7 @@ class MockChildRepository: ChildRepositoryProtocol {
     var mockChildren: [Child] = []
     var mockError: Error?
     var activeChildId: UUID?
+    var childrenToReturn: [Child] = []
 
     // MARK: - ChildRepositoryProtocol
 
@@ -26,12 +27,13 @@ class MockChildRepository: ChildRepositoryProtocol {
 
     func fetchAll() async throws -> [Child] {
         if let error = mockError { throw error }
-        return mockChildren
+        return childrenToReturn.isEmpty ? mockChildren : childrenToReturn
     }
 
     func fetch(by id: UUID) async throws -> Child? {
         if let error = mockError { throw error }
-        return mockChildren.first { $0.id == id }
+        let source = childrenToReturn.isEmpty ? mockChildren : childrenToReturn
+        return source.first { $0.id == id }
     }
 
     func update(_ child: Child) async throws -> Child {

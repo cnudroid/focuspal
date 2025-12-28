@@ -23,6 +23,10 @@ struct FocusPalApp: App {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(serviceContainer)
+                .task {
+                    // Check and send weekly email if due on app launch
+                    serviceContainer.checkWeeklyEmailOnLaunch()
+                }
         }
     }
 }

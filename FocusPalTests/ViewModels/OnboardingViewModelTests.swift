@@ -15,14 +15,17 @@ final class OnboardingViewModelTests: XCTestCase {
     var sut: OnboardingViewModel!
     var mockPINService: OnboardingMockPINService!
     var mockChildRepository: TestMockChildRepository!
+    var mockParentRepository: MockParentRepository!
 
     override func setUp() async throws {
         try await super.setUp()
         mockPINService = OnboardingMockPINService()
         mockChildRepository = TestMockChildRepository()
+        mockParentRepository = MockParentRepository()
         sut = OnboardingViewModel(
             pinService: mockPINService,
-            childRepository: mockChildRepository
+            childRepository: mockChildRepository,
+            parentRepository: mockParentRepository
         )
         // Reset AppStorage property to ensure clean state for each test
         sut.hasCompletedOnboarding = false
@@ -32,6 +35,7 @@ final class OnboardingViewModelTests: XCTestCase {
         sut = nil
         mockPINService = nil
         mockChildRepository = nil
+        mockParentRepository = nil
         try await super.tearDown()
     }
 

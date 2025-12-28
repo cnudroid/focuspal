@@ -160,7 +160,7 @@ struct ReportsView: View {
 // MARK: - Summary Stats Section
 
 struct SummaryStatsSection: View {
-    let summary: WeeklySummary?
+    let summary: AnalyticsWeeklySummary?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -175,7 +175,7 @@ struct SummaryStatsSection: View {
         }
     }
 
-    private func summaryStats(_ summary: WeeklySummary) -> some View {
+    private func summaryStats(_ summary: AnalyticsWeeklySummary) -> some View {
         HStack(spacing: 16) {
             StatBox(
                 value: String(summary.totalMinutes / 60),
@@ -494,8 +494,8 @@ struct ShareSheet: UIViewControllerRepresentable {
 // MARK: - Mock Analytics Service
 
 class MockAnalyticsService: AnalyticsServiceProtocol {
-    func calculateWeeklySummary(for child: Child?, weekOf date: Date) async throws -> WeeklySummary {
-        WeeklySummary(weekStart: date, totalMinutes: 420, activityCount: 14, activeDays: 5, averageMinutesPerDay: 84)
+    func calculateWeeklySummary(for child: Child?, weekOf date: Date) async throws -> AnalyticsWeeklySummary {
+        AnalyticsWeeklySummary(weekStart: date, totalMinutes: 420, activityCount: 14, activeDays: 5, averageMinutesPerDay: 84)
     }
 
     func calculateBalanceScore(for child: Child?, in dateRange: DateInterval) async throws -> BalanceScore {

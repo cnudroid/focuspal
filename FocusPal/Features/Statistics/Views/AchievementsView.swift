@@ -73,9 +73,8 @@ struct AchievementBadge: View {
                     )
                     .frame(width: 60, height: 60)
 
-                Image(systemName: achievement.iconName)
-                    .font(.title2)
-                    .foregroundColor(.white)
+                Text(achievement.emoji)
+                    .font(.title)
             }
 
             Text(achievement.name)
@@ -97,8 +96,9 @@ struct AchievementProgressRow: View {
                     .fill(Color(.systemGray5))
                     .frame(width: 50, height: 50)
 
-                Image(systemName: achievement.iconName)
-                    .foregroundColor(.secondary)
+                Text(achievement.emoji)
+                    .font(.title2)
+                    .opacity(0.5)
             }
 
             VStack(alignment: .leading, spacing: 4) {
@@ -130,6 +130,7 @@ struct AchievementDisplayItem: Identifiable {
     let name: String
     let description: String
     let iconName: String
+    let emoji: String
     let isUnlocked: Bool
     let progress: Double
     let unlockedDate: Date?
@@ -142,6 +143,7 @@ struct AchievementDisplayItem: Identifiable {
             name: "First Timer",
             description: "Complete your first activity",
             iconName: "star.fill",
+            emoji: "🎯",
             isUnlocked: true,
             progress: 100,
             unlockedDate: Date()
@@ -151,6 +153,7 @@ struct AchievementDisplayItem: Identifiable {
             name: "3-Day Streak",
             description: "Log activities for 3 days in a row",
             iconName: "flame.fill",
+            emoji: "🔥",
             isUnlocked: false,
             progress: 66,
             unlockedDate: nil

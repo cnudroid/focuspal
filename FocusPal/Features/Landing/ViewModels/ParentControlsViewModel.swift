@@ -15,11 +15,16 @@ class ParentControlsViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var showAddChild = false
     @Published var errorMessage: String?
+    @Published var hasParentProfile = false
 
     private let childRepository: ChildRepositoryProtocol
+    private let parentRepository: ParentRepositoryProtocol
 
-    init(childRepository: ChildRepositoryProtocol? = nil) {
+    init(childRepository: ChildRepositoryProtocol? = nil, parentRepository: ParentRepositoryProtocol? = nil) {
         self.childRepository = childRepository ?? CoreDataChildRepository(
+            context: PersistenceController.shared.container.viewContext
+        )
+        self.parentRepository = parentRepository ?? CoreDataParentRepository(
             context: PersistenceController.shared.container.viewContext
         )
     }
@@ -40,6 +45,16 @@ class ParentControlsViewModel: ObservableObject {
             children.removeAll { $0.id == child.id }
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    func checkParentProfile() async {
+        do {
+            let parent = try await parentRepository.fetch()
+            hasParentProfile = parent != nil
+        } catch {
+            errorMessage = error.localizedDescription
+            hasParentProfile = false
         }
     }
 }
