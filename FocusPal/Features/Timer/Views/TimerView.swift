@@ -42,9 +42,11 @@ struct TimerView: View {
                 .padding(.top, 8)
 
                 // Category selector with duration display
+                // Disabled when timer is running or paused
                 CategorySelector(
                     categories: viewModel.categories,
-                    selected: $viewModel.selectedCategory
+                    selected: $viewModel.selectedCategory,
+                    isDisabled: viewModel.timerState == .running || viewModel.timerState == .paused
                 )
 
                 Spacer()
@@ -308,6 +310,7 @@ struct TimerDisplayContainer: View {
 struct CategorySelector: View {
     let categories: [Category]
     @Binding var selected: Category?
+    var isDisabled: Bool = false
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -315,9 +318,12 @@ struct CategorySelector: View {
                 ForEach(categories) { category in
                     CategoryChip(
                         category: category,
-                        isSelected: selected?.id == category.id
+                        isSelected: selected?.id == category.id,
+                        isDisabled: isDisabled && selected?.id != category.id
                     ) {
-                        selected = category
+                        if !isDisabled {
+                            selected = category
+                        }
                     }
                 }
             }
@@ -329,6 +335,7 @@ struct CategorySelector: View {
 struct CategoryChip: View {
     let category: Category
     let isSelected: Bool
+    var isDisabled: Bool = false
     let onTap: () -> Void
 
     var body: some View {
@@ -348,9 +355,11 @@ struct CategoryChip: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
             .background(isSelected ? Color(hex: category.colorHex) : Color(.systemGray5))
-            .foregroundColor(isSelected ? .white : .primary)
+            .foregroundColor(isSelected ? .white : (isDisabled ? .secondary : .primary))
             .cornerRadius(16)
+            .opacity(isDisabled ? 0.5 : 1.0)
         }
+        .disabled(isDisabled)
     }
 }
 
