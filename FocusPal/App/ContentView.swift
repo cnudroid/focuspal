@@ -15,6 +15,8 @@ struct ContentView: View {
 
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var currentChild: Child?
+    @State private var completedTimerAlert: ChildTimerState?
+    @State private var showingCompletedAlert = false
 
     var body: some View {
         Group {
@@ -49,6 +51,34 @@ struct ContentView: View {
                 )
             }
         }
+        .onReceive(serviceContainer.multiChildTimerManager.$completedTimers) { timers in
+            // Show alert for any completed timer (only if we don't already have one showing)
+            if completedTimerAlert == nil, let completed = timers.first {
+                completedTimerAlert = completed
+            }
+        }
+        .alert("Timer Completed!", isPresented: $showingCompletedAlert) {
+            Button("OK") {
+                dismissCompletedAlert()
+            }
+        } message: {
+            if let state = completedTimerAlert {
+                Text("\(state.childName) completed \(state.categoryName)!")
+            } else {
+                Text("Great job!")
+            }
+        }
+        .onChange(of: completedTimerAlert) { newValue in
+            showingCompletedAlert = newValue != nil
+        }
+    }
+
+    private func dismissCompletedAlert() {
+        if let state = completedTimerAlert {
+            serviceContainer.multiChildTimerManager.dismissCompletedTimer(state)
+        }
+        completedTimerAlert = nil
+        showingCompletedAlert = false
     }
 }
 
@@ -75,10 +105,13 @@ struct MainTabView: View {
                 .tag(AppTab.home)
 
             TimerView(
-                timerService: serviceContainer.timerService,
+                timerManager: serviceContainer.multiChildTimerManager,
                 activityService: serviceContainer.activityService,
                 currentChild: currentChild
             )
+                .id(currentChild.id)  // Force recreation when child changes
+                .transition(.identity)  // Prevent default transition animation
+                .animation(nil, value: currentChild.id)  // Disable animation on child switch
                 .tabItem {
                     Label("Timer", systemImage: "timer")
                 }

@@ -9,24 +9,23 @@ import Foundation
 import Combine
 
 /// ViewModel for the Timer screen.
-/// Manages timer state and coordinates with TimerService.
+/// Manages timer state and coordinates with MultiChildTimerManager for per-child timers.
 @MainActor
 class TimerViewModel: ObservableObject {
 
     // MARK: - Published Properties
 
-    @Published var timerState: TimerState = .idle
-    @Published var remainingTime: TimeInterval = 0
-    @Published var progress: Double = 1.0
+    @Published var timerState: TimerState
+    @Published var remainingTime: TimeInterval
+    @Published var progress: Double
+    @Published var isRestoring: Bool
     @Published var categories: [Category] = []
     @Published var selectedCategory: Category? {
         didSet {
-            // Update duration when category changes
-            if let category = selectedCategory {
+            // Update duration when category changes (only when idle)
+            if let category = selectedCategory, timerState == .idle {
                 defaultDuration = category.recommendedDuration
-                if timerState == .idle {
-                    remainingTime = defaultDuration
-                }
+                remainingTime = defaultDuration
             }
         }
     }
@@ -34,80 +33,161 @@ class TimerViewModel: ObservableObject {
     @Published var defaultDuration: TimeInterval = 25 * 60  // 25 minutes
     @Published var audioCalloutsEnabled: Bool = true
     @Published var childName: String = "Buddy"
-
-    // Time tracking for actual duration
-    @Published var actualStartTime: Date?
-    @Published var actualDuration: TimeInterval = 0
-    @Published var timeAdded: TimeInterval = 0  // Extra time added during session
+    @Published var timeAdded: TimeInterval = 0
 
     // MARK: - Dependencies
 
-    private let timerService: TimerServiceProtocol
+    private let timerManager: MultiChildTimerManager
     private let activityService: ActivityServiceProtocol
     private let audioService = TimerAudioService()
     private var cancellables = Set<AnyCancellable>()
-    private var totalDuration: TimeInterval = 0
+    private var updateTimer: Timer?
     private let currentChild: Child
 
     // MARK: - Initialization
 
     init(
-        timerService: TimerServiceProtocol? = nil,
+        timerManager: MultiChildTimerManager? = nil,
         activityService: ActivityServiceProtocol? = nil,
         currentChild: Child? = nil
     ) {
         // Use real services by default
         let activityRepo = CoreDataActivityRepository(context: PersistenceController.shared.container.viewContext)
+        let notificationService = NotificationService()
 
-        self.timerService = timerService ?? MockTimerService()
+        let manager = timerManager ?? MultiChildTimerManager(notificationService: notificationService)
+        let child = currentChild ?? Child(name: "Buddy", age: 8)
+
+        self.timerManager = manager
         self.activityService = activityService ?? ActivityService(repository: activityRepo)
-        self.currentChild = currentChild ?? Child(name: "Buddy", age: 8)
+        self.currentChild = child
 
-        setupBindings()
+        // Check for existing timer state BEFORE setting initial values
+        // This prevents animation by setting the correct initial progress from the start
+        if let existingState = manager.timerState(for: child.id) {
+            // Initialize with restored values - no state change will occur
+            self._timerState = Published(initialValue: existingState.isPaused ? .paused : (existingState.isCompleted ? .completed : .running))
+            self._progress = Published(initialValue: existingState.progress)
+            self._remainingTime = Published(initialValue: existingState.remainingTime)
+            self._isRestoring = Published(initialValue: false)
+        } else {
+            // No active timer - set idle state from the start
+            self._timerState = Published(initialValue: .idle)
+            self._progress = Published(initialValue: 1.0)
+            self._remainingTime = Published(initialValue: 0)
+            self._isRestoring = Published(initialValue: false)
+        }
+
+        self.childName = child.name
+
         loadCategories()
 
-        // Set child name from the current child
-        if let child = currentChild {
-            self.childName = child.name
+        // If there was an existing timer, restore category selection
+        if let existingState = manager.timerState(for: child.id) {
+            if let category = categories.first(where: { $0.id == existingState.categoryId }) {
+                // Use _selectedCategory to avoid triggering didSet
+                self._selectedCategory = Published(initialValue: category)
+            }
+            timeAdded = max(0, existingState.totalDuration - (selectedCategory?.recommendedDuration ?? existingState.totalDuration))
         }
+
+        setupBindings()
+        startUpdateLoop()
+    }
+
+    deinit {
+        updateTimer?.invalidate()
     }
 
     func setChildName(_ name: String) {
         childName = name
-        UserDefaults.standard.set(name, forKey: "childName")
         UserDefaults.standard.set(name, forKey: "childName_\(currentChild.id.uuidString)")
     }
 
     // MARK: - Setup
 
     private func setupBindings() {
-        timerService.timerStatePublisher
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$timerState)
-
-        timerService.remainingTimePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] remaining in
-                guard let self = self else { return }
-                self.remainingTime = remaining
-                self.updateProgress()
-
-                // Check for audio callouts
-                if self.timerState == .running {
-                    self.audioService.checkForAnnouncements(
-                        remainingTime: remaining,
-                        totalDuration: self.totalDuration
-                    )
-                }
-            }
-            .store(in: &cancellables)
-
         // Sync audio enabled state
         $audioCalloutsEnabled
             .sink { [weak self] enabled in
                 self?.audioService.isEnabled = enabled
             }
             .store(in: &cancellables)
+
+        // Listen for timer manager changes
+        timerManager.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.syncWithManager()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func startUpdateLoop() {
+        // Update UI every 0.1 seconds when timer is running
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                self?.updateFromManager()
+            }
+        }
+        RunLoop.current.add(updateTimer!, forMode: .common)
+    }
+
+    private func syncWithManager() {
+        if let state = timerManager.timerState(for: currentChild.id) {
+            if state.isPaused {
+                timerState = .paused
+            } else if state.isCompleted {
+                timerState = .completed
+            } else {
+                timerState = .running
+            }
+        }
+    }
+
+    private func updateFromManager() {
+        guard let state = timerManager.timerState(for: currentChild.id) else {
+            // No active timer for this child
+            if timerState != .idle && timerState != .completed {
+                timerState = .idle
+                progress = 1.0
+                remainingTime = selectedCategory?.recommendedDuration ?? defaultDuration
+            }
+            return
+        }
+
+        // Update from manager state
+        remainingTime = state.remainingTime
+        progress = state.progress
+
+        if state.isPaused {
+            timerState = .paused
+        } else if state.isCompleted {
+            // Timer completed
+            handleTimerCompletion(state: state)
+        } else {
+            timerState = .running
+
+            // Check for audio callouts
+            audioService.checkForAnnouncements(
+                remainingTime: remainingTime,
+                totalDuration: state.totalDuration
+            )
+        }
+    }
+
+    private func handleTimerCompletion(state: ChildTimerState) {
+        timerState = .completed
+        audioService.reset()
+
+        // Log the activity
+        logCompletedActivity(state: state)
+
+        // Remove from manager
+        _ = timerManager.completeTimer(for: currentChild.id)
+
+        // Reset for next session
+        resetForNextSession()
     }
 
     private static let globalCategoryKey = "globalCategories"
@@ -116,18 +196,18 @@ class TimerViewModel: ObservableObject {
         // Try to load categories from shared storage first
         if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
            let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
-            // Filter to only active categories
             categories = decoded.map { $0.toCategory(childId: currentChild.id) }.filter { $0.isActive }
         } else {
-            // Fall back to default categories
             categories = Category.defaultCategories(for: currentChild.id)
         }
 
-        // Select first category and set its duration
-        if let firstCategory = categories.first {
-            selectedCategory = firstCategory
-            defaultDuration = firstCategory.recommendedDuration
-            remainingTime = defaultDuration
+        // Select first category and set its duration (only if no active timer)
+        if timerManager.timerState(for: currentChild.id) == nil {
+            if let firstCategory = categories.first {
+                selectedCategory = firstCategory
+                defaultDuration = firstCategory.recommendedDuration
+                remainingTime = defaultDuration
+            }
         }
     }
 
@@ -147,8 +227,7 @@ class TimerViewModel: ObservableObject {
         if let id = currentSelectedId,
            let category = categories.first(where: { $0.id == id }) {
             selectedCategory = category
-        } else if let firstCategory = categories.first {
-            // If previously selected category is gone, select first one
+        } else if timerState == .idle, let firstCategory = categories.first {
             selectedCategory = firstCategory
             defaultDuration = firstCategory.recommendedDuration
             remainingTime = defaultDuration
@@ -158,43 +237,58 @@ class TimerViewModel: ObservableObject {
     // MARK: - Timer Controls
 
     func startTimer() {
-        // Use the selected category's duration
-        let duration = selectedCategory?.recommendedDuration ?? defaultDuration
-        totalDuration = duration
-        remainingTime = duration
-        progress = 1.0
+        guard let category = selectedCategory else { return }
+
+        let duration = category.recommendedDuration
         timeAdded = 0
-        actualStartTime = Date()
-        actualDuration = 0
 
         // Reset audio announcements
         audioService.reset()
 
-        timerService.startTimer(
-            duration: duration,
-            mode: .countdown(duration: duration),
-            category: selectedCategory
-        )
+        // Start timer through manager
+        timerManager.startTimer(for: currentChild, category: category, duration: duration)
+        timerState = .running
+        remainingTime = duration
+        progress = 1.0
+    }
+
+    func pauseTimer() {
+        timerManager.pauseTimer(for: currentChild.id)
+        timerState = .paused
+    }
+
+    func resumeTimer() {
+        timerManager.resumeTimer(for: currentChild.id)
+        timerState = .running
+    }
+
+    func stopTimer() {
+        // Get current state for logging
+        if let state = timerManager.timerState(for: currentChild.id) {
+            logCompletedActivity(state: state)
+        }
+
+        timerManager.stopTimer(for: currentChild.id)
+        timerState = .idle
+        audioService.reset()
+        progress = 1.0
+        remainingTime = selectedCategory?.recommendedDuration ?? defaultDuration
+        timeAdded = 0
     }
 
     /// Complete task early (before timer ends)
     func completeEarly() {
         guard timerState == .running || timerState == .paused else { return }
 
-        // Calculate actual duration
-        if let startTime = actualStartTime {
-            actualDuration = Date().timeIntervalSince(startTime)
+        // Get current state for logging
+        if let state = timerManager.timerState(for: currentChild.id) {
+            logCompletedActivity(state: state)
         }
 
-        // Log the activity with actual duration
-        logCompletedActivity(wasCompletedEarly: true)
-
-        // Stop the timer
-        timerService.stopTimer()
+        timerManager.stopTimer(for: currentChild.id)
         audioService.reset()
         timerState = .completed
 
-        // Reset for next session
         resetForNextSession()
     }
 
@@ -204,11 +298,8 @@ class TimerViewModel: ObservableObject {
 
         let additionalTime = TimeInterval(minutes * 60)
         timeAdded += additionalTime
-        totalDuration += additionalTime
-        remainingTime += additionalTime
 
-        // Update the timer service
-        timerService.addTime(additionalTime)
+        timerManager.addTime(for: currentChild.id, minutes: minutes)
     }
 
     private func resetForNextSession() {
@@ -217,43 +308,12 @@ class TimerViewModel: ObservableObject {
             self.progress = 1.0
             self.remainingTime = self.selectedCategory?.recommendedDuration ?? self.defaultDuration
             self.timerState = .idle
-            self.actualStartTime = nil
-            self.actualDuration = 0
             self.timeAdded = 0
         }
     }
 
-    func pauseTimer() {
-        timerService.pauseTimer()
-    }
-
-    func resumeTimer() {
-        timerService.resumeTimer()
-    }
-
-    func stopTimer() {
-        // Calculate actual duration
-        if let startTime = actualStartTime {
-            actualDuration = Date().timeIntervalSince(startTime)
-        }
-
-        // Log activity if timer was running
-        if timerState == .completed || timerState == .running || timerState == .paused {
-            logCompletedActivity(wasCompletedEarly: false)
-        }
-
-        timerService.stopTimer()
-        audioService.reset()
-        progress = 1.0
-        remainingTime = selectedCategory?.recommendedDuration ?? defaultDuration
-        actualStartTime = nil
-        actualDuration = 0
-        timeAdded = 0
-    }
-
     func setVisualizationMode(_ mode: TimerVisualizationMode) {
         visualizationMode = mode
-        timerService.setVisualizationMode(mode)
     }
 
     func toggleAudioCallouts() {
@@ -262,34 +322,24 @@ class TimerViewModel: ObservableObject {
 
     // MARK: - Private Methods
 
-    private func updateProgress() {
-        guard totalDuration > 0 else { return }
-        progress = remainingTime / totalDuration
-    }
+    private func logCompletedActivity(state: ChildTimerState) {
+        let duration = state.elapsedTime
+        let category = categories.first { $0.id == state.categoryId }
 
-    private func logCompletedActivity(wasCompletedEarly: Bool) {
-        guard let category = selectedCategory else {
-            print("❌ No category selected, cannot log activity")
+        guard let category = category else {
+            print("❌ Category not found, cannot log activity")
             return
         }
 
-        // Use actual duration if available, otherwise calculate from timer
-        let duration = actualDuration > 0 ? actualDuration : (totalDuration - remainingTime)
-
-        // Log for debugging BEFORE the async call
-        let plannedMinutes = Int(totalDuration / 60)
         let actualMinutes = Int(duration / 60)
         let actualSeconds = Int(duration) % 60
         print("📊 LOGGING Activity for \(currentChild.name): \(category.name)")
         print("   Child ID: \(currentChild.id)")
         print("   Category ID: \(category.id)")
-        print("   Planned: \(plannedMinutes) min")
-        print("   Actual: \(actualMinutes)m \(actualSeconds)s")
-        print("   Completed early: \(wasCompletedEarly)")
+        print("   Duration: \(actualMinutes)m \(actualSeconds)s")
 
         Task {
             do {
-                // Use the actual current child instead of creating a new one
                 let activity = try await activityService.logActivity(
                     category: category,
                     duration: duration,
@@ -304,8 +354,8 @@ class TimerViewModel: ObservableObject {
 
     /// Formatted string for actual elapsed time
     var elapsedTimeFormatted: String {
-        guard let startTime = actualStartTime else { return "0:00" }
-        let elapsed = Date().timeIntervalSince(startTime)
+        guard let state = timerManager.timerState(for: currentChild.id) else { return "0:00" }
+        let elapsed = state.elapsedTime
         let minutes = Int(elapsed) / 60
         let seconds = Int(elapsed) % 60
         return String(format: "%d:%02d", minutes, seconds)

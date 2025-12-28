@@ -13,9 +13,9 @@ struct TimerView: View {
     @State private var showingParentControls = false
     @State private var showingNameEditor = false
 
-    init(timerService: TimerServiceProtocol? = nil, activityService: ActivityServiceProtocol? = nil, currentChild: Child? = nil) {
+    init(timerManager: MultiChildTimerManager? = nil, activityService: ActivityServiceProtocol? = nil, currentChild: Child? = nil) {
         _viewModel = StateObject(wrappedValue: TimerViewModel(
-            timerService: timerService,
+            timerManager: timerManager,
             activityService: activityService,
             currentChild: currentChild
         ))
@@ -50,6 +50,7 @@ struct TimerView: View {
                 Spacer()
 
                 // Timer display (based on visualization mode)
+                // Disable all implicit animations to prevent animation on view recreation
                 Group {
                     switch viewModel.visualizationMode {
                     case .circular:
@@ -73,6 +74,9 @@ struct TimerView: View {
                     }
                 }
                 .frame(maxWidth: 300, maxHeight: 300)
+                .transaction { transaction in
+                    transaction.animation = nil
+                }
 
                 // Time info when running
                 if viewModel.timerState == .running || viewModel.timerState == .paused {

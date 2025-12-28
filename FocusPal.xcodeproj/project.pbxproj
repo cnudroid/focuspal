@@ -77,6 +77,7 @@
 		742CCDE38583C645DE03537E /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDDB2DCAD2C10DFBF9B7CF1 /* AuthenticationView.swift */; };
 		74E0AADAD81EF9C532799DC5 /* MockChildRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87417B24933571761E4572C /* MockChildRepository.swift */; };
 		75C46C39C9652FBDD8A14A45 /* PINSetupViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51016B107A06F80B3E9FAEFB /* PINSetupViewTests.swift */; };
+		780D82ABF332E1E1560CF078 /* ChildTimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF446F8E92A4283FF747CAC /* ChildTimerState.swift */; };
 		784BCD67482FE131069F5A87 /* PINEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DB2E5D36463C98CA73A06B /* PINEntryView.swift */; };
 		78AFCB826AED905FCAA29754 /* ReportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824C5FA9514D2CE580C77AAC /* ReportsViewModel.swift */; };
 		7925D8CEEB17376551F21543 /* Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358FA3C9591D0442E15DB251 /* Shadows.swift */; };
@@ -137,6 +138,7 @@
 		D3A35A62B9726A6032ECFBAF /* FocusPalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD82A78834FBE6E89D9087C /* FocusPalApp.swift */; };
 		D6D6973D3DBD23613E7CA0AD /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C0158B0FE9BF6A1BDC871C /* TestData.swift */; };
 		D829F700E78BD5A82EDA92E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981B357603A682A936FB405E /* HomeViewModel.swift */; };
+		D952B8A892506737D81CF546 /* MultiChildTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73CD7CBEFCF041DF6097AE0 /* MultiChildTimerManager.swift */; };
 		DB13EEB32C3F1ED69EE10E40 /* PINChangeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C1C5424FC3E15553B24D54 /* PINChangeViewModelTests.swift */; };
 		DDF0A856B1C28BD43C7A7984 /* MockTimerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6583C9029B317357067EF16D /* MockTimerService.swift */; };
 		E1592E8A99A6AC640CA4E44F /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0842B34DB269BD73E5DCCA7 /* EmptyStateView.swift */; };
@@ -307,6 +309,7 @@
 		E59DD8FF32A3E070CF9DCF61 /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievement.swift; sourceTree = "<group>"; };
 		E5BA8760399F1D8C442B19A0 /* BarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChart.swift; sourceTree = "<group>"; };
 		E6BB319832C9EBE117CA4A38 /* TimeGoalServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalServiceTests.swift; sourceTree = "<group>"; };
+		E73CD7CBEFCF041DF6097AE0 /* MultiChildTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiChildTimerManager.swift; sourceTree = "<group>"; };
 		E7F81B675925CBA456883AD9 /* ParentAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentAuthViewModel.swift; sourceTree = "<group>"; };
 		E8293F29EA47D58C462AEA6B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EB443DB5855CEDB71783EEE8 /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
@@ -322,6 +325,7 @@
 		FC9F1C760A9CAD49E8127C4C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FDAC4628BE8EE160AC1A5C6F /* ChildEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildEntityMapper.swift; sourceTree = "<group>"; };
 		FEA4E1698643D72BF5BD48DB /* CategorySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsView.swift; sourceTree = "<group>"; };
+		FEF446F8E92A4283FF747CAC /* ChildTimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildTimerState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -733,6 +737,7 @@
 				E4553CAD06F9551DCF5D477C /* Activity.swift */,
 				BA83B1A7D80275DBDF294EF6 /* Category.swift */,
 				963FE5B9D60DA6DB69827A7B /* Child.swift */,
+				FEF446F8E92A4283FF747CAC /* ChildTimerState.swift */,
 				C44CA5FB1381B381265E00D8 /* TimeGoal.swift */,
 			);
 			path = Models;
@@ -870,6 +875,7 @@
 				3177E28672D8AA1E3E42EC0E /* AnalyticsService.swift */,
 				DA5887B1CE7000F95A38FA7F /* AnalyticsService+Notifications.swift */,
 				19444D8D2DC1C63530E080B5 /* CategoryService.swift */,
+				E73CD7CBEFCF041DF6097AE0 /* MultiChildTimerManager.swift */,
 				399485656A65B5F2A5CEE706 /* NotificationService.swift */,
 				CB65458FB96D898342776118 /* SyncService.swift */,
 				85BFB0F574821A2FCA9563EB /* TimeGoalService.swift */,
@@ -1185,6 +1191,7 @@
 				9ECAC914E65D687A830B6497 /* Child.swift in Sources */,
 				20FE25E9CC8C01C8C40A6272 /* ChildEntityMapper.swift in Sources */,
 				8105EAEA48A7ABC4F8C6FD30 /* ChildRepositoryProtocol.swift in Sources */,
+				780D82ABF332E1E1560CF078 /* ChildTimerState.swift in Sources */,
 				B61734A9C1DF304B4258F5DF /* CircularTimerView.swift in Sources */,
 				A5B0BEC2110592706AEEF49E /* CloudKitManager.swift in Sources */,
 				F2E65E7800EDC5FEE3E81D7B /* Colors.swift in Sources */,
@@ -1216,6 +1223,7 @@
 				74E0AADAD81EF9C532799DC5 /* MockChildRepository.swift in Sources */,
 				D319473E5FA7EF9FD9026728 /* MockNotificationService.swift in Sources */,
 				DDF0A856B1C28BD43C7A7984 /* MockTimerService.swift in Sources */,
+				D952B8A892506737D81CF546 /* MultiChildTimerManager.swift in Sources */,
 				FC214444EDD0263A43C4213C /* NotificationService.swift in Sources */,
 				03B2FDC2E5C167861091650D /* NotificationServiceProtocol.swift in Sources */,
 				93D8352D1E06AB913D036782 /* OnboardingContainerView.swift in Sources */,

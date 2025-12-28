@@ -13,6 +13,7 @@ struct CircularTimerView: View {
     let progress: Double
     let remainingTime: TimeInterval
     let state: TimerState
+    var isRestoring: Bool = false
 
     @State private var isPulsing = false
 
@@ -34,14 +35,18 @@ struct CircularTimerView: View {
 
             // Colored time wedge - the key ADHD timer feature
             // This shrinks as time passes, making time visible
+            // Explicitly disable ALL animations on the wedge to prevent animation on view recreation
             TimeWedge(progress: progress)
                 .fill(wedgeColor)
                 .opacity(state == .idle ? 0.5 : 0.9)
+                .transaction { transaction in
+                    transaction.animation = nil
+                }
                 .scaleEffect(isPulsing ? 1.02 : 1.0)
                 .animation(
                     state == .running ?
                         .easeInOut(duration: 1.5).repeatForever(autoreverses: true) :
-                        .default,
+                        .none,
                     value: isPulsing
                 )
 
@@ -129,10 +134,8 @@ struct CircularTimerView: View {
 struct TimeWedge: Shape {
     var progress: Double
 
-    var animatableData: Double {
-        get { progress }
-        set { progress = newValue }
-    }
+    // Removed animatableData to prevent automatic animation
+    // Animation is controlled at the view level via displayedProgress
 
     func path(in rect: CGRect) -> Path {
         let center = CGPoint(x: rect.midX, y: rect.midY)
