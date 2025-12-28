@@ -106,6 +106,12 @@ struct QuickLogView: View {
             .sheet(isPresented: $showingManualEntry) {
                 ManualEntryView(viewModel: viewModel)
             }
+            .task {
+                // Ensure categories are loaded when view appears
+                if viewModel.categories.isEmpty {
+                    await viewModel.reloadCategories()
+                }
+            }
         }
     }
 }

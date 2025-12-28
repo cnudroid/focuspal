@@ -205,15 +205,23 @@ class ActivityLogViewModel: ObservableObject {
         return categoryColor(for: activity.categoryId)
     }
 
+    /// Reload categories from storage
+    func reloadCategories() async {
+        await loadCategories()
+    }
+
     // MARK: - Private Methods
 
+    @MainActor
     private func loadCategories() async {
         // Load categories from shared storage first, then fall back to defaults
         if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
            let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
-            categories = decoded.map { $0.toCategory(childId: currentChild.id) }
+            categories = decoded.map { $0.toCategory(childId: currentChild.id) }.filter { $0.isActive }
+            print("📋 Loaded \(categories.count) categories from UserDefaults")
         } else {
             categories = Category.defaultCategories(for: currentChild.id)
+            print("📋 Loaded \(categories.count) default categories")
         }
     }
 
