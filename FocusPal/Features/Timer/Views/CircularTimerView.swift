@@ -35,13 +35,11 @@ struct CircularTimerView: View {
 
             // Colored time wedge - the key ADHD timer feature
             // This shrinks as time passes, making time visible
-            // Explicitly disable ALL animations on the wedge to prevent animation on view recreation
+            // Use drawingGroup to rasterize and prevent implicit animations
             TimeWedge(progress: progress)
                 .fill(wedgeColor)
                 .opacity(state == .idle ? 0.5 : 0.9)
-                .transaction { transaction in
-                    transaction.animation = nil
-                }
+                .drawingGroup()  // Rasterize to prevent shape animation
                 .scaleEffect(isPulsing ? 1.02 : 1.0)
                 .animation(
                     state == .running ?

@@ -50,33 +50,14 @@ struct TimerView: View {
                 Spacer()
 
                 // Timer display (based on visualization mode)
-                // Disable all implicit animations to prevent animation on view recreation
-                Group {
-                    switch viewModel.visualizationMode {
-                    case .circular:
-                        CircularTimerView(
-                            progress: viewModel.progress,
-                            remainingTime: viewModel.remainingTime,
-                            state: viewModel.timerState
-                        )
-                    case .bar:
-                        BarTimerView(
-                            progress: viewModel.progress,
-                            remainingTime: viewModel.remainingTime,
-                            state: viewModel.timerState
-                        )
-                    case .analog:
-                        AnalogTimerView(
-                            progress: viewModel.progress,
-                            remainingTime: viewModel.remainingTime,
-                            state: viewModel.timerState
-                        )
-                    }
-                }
+                // Wrap in container that completely disables animations
+                TimerDisplayContainer(
+                    visualizationMode: viewModel.visualizationMode,
+                    progress: viewModel.progress,
+                    remainingTime: viewModel.remainingTime,
+                    timerState: viewModel.timerState
+                )
                 .frame(maxWidth: 300, maxHeight: 300)
-                .transaction { transaction in
-                    transaction.animation = nil
-                }
 
                 // Time info when running
                 if viewModel.timerState == .running || viewModel.timerState == .paused {
@@ -273,6 +254,54 @@ struct NameEditorView: View {
             }
         }
         .presentationDetents([.medium])
+    }
+}
+
+// MARK: - Timer Display Container
+// Wrapper that completely disables implicit animations for timer display
+
+struct TimerDisplayContainer: View {
+    let visualizationMode: TimerVisualizationMode
+    let progress: Double
+    let remainingTime: TimeInterval
+    let timerState: TimerState
+
+    var body: some View {
+        // Use a unique ID based on the actual values to force immediate rendering
+        // This prevents SwiftUI from trying to animate between states
+        timerContent
+            .id("\(visualizationMode.rawValue)")
+            .animation(nil, value: progress)
+            .animation(nil, value: remainingTime)
+            .animation(nil, value: timerState)
+            .transaction { transaction in
+                transaction.animation = nil
+                transaction.disablesAnimations = true
+            }
+    }
+
+    @ViewBuilder
+    private var timerContent: some View {
+        switch visualizationMode {
+        case .circular:
+            CircularTimerView(
+                progress: progress,
+                remainingTime: remainingTime,
+                state: timerState
+            )
+        case .bar:
+            BarTimerView(
+                progress: progress,
+                remainingTime: remainingTime,
+                state: timerState
+            )
+        case .analog:
+            AnalogTimerView(
+                progress: progress,
+                remainingTime: remainingTime,
+                state: timerState
+            )
+        }
     }
 }
 
