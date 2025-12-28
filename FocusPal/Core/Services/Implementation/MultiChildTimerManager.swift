@@ -28,15 +28,11 @@ class MultiChildTimerManager: ObservableObject {
     private var updateTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
     private let notificationService: NotificationServiceProtocol
-    private let activityService: ActivityServiceProtocol
 
     // MARK: - Initialization
 
-    init(notificationService: NotificationServiceProtocol, activityService: ActivityServiceProtocol? = nil) {
+    init(notificationService: NotificationServiceProtocol) {
         self.notificationService = notificationService
-        // Create activity service for logging completed timers
-        let activityRepo = CoreDataActivityRepository(context: PersistenceController.shared.container.viewContext)
-        self.activityService = activityService ?? ActivityService(repository: activityRepo)
         loadPersistedStates()
         startUpdateLoop()
         setupNotificationObservers()
@@ -139,8 +135,7 @@ class MultiChildTimerManager: ObservableObject {
             if state.isCompleted && !state.isPaused {
                 completedChildIds.append(childId)
                 completedTimers.append(state)
-                // Log the completed activity
-                logCompletedActivity(state: state)
+                // Note: Activity logging is now handled by TimerViewModel after user confirms completion
             }
         }
 
@@ -155,48 +150,6 @@ class MultiChildTimerManager: ObservableObject {
 
         // Trigger UI update for remaining timers
         objectWillChange.send()
-    }
-
-    /// Log activity when a timer completes
-    private func logCompletedActivity(state: ChildTimerState) {
-        let duration = state.elapsedTime
-
-        // Create a child object from the state
-        let child = Child(
-            id: state.childId,
-            name: state.childName,
-            age: 8,  // Default age, not critical for logging
-            avatarId: "",
-            themeColor: "blue"
-        )
-
-        // Create a category from the state
-        let category = Category(
-            id: state.categoryId,
-            name: state.categoryName,
-            iconName: state.categoryIconName,
-            colorHex: state.categoryColorHex,
-            childId: state.childId
-        )
-
-        let actualMinutes = Int(duration / 60)
-        let actualSeconds = Int(duration) % 60
-        print("📊 LOGGING Completed Activity for \(state.childName): \(state.categoryName)")
-        print("   Child ID: \(state.childId)")
-        print("   Duration: \(actualMinutes)m \(actualSeconds)s")
-
-        Task {
-            do {
-                let activity = try await activityService.logActivity(
-                    category: category,
-                    duration: duration,
-                    child: child
-                )
-                print("✅ Activity logged successfully: \(activity.id)")
-            } catch {
-                print("❌ Failed to log activity: \(error)")
-            }
-        }
     }
 
     private func persistStates() {

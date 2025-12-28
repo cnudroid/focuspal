@@ -146,6 +146,23 @@ struct TimerView: View {
                     }
                 )
             }
+            .alert("Time's Up!", isPresented: .init(
+                get: { viewModel.pendingCompletionState != nil },
+                set: { if !$0 { viewModel.pendingCompletionState = nil } }
+            )) {
+                Button("Yes, I finished!") {
+                    viewModel.confirmCompletion()
+                }
+                Button("Not yet", role: .cancel) {
+                    viewModel.markIncomplete()
+                }
+            } message: {
+                if let state = viewModel.pendingCompletionState {
+                    Text("Did you finish \(state.categoryName)?")
+                } else {
+                    Text("Did you finish the activity?")
+                }
+            }
         }
     }
 }

@@ -95,6 +95,7 @@ struct ActivityDisplayItem: Identifiable {
     let durationMinutes: Int
     let timeRange: String
     let startTime: Date // For sorting
+    let isComplete: Bool
 
     init(
         id: UUID,
@@ -103,7 +104,8 @@ struct ActivityDisplayItem: Identifiable {
         colorHex: String,
         durationMinutes: Int,
         timeRange: String,
-        startTime: Date = Date()
+        startTime: Date = Date(),
+        isComplete: Bool = true
     ) {
         self.id = id
         self.categoryName = categoryName
@@ -112,6 +114,7 @@ struct ActivityDisplayItem: Identifiable {
         self.durationMinutes = durationMinutes
         self.timeRange = timeRange
         self.startTime = startTime
+        self.isComplete = isComplete
     }
 }
 

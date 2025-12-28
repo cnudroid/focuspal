@@ -364,7 +364,7 @@ class MockActivityService: ActivityServiceProtocol {
     var todayActivities: [Activity] = []
     var aggregates: [CategoryAggregate] = []
 
-    func logActivity(category: Category, duration: TimeInterval, child: Child) async throws -> Activity {
+    func logActivity(category: Category, duration: TimeInterval, child: Child, isComplete: Bool = true) async throws -> Activity {
         fatalError("Not implemented for these tests")
     }
 

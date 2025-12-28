@@ -34,6 +34,7 @@ class TimerViewModel: ObservableObject {
     @Published var audioCalloutsEnabled: Bool = true
     @Published var childName: String = "Buddy"
     @Published var timeAdded: TimeInterval = 0
+    @Published var pendingCompletionState: ChildTimerState?  // For completion prompt
 
     // MARK: - Dependencies
 
@@ -180,13 +181,26 @@ class TimerViewModel: ObservableObject {
         timerState = .completed
         audioService.reset()
 
-        // Log the activity
-        logCompletedActivity(state: state)
-
         // Remove from manager
         _ = timerManager.completeTimer(for: currentChild.id)
 
-        // Reset for next session
+        // Show completion prompt instead of auto-logging
+        pendingCompletionState = state
+    }
+
+    /// Called when user confirms they completed the activity
+    func confirmCompletion() {
+        guard let state = pendingCompletionState else { return }
+        logCompletedActivity(state: state, isComplete: true)
+        pendingCompletionState = nil
+        resetForNextSession()
+    }
+
+    /// Called when user says they didn't finish
+    func markIncomplete() {
+        guard let state = pendingCompletionState else { return }
+        logCompletedActivity(state: state, isComplete: false)
+        pendingCompletionState = nil
         resetForNextSession()
     }
 
@@ -263,26 +277,23 @@ class TimerViewModel: ObservableObject {
     }
 
     func stopTimer() {
-        // Get current state for logging
-        if let state = timerManager.timerState(for: currentChild.id) {
-            logCompletedActivity(state: state)
-        }
-
+        // Stopping cancels the timer - don't log activity
         timerManager.stopTimer(for: currentChild.id)
         timerState = .idle
         audioService.reset()
         progress = 1.0
         remainingTime = selectedCategory?.recommendedDuration ?? defaultDuration
         timeAdded = 0
+        pendingCompletionState = nil
     }
 
     /// Complete task early (before timer ends)
     func completeEarly() {
         guard timerState == .running || timerState == .paused else { return }
 
-        // Get current state for logging
+        // Get current state for logging - marked as complete since user said they finished
         if let state = timerManager.timerState(for: currentChild.id) {
-            logCompletedActivity(state: state)
+            logCompletedActivity(state: state, isComplete: true)
         }
 
         timerManager.stopTimer(for: currentChild.id)
@@ -322,7 +333,7 @@ class TimerViewModel: ObservableObject {
 
     // MARK: - Private Methods
 
-    private func logCompletedActivity(state: ChildTimerState) {
+    private func logCompletedActivity(state: ChildTimerState, isComplete: Bool) {
         let duration = state.elapsedTime
         let category = categories.first { $0.id == state.categoryId }
 
@@ -337,13 +348,15 @@ class TimerViewModel: ObservableObject {
         print("   Child ID: \(currentChild.id)")
         print("   Category ID: \(category.id)")
         print("   Duration: \(actualMinutes)m \(actualSeconds)s")
+        print("   Completed: \(isComplete)")
 
         Task {
             do {
                 let activity = try await activityService.logActivity(
                     category: category,
                     duration: duration,
-                    child: currentChild
+                    child: currentChild,
+                    isComplete: isComplete
                 )
                 print("✅ Activity logged successfully: \(activity.id)")
             } catch {

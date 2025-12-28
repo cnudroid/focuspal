@@ -23,7 +23,7 @@ class ActivityService: ActivityServiceProtocol {
 
     // MARK: - ActivityServiceProtocol
 
-    func logActivity(category: Category, duration: TimeInterval, child: Child) async throws -> Activity {
+    func logActivity(category: Category, duration: TimeInterval, child: Child, isComplete: Bool = true) async throws -> Activity {
         let endTime = Date()
         let startTime = endTime.addingTimeInterval(-duration)
 
@@ -32,7 +32,8 @@ class ActivityService: ActivityServiceProtocol {
             childId: child.id,
             startTime: startTime,
             endTime: endTime,
-            isManualEntry: false
+            isManualEntry: false,
+            isComplete: isComplete
         )
 
         return try await repository.create(activity)

@@ -11,7 +11,7 @@ import Foundation
 /// Manages activity logging and retrieval operations.
 protocol ActivityServiceProtocol {
     /// Log a new activity
-    func logActivity(category: Category, duration: TimeInterval, child: Child) async throws -> Activity
+    func logActivity(category: Category, duration: TimeInterval, child: Child, isComplete: Bool) async throws -> Activity
 
     /// Fetch today's activities for a child
     func fetchTodayActivities(for child: Child) async throws -> [Activity]

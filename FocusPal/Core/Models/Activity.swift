@@ -18,6 +18,7 @@ struct Activity: Identifiable, Equatable, Hashable {
     var notes: String?
     var mood: Mood
     var isManualEntry: Bool
+    var isComplete: Bool
     let createdDate: Date
     var syncStatus: SyncStatus
 
@@ -40,6 +41,7 @@ struct Activity: Identifiable, Equatable, Hashable {
         notes: String? = nil,
         mood: Mood = .none,
         isManualEntry: Bool = false,
+        isComplete: Bool = true,
         createdDate: Date = Date(),
         syncStatus: SyncStatus = .pending
     ) {
@@ -51,6 +53,7 @@ struct Activity: Identifiable, Equatable, Hashable {
         self.notes = notes
         self.mood = mood
         self.isManualEntry = isManualEntry
+        self.isComplete = isComplete
         self.createdDate = createdDate
         self.syncStatus = syncStatus
     }

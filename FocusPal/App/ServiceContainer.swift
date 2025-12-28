@@ -43,7 +43,7 @@ class ServiceContainer: ObservableObject {
     }()
 
     lazy var multiChildTimerManager: MultiChildTimerManager = {
-        MultiChildTimerManager(notificationService: notificationService, activityService: activityService)
+        MultiChildTimerManager(notificationService: notificationService)
     }()
 
     lazy var activityService: ActivityServiceProtocol = {

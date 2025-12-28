@@ -35,6 +35,7 @@ extension ActivityEntity {
             notes: notes,
             mood: moodValue,
             isManualEntry: isManualEntry,
+            isComplete: isComplete,
             createdDate: createdDate,
             syncStatus: syncStatusValue
         )
@@ -48,6 +49,7 @@ extension ActivityEntity {
         self.notes = model.notes
         self.mood = Int16(model.mood.rawValue)
         self.isManualEntry = model.isManualEntry
+        self.isComplete = model.isComplete
         self.createdDate = model.createdDate
         self.syncStatus = model.syncStatus.rawValue
     }

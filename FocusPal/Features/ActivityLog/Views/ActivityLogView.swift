@@ -39,7 +39,14 @@ struct ActivityLogView: View {
                         EmptyLogView()
                     } else {
                         ForEach(viewModel.activities) { activity in
-                            ActivityLogRow(activity: activity)
+                            ActivityLogRow(
+                                activity: activity,
+                                onMarkComplete: activity.isComplete ? nil : {
+                                    Task {
+                                        await viewModel.markActivityComplete(activity.id)
+                                    }
+                                }
+                            )
                         }
                         .onDelete(perform: viewModel.deleteActivities)
                     }
@@ -72,18 +79,39 @@ struct ActivityLogView: View {
 
 struct ActivityLogRow: View {
     let activity: ActivityDisplayItem
+    var onMarkComplete: (() -> Void)?
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: activity.iconName)
-                .foregroundColor(.white)
-                .frame(width: 36, height: 36)
-                .background(Color(hex: activity.colorHex))
-                .cornerRadius(8)
+            // Category icon with completion indicator
+            ZStack(alignment: .bottomTrailing) {
+                Image(systemName: activity.iconName)
+                    .foregroundColor(.white)
+                    .frame(width: 36, height: 36)
+                    .background(Color(hex: activity.colorHex))
+                    .cornerRadius(8)
+
+                // Incomplete indicator
+                if !activity.isComplete {
+                    Image(systemName: "exclamationmark.circle.fill")
+                        .font(.system(size: 14))
+                        .foregroundColor(.orange)
+                        .background(Circle().fill(Color(.systemBackground)).frame(width: 12, height: 12))
+                        .offset(x: 4, y: 4)
+                }
+            }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(activity.categoryName)
-                    .font(.headline)
+                HStack(spacing: 4) {
+                    Text(activity.categoryName)
+                        .font(.headline)
+
+                    if !activity.isComplete {
+                        Text("(incomplete)")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
+                }
 
                 Text(activity.timeRange)
                     .font(.caption)
@@ -92,9 +120,20 @@ struct ActivityLogRow: View {
 
             Spacer()
 
-            Text("\(activity.durationMinutes) min")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+            if let onMarkComplete = onMarkComplete {
+                Button {
+                    onMarkComplete()
+                } label: {
+                    Image(systemName: "checkmark.circle")
+                        .font(.title2)
+                        .foregroundColor(.green)
+                }
+                .buttonStyle(.plain)
+            } else {
+                Text("\(activity.durationMinutes) min")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
         }
         .padding(.vertical, 4)
     }

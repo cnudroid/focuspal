@@ -21,7 +21,7 @@ class MockActivityService: ActivityServiceProtocol {
 
     // MARK: - ActivityServiceProtocol
 
-    func logActivity(category: Category, duration: TimeInterval, child: Child) async throws -> Activity {
+    func logActivity(category: Category, duration: TimeInterval, child: Child, isComplete: Bool = true) async throws -> Activity {
         logActivityCallCount += 1
 
         if let error = mockError {
@@ -32,7 +32,8 @@ class MockActivityService: ActivityServiceProtocol {
             categoryId: category.id,
             childId: child.id,
             startTime: Date().addingTimeInterval(-duration),
-            endTime: Date()
+            endTime: Date(),
+            isComplete: isComplete
         )
 
         mockActivities.append(activity)

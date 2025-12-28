@@ -26,6 +26,7 @@ class ActivityLogViewModel: ObservableObject {
     private let activityService: ActivityServiceProtocol
     private let categoryService: CategoryServiceProtocol
     private let currentChild: Child
+    private var rawActivities: [Activity] = []  // Store raw activities for updates
 
     private static let globalCategoryKey = "globalCategories"
 
@@ -73,6 +74,7 @@ class ActivityLogViewModel: ObservableObject {
 
             print("📋 Fetched \(fetchedActivities.count) activities")
 
+            rawActivities = fetchedActivities
             activities = fetchedActivities.map { activity in
                 ActivityDisplayItem(
                     id: activity.id,
@@ -80,7 +82,9 @@ class ActivityLogViewModel: ObservableObject {
                     iconName: categoryIcon(for: activity.categoryId),
                     colorHex: categoryColor(for: activity.categoryId),
                     durationMinutes: activity.durationMinutes,
-                    timeRange: formatTimeRange(start: activity.startTime, end: activity.endTime)
+                    timeRange: formatTimeRange(start: activity.startTime, end: activity.endTime),
+                    startTime: activity.startTime,
+                    isComplete: activity.isComplete
                 )
             }
         } catch {
@@ -96,7 +100,8 @@ class ActivityLogViewModel: ObservableObject {
             _ = try await activityService.logActivity(
                 category: category,
                 duration: duration,
-                child: currentChild
+                child: currentChild,
+                isComplete: true  // Manual quick log is always complete
             )
             await loadActivities()
         } catch {
@@ -122,7 +127,8 @@ class ActivityLogViewModel: ObservableObject {
             let activity = try await activityService.logActivity(
                 category: category,
                 duration: duration,
-                child: currentChild
+                child: currentChild,
+                isComplete: true  // Manual entries are always complete
             )
 
             // Then update it with manual entry details
@@ -135,6 +141,7 @@ class ActivityLogViewModel: ObservableObject {
                 notes: finalNotes,
                 mood: mood,
                 isManualEntry: true,
+                isComplete: true,
                 createdDate: activity.createdDate,
                 syncStatus: activity.syncStatus
             )
@@ -153,6 +160,21 @@ class ActivityLogViewModel: ObservableObject {
                 try? await activityService.deleteActivity(activityId)
             }
             await loadActivities()
+        }
+    }
+
+    /// Mark an incomplete activity as complete
+    func markActivityComplete(_ activityId: UUID) async {
+        guard let activity = rawActivities.first(where: { $0.id == activityId }) else { return }
+
+        var updatedActivity = activity
+        updatedActivity.isComplete = true
+
+        do {
+            _ = try await activityService.updateActivity(updatedActivity)
+            await loadActivities()
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 

@@ -189,7 +189,7 @@ class TestMockActivityService: ActivityServiceProtocol {
     var logActivityCallCount = 0
     var lastLoggedActivity: Activity?
 
-    func logActivity(category: FocusPal.Category, duration: TimeInterval, child: Child) async throws -> Activity {
+    func logActivity(category: FocusPal.Category, duration: TimeInterval, child: Child, isComplete: Bool = true) async throws -> Activity {
         if shouldThrowError {
             enum TestError: Error { case failed }
             throw TestError.failed
@@ -199,7 +199,8 @@ class TestMockActivityService: ActivityServiceProtocol {
             categoryId: category.id,
             childId: child.id,
             startTime: Date().addingTimeInterval(-duration),
-            endTime: Date()
+            endTime: Date(),
+            isComplete: isComplete
         )
         lastLoggedActivity = activity
         todayActivities.append(activity)
