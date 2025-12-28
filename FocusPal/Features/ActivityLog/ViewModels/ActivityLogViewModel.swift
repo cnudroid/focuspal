@@ -178,6 +178,33 @@ class ActivityLogViewModel: ObservableObject {
         }
     }
 
+    /// Get raw activity by ID for editing
+    func getActivity(_ activityId: UUID) -> Activity? {
+        rawActivities.first(where: { $0.id == activityId })
+    }
+
+    /// Update an activity with new values
+    func updateActivity(_ activity: Activity) async {
+        do {
+            _ = try await activityService.updateActivity(activity)
+            await loadActivities()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    /// Get category name for an activity
+    func getCategoryName(for activityId: UUID) -> String {
+        guard let activity = rawActivities.first(where: { $0.id == activityId }) else { return "Unknown" }
+        return categoryName(for: activity.categoryId)
+    }
+
+    /// Get category color for an activity
+    func getCategoryColor(for activityId: UUID) -> String {
+        guard let activity = rawActivities.first(where: { $0.id == activityId }) else { return "#888888" }
+        return categoryColor(for: activity.categoryId)
+    }
+
     // MARK: - Private Methods
 
     private func loadCategories() async {

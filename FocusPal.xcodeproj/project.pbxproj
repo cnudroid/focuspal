@@ -56,6 +56,7 @@
 		4D58EF0003963B263CD71593 /* TimerServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109431C59F0FE565F2640A2F /* TimerServiceProtocol.swift */; };
 		4F61003693EF54743568D042 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0472A820F5F0183194AFEF /* WelcomeView.swift */; };
 		514072906C8F2B0FA6FF83D4 /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9ED0D136F23B6EC94BFE57 /* ActivityLogView.swift */; };
+		B688EAF892D0462994CD0034 /* ActivityEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274001A4D3284F9EACAA5499 /* ActivityEditView.swift */; };
 		546753A82FE4300E807439A3 /* SharedMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BE216ED6085C362AB1135B /* SharedMocks.swift */; };
 		549257F919B89A5526EED0F0 /* ParentControlsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A130207B74F105447AD04A /* ParentControlsViewModel.swift */; };
 		56E74E3CD5F23468C654DFD0 /* AnalyticsService+Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5887B1CE7000F95A38FA7F /* AnalyticsService+Notifications.swift */; };
@@ -237,6 +238,7 @@
 		7470D536420BEB275B871DB8 /* AchievementRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementRepositoryProtocol.swift; sourceTree = "<group>"; };
 		75821F4560E13C2B64FCF5AE /* ManualEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryView.swift; sourceTree = "<group>"; };
 		7C9ED0D136F23B6EC94BFE57 /* ActivityLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogView.swift; sourceTree = "<group>"; };
+		274001A4D3284F9EACAA5499 /* ActivityEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEditView.swift; sourceTree = "<group>"; };
 		81752F679BE76FD4942305B7 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		824C5FA9514D2CE580C77AAC /* ReportsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsViewModel.swift; sourceTree = "<group>"; };
 		82AF7409D5CA970E038ED768 /* PINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINService.swift; sourceTree = "<group>"; };
@@ -650,6 +652,7 @@
 			isa = PBXGroup;
 			children = (
 				7C9ED0D136F23B6EC94BFE57 /* ActivityLogView.swift */,
+				274001A4D3284F9EACAA5499 /* ActivityEditView.swift */,
 				75821F4560E13C2B64FCF5AE /* ManualEntryView.swift */,
 				9E4D828FF0ECDDF95C9F4CC4 /* QuickLogView.swift */,
 			);
@@ -1162,6 +1165,7 @@
 				31D2B38B6907600F82F2558E /* ActivityCard.swift in Sources */,
 				942ACB3A385E08D217DF2733 /* ActivityEntityMapper.swift in Sources */,
 				514072906C8F2B0FA6FF83D4 /* ActivityLogView.swift in Sources */,
+				B688EAF892D0462994CD0034 /* ActivityEditView.swift in Sources */,
 				F5C7ABBB6D7AFBB09922FDBF /* ActivityLogViewModel.swift in Sources */,
 				E36A5B7CCC444B144E734E24 /* ActivityRepositoryProtocol.swift in Sources */,
 				7F81683285EF251A5DAC33AE /* ActivityService.swift in Sources */,

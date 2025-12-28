@@ -12,6 +12,8 @@ struct ActivityLogView: View {
     @EnvironmentObject var serviceContainer: ServiceContainer
     @StateObject private var viewModel: ActivityLogViewModel
     @State private var showingQuickLog = false
+    @State private var showingEditSheet = false
+    @State private var editingActivityId: UUID?
     let currentChild: Child?
 
     init(currentChild: Child? = nil) {
@@ -47,6 +49,11 @@ struct ActivityLogView: View {
                                     }
                                 }
                             )
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                editingActivityId = activity.id
+                                showingEditSheet = true
+                            }
                         }
                         .onDelete(perform: viewModel.deleteActivities)
                     }
@@ -64,6 +71,25 @@ struct ActivityLogView: View {
             }
             .sheet(isPresented: $showingQuickLog) {
                 QuickLogView(viewModel: viewModel)
+            }
+            .sheet(isPresented: $showingEditSheet) {
+                if let activityId = editingActivityId,
+                   let activity = viewModel.getActivity(activityId) {
+                    ActivityEditView(
+                        activity: activity,
+                        categoryName: viewModel.getCategoryName(for: activityId),
+                        categoryColor: viewModel.getCategoryColor(for: activityId),
+                        onSave: { updatedActivity in
+                            Task {
+                                await viewModel.updateActivity(updatedActivity)
+                            }
+                            showingEditSheet = false
+                        },
+                        onCancel: {
+                            showingEditSheet = false
+                        }
+                    )
+                }
             }
             .task {
                 await viewModel.loadActivities()
