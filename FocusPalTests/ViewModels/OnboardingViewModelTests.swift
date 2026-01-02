@@ -56,9 +56,20 @@ final class OnboardingViewModelTests: XCTestCase {
 
     // MARK: - Navigation Tests
 
-    func testNextStep_FromWelcome_MovesToCreatePIN() {
+    func testNextStep_FromWelcome_MovesToParentProfile() {
         // Given: View model on welcome step
         XCTAssertEqual(sut.currentStep, .welcome)
+
+        // When: Moving to next step
+        sut.nextStep()
+
+        // Then: Should move to parentProfile step
+        XCTAssertEqual(sut.currentStep, .parentProfile)
+    }
+
+    func testNextStep_FromParentProfile_MovesToCreatePIN() {
+        // Given: View model on parentProfile step
+        sut.currentStep = .parentProfile
 
         // When: Moving to next step
         sut.nextStep()
@@ -67,37 +78,26 @@ final class OnboardingViewModelTests: XCTestCase {
         XCTAssertEqual(sut.currentStep, .createPIN)
     }
 
-    func testNextStep_FromCreatePIN_MovesToPermissions() {
-        // Given: View model on createPIN step
+    func testNextStep_FromCreatePIN_DoesNotMove() {
+        // Given: View model on last step (createPIN)
         sut.currentStep = .createPIN
-
-        // When: Moving to next step
-        sut.nextStep()
-
-        // Then: Should move to permissions step
-        XCTAssertEqual(sut.currentStep, .permissions)
-    }
-
-    func testNextStep_FromPermissions_DoesNotMove() {
-        // Given: View model on last step (permissions)
-        sut.currentStep = .permissions
 
         // When: Attempting to move to next step
         sut.nextStep()
 
-        // Then: Should remain on permissions step
-        XCTAssertEqual(sut.currentStep, .permissions)
+        // Then: Should remain on createPIN step (last step)
+        XCTAssertEqual(sut.currentStep, .createPIN)
     }
 
-    func testPreviousStep_FromCreatePIN_MovesToWelcome() {
+    func testPreviousStep_FromCreatePIN_MovesToParentProfile() {
         // Given: View model on createPIN step
         sut.currentStep = .createPIN
 
         // When: Moving to previous step
         sut.previousStep()
 
-        // Then: Should move back to welcome step
-        XCTAssertEqual(sut.currentStep, .welcome)
+        // Then: Should move back to parentProfile step
+        XCTAssertEqual(sut.currentStep, .parentProfile)
     }
 
     func testPreviousStep_FromWelcome_DoesNotMove() {
@@ -378,17 +378,17 @@ final class OnboardingViewModelTests: XCTestCase {
         XCTAssertEqual(sut.currentStep, .welcome)
 
         // When: Moving through the flow
-        // Step 1: Welcome -> Create PIN
+        // Step 1: Welcome -> Parent Profile
+        sut.nextStep()
+        XCTAssertEqual(sut.currentStep, .parentProfile)
+
+        // Step 2: Parent Profile -> Create PIN
         sut.nextStep()
         XCTAssertEqual(sut.currentStep, .createPIN)
 
-        // Step 2: Save PIN and move to permissions
+        // Step 3: Save PIN and complete onboarding
         let pinSaved = await sut.savePIN("1234")
         XCTAssertTrue(pinSaved)
-        sut.nextStep()
-        XCTAssertEqual(sut.currentStep, .permissions)
-
-        // Step 3: Complete onboarding
         sut.completeOnboarding()
 
         // Then: Verify complete state
@@ -398,12 +398,12 @@ final class OnboardingViewModelTests: XCTestCase {
     }
 
     func testOnboardingFlow_BackNavigation() {
-        // Given: View model at permissions step
-        sut.currentStep = .permissions
+        // Given: View model at createPIN step (last step)
+        sut.currentStep = .createPIN
 
         // When: Navigating back through steps
         sut.previousStep()
-        XCTAssertEqual(sut.currentStep, .createPIN)
+        XCTAssertEqual(sut.currentStep, .parentProfile)
 
         sut.previousStep()
         XCTAssertEqual(sut.currentStep, .welcome)
