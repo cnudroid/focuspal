@@ -41,6 +41,7 @@ class TimerViewModel: ObservableObject {
     private let timerManager: MultiChildTimerManager
     private let activityService: ActivityServiceProtocol
     private let pointsService: PointsServiceProtocol?
+    private let rewardsService: RewardsServiceProtocol?
     private let audioService = TimerAudioService()
     private var cancellables = Set<AnyCancellable>()
     private var updateTimer: Timer?
@@ -56,6 +57,7 @@ class TimerViewModel: ObservableObject {
         timerManager: MultiChildTimerManager? = nil,
         activityService: ActivityServiceProtocol? = nil,
         pointsService: PointsServiceProtocol? = nil,
+        rewardsService: RewardsServiceProtocol? = nil,
         currentChild: Child? = nil
     ) {
         // Use real services by default
@@ -68,6 +70,7 @@ class TimerViewModel: ObservableObject {
         self.timerManager = manager
         self.activityService = activityService ?? ActivityService(repository: activityRepo)
         self.pointsService = pointsService
+        self.rewardsService = rewardsService
         self.currentChild = child
 
         // Check for existing timer state BEFORE setting initial values
@@ -342,11 +345,24 @@ class TimerViewModel: ObservableObject {
 
     private func logCompletedActivity(state: ChildTimerState, isComplete: Bool, checkEarlyBonus: Bool = false) {
         let duration = state.elapsedTime
-        let category = categories.first { $0.id == state.categoryId }
 
-        guard let category = category else {
-            print("❌ Category not found, cannot log activity")
-            return
+        // Try to find category in current list, or reconstruct from state
+        // This fixes the bug where category might not be in current categories array
+        // (e.g., if app restarted or categories were modified)
+        let category: Category
+        if let existingCategory = categories.first(where: { $0.id == state.categoryId }) {
+            category = existingCategory
+        } else {
+            // Reconstruct category from state data - this ensures activity is always logged
+            category = Category(
+                id: state.categoryId,
+                name: state.categoryName,
+                iconName: state.categoryIconName,
+                colorHex: state.categoryColorHex,
+                childId: state.childId,
+                recommendedDuration: state.totalDuration
+            )
+            print("⚠️ Category reconstructed from timer state")
         }
 
         let actualMinutes = Int(duration / 60)
@@ -413,6 +429,8 @@ class TimerViewModel: ObservableObject {
             return
         }
 
+        var totalPointsEarned = 0
+
         do {
             if isComplete {
                 // Award points for completing the activity
@@ -422,6 +440,7 @@ class TimerViewModel: ObservableObject {
                     reason: .activityComplete,
                     activityId: activityId
                 )
+                totalPointsEarned += 10
                 print("✅ Awarded 10 points for activity completion")
 
                 // Reset consecutive incomplete counter on success
@@ -437,6 +456,7 @@ class TimerViewModel: ObservableObject {
                             reason: .earlyFinishBonus,
                             activityId: activityId
                         )
+                        totalPointsEarned += 5
                         print("🎉 Awarded 5 bonus points for early finish!")
                     }
                 }
@@ -463,6 +483,18 @@ class TimerViewModel: ObservableObject {
 
                     // Reset counter after applying penalty
                     consecutiveIncompleteCount = 0
+                }
+            }
+
+            // Update weekly rewards if points were earned
+            // This fixes Issue 4: Rewards not being updated
+            if totalPointsEarned > 0, let rewardsService = rewardsService {
+                do {
+                    _ = try await rewardsService.addPoints(totalPointsEarned, for: currentChild.id)
+                    print("🏆 Updated weekly rewards with \(totalPointsEarned) points")
+                } catch {
+                    print("⚠️ Failed to update rewards: \(error)")
+                    // Continue gracefully - points are still saved
                 }
             }
         } catch {

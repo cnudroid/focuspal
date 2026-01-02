@@ -35,15 +35,20 @@ class TimerAudioService: ObservableObject {
     // MARK: - Initialization
 
     init() {
-        setupAudioSession()
+        // Defer audio session setup to avoid blocking init
+        // This prevents potential crashes during app launch
+        Task { @MainActor in
+            await self.setupAudioSession()
+        }
     }
 
-    private func setupAudioSession() {
+    private func setupAudioSession() async {
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .duckOthers)
-            try AVAudioSession.sharedInstance().setActive(true)
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .mixWithOthers)
+            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
             print("Failed to setup audio session: \(error)")
+            // Continue gracefully - audio just won't work
         }
     }
 

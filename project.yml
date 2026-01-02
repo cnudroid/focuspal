@@ -54,18 +54,35 @@ targets:
     dependencies:
       - target: FocusPal
 
+  FocusPalUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: FocusPalUITests
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.focuspal.dev.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: 5.0
+    dependencies:
+      - target: FocusPal
+
 schemes:
   FocusPal:
     build:
       targets:
         FocusPal: all
         FocusPalTests: [test]
+        FocusPalUITests: [test]
     run:
       config: Debug
     test:
       config: Debug
       targets:
         - FocusPalTests
+        - FocusPalUITests
     profile:
       config: Release
     analyze:

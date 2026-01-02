@@ -38,14 +38,9 @@ struct OnboardingContainerView: View {
 
             CreatePINView(
                 viewModel: viewModel,
-                onComplete: viewModel.nextStep
+                onComplete: viewModel.completeOnboarding
             )
             .tag(OnboardingStep.createPIN)
-
-            PermissionsView(onComplete: {
-                viewModel.completeOnboarding()
-            })
-            .tag(OnboardingStep.permissions)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .animation(.easeInOut, value: viewModel.currentStep)
@@ -57,7 +52,6 @@ enum OnboardingStep: Int, CaseIterable {
     case welcome = 0
     case parentProfile = 1
     case createPIN = 2
-    case permissions = 3
 }
 
 #Preview {

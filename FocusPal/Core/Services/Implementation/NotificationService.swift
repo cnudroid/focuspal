@@ -402,17 +402,5 @@ protocol UNUserNotificationCenterProtocol {
     func removeAllPendingNotificationRequests()
 }
 
-// Extend real UNUserNotificationCenter to conform to protocol
-extension UNUserNotificationCenter: UNUserNotificationCenterProtocol {
-    func requestAuthorization(options: UNAuthorizationOptions) async throws -> Bool {
-        return try await requestAuthorization(options: options)
-    }
-
-    func notificationSettings() async -> UNNotificationSettings {
-        return await notificationSettings()
-    }
-
-    func add(_ request: UNNotificationRequest) async throws {
-        try await add(request)
-    }
-}
+// UNUserNotificationCenter already has these methods, so it conforms automatically
+extension UNUserNotificationCenter: UNUserNotificationCenterProtocol {}
