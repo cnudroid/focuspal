@@ -135,8 +135,8 @@ class TimerViewModel: ObservableObject {
     }
 
     private func startUpdateLoop() {
-        // Update UI every 0.1 seconds when timer is running
-        updateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+        // Update UI every 1 second - sufficient for timer display, reduces memory usage
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 self?.updateFromManager()
             }

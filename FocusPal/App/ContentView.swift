@@ -109,6 +109,7 @@ struct MainTabView: View {
                 timerManager: serviceContainer.multiChildTimerManager,
                 activityService: serviceContainer.activityService,
                 pointsService: serviceContainer.pointsService,
+                rewardsService: serviceContainer.rewardsService,
                 currentChild: currentChild
             )
                 .id(currentChild.id)  // Force recreation when child changes

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 /// Permissions request screen in onboarding flow.
 struct PermissionsView: View {
@@ -73,15 +74,15 @@ struct PermissionsView: View {
     }
 
     private func requestNotifications() {
-        Task {
+        Task { @MainActor in
             do {
                 let center = UNUserNotificationCenter.current()
                 let granted = try await center.requestAuthorization(options: [.alert, .sound, .badge])
-                await MainActor.run {
-                    notificationsGranted = granted
-                }
+                notificationsGranted = granted
             } catch {
                 print("Notification permission error: \(error)")
+                // Still allow user to continue even if permission request fails
+                notificationsGranted = false
             }
         }
     }

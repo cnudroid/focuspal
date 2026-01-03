@@ -1,0 +1,268 @@
+name: CI - Test Suite
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
+  SCHEME: FocusPal
+  DESTINATION: 'platform=iOS Simulator,name=iPhone 14,OS=17.2'
+
+jobs:
+  lint:
+    name: SwiftLint
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Run SwiftLint
+        run: swiftlint lint --strict --reporter github-actions-logging
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Run unit tests
+        run: |
+          xcodebuild test \
+            -scheme ${{ env.SCHEME }} \
+            -destination "${{ env.DESTINATION }}" \
+            -only-testing:FocusPalTests \
+            -enableCodeCoverage YES \
+            -resultBundlePath TestResults/UnitTests.xcresult \
+            | xcpretty
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: TestResults/UnitTests.xcresult
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app
+
+      - name: Run integration tests
+        run: |
+          xcodebuild test \
+            -scheme ${{ env.SCHEME }} \
+            -destination "${{ env.DESTINATION }}" \
+            -only-testing:FocusPalTests/Integration \
+            -enableCodeCoverage YES \
+            -resultBundlePath TestResults/IntegrationTests.xcresult \
+            | xcpretty
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: TestResults/IntegrationTests.xcresult
+
+  ui-tests:
+    name: UI Tests
+    runs-on: macos-14
+    strategy:
+      matrix:
+        device:
+          - 'iPhone SE (3rd generation)'
+          - 'iPhone 14'
+          - 'iPad (10th generation)'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app
+
+      - name: Boot simulator
+        run: |
+          SIMULATOR_ID=$(xcrun simctl list devices available | grep "${{ matrix.device }}" | grep -v "unavailable" | head -1 | awk -F'[()]' '{print $(NF-1)}')
+          xcrun simctl boot $SIMULATOR_ID || true
+
+      - name: Run UI tests
+        run: |
+          xcodebuild test \
+            -scheme ${{ env.SCHEME }} \
+            -destination "platform=iOS Simulator,name=${{ matrix.device }}" \
+            -only-testing:FocusPalUITests \
+            -enableCodeCoverage YES \
+            -resultBundlePath TestResults/UITests-${{ matrix.device }}.xcresult \
+            | xcpretty
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-results-${{ matrix.device }}
+          path: TestResults/UITests-${{ matrix.device }}.xcresult
+
+      - name: Upload screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-screenshots-${{ matrix.device }}
+          path: ~/Library/Logs/DiagnosticReports
+
+  code-coverage:
+    name: Code Coverage
+    needs: [unit-tests, integration-tests, ui-tests]
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download unit test results
+        uses: actions/download-artifact@v4
+        with:
+          name: unit-test-results
+          path: TestResults
+
+      - name: Download integration test results
+        uses: actions/download-artifact@v4
+        with:
+          name: integration-test-results
+          path: TestResults
+
+      - name: Generate coverage report
+        run: |
+          xcrun xccov view --report --json TestResults/UnitTests.xcresult > coverage.json
+
+      - name: Check coverage threshold
+        run: |
+          COVERAGE=$(jq -r '.lineCoverage' coverage.json)
+          THRESHOLD=80
+
+          echo "Code coverage: ${COVERAGE}%"
+
+          if (( $(echo "$COVERAGE < $THRESHOLD" | bc -l) )); then
+            echo "❌ Code coverage ${COVERAGE}% is below threshold ${THRESHOLD}%"
+            exit 1
+          else
+            echo "✅ Code coverage ${COVERAGE}% meets threshold ${THRESHOLD}%"
+          fi
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: coverage.json
+          fail_ci_if_error: true
+
+  build:
+    name: Build App
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app
+
+      - name: Build for simulator
+        run: |
+          xcodebuild build \
+            -scheme ${{ env.SCHEME }} \
+            -destination "${{ env.DESTINATION }}" \
+            -configuration Debug \
+            | xcpretty
+
+      - name: Build for device (Release)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          xcodebuild build \
+            -scheme ${{ env.SCHEME }} \
+            -destination 'generic/platform=iOS' \
+            -configuration Release \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            | xcpretty
+
+  performance-tests:
+    name: Performance Tests
+    runs-on: macos-14
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app
+
+      - name: Run performance tests
+        run: |
+          xcodebuild test \
+            -scheme ${{ env.SCHEME }} \
+            -destination "${{ env.DESTINATION }}" \
+            -only-testing:FocusPalTests/Performance \
+            -enableCodeCoverage NO \
+            -resultBundlePath TestResults/PerformanceTests.xcresult \
+            | xcpretty
+
+      - name: Upload performance results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-test-results
+          path: TestResults/PerformanceTests.xcresult
+
+  slack-notification:
+    name: Slack Notification
+    needs: [lint, unit-tests, integration-tests, ui-tests, code-coverage, build]
+    runs-on: macos-14
+    if: failure() && github.ref == 'refs/heads/main'
+    steps:
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "❌ FocusPal CI Failed on main branch",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*FocusPal Test Suite Failed*\n\nBranch: `${{ github.ref_name }}`\nCommit: `${{ github.sha }}`\nAuthor: ${{ github.actor }}"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Workflow"
+                      },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
