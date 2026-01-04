@@ -4,7 +4,7 @@ A family-focused iOS app designed to help children develop healthy time manageme
 
 ## Overview
 
-FocusPal is an ADHD-friendly screen time and activity tracker built specifically for families with multiple children. It features intuitive timer visualizations inspired by the Time Timer concept, making abstract time concepts tangible for children of all ages.
+FocusPal is a screen time and activity tracker built specifically for families with multiple children. It features intuitive timer visualizations inspired by the Time Timer concept, making abstract time concepts tangible for children of all ages—especially helpful for kids who struggle with focus or time awareness.
 
 Parents can set up profiles for each child, configure activity categories with time goals, and monitor progress through detailed statistics—all protected by a simple PIN system.
 
@@ -17,7 +17,7 @@ Parents can set up profiles for each child, configure activity categories with t
 - Switch between profiles seamlessly from the landing page
 
 ### Timer Visualizations
-- **Circular Timer**: ADHD-friendly Time Timer style with disappearing color wedge
+- **Circular Timer**: Visual Time Timer style with disappearing color wedge
 - **Bar Timer**: Simple horizontal progress bar
 - **Analog Timer**: Traditional clock-style display
 - Audio callouts at key intervals (10 minutes, 1 minute remaining)
@@ -121,11 +121,11 @@ Stay informed with automated summaries:
 - **Calendar Integration**: Sync with family calendars for better planning
 - **Weekly Email Summaries**: Automated reports delivered to your inbox
 
-### For Families with ADHD
-- **Time Timer Style**: Research-backed visual countdown
-- **Audio Callouts**: Gentle time warnings
-- **Category Colors**: Visual organization
-- **Simple Interface**: Reduced cognitive load
+### For Children Who Need Extra Support
+- **Time Timer Style**: Research-backed visual countdown helps kids "see" time
+- **Audio Callouts**: Gentle time warnings prepare children for transitions
+- **Category Colors**: Visual organization reduces confusion
+- **Simple Interface**: Clean design minimizes distractions
 
 ## Architecture
 
@@ -344,8 +344,8 @@ Timers survive app termination. State is saved to UserDefaults and restored on l
 ### Deterministic UUIDs
 Categories use hash-based UUIDs derived from `childId + categoryName`, ensuring data consistency across sessions and potential future sync scenarios.
 
-### ADHD-Friendly Design
-The circular timer visualization is inspired by research showing that visual time representation helps individuals with ADHD better understand time passage.
+### Visual Time Design
+The circular timer visualization is inspired by research showing that visual time representation helps children better understand time passage—particularly beneficial for kids who struggle with focus or time awareness.
 
 ### Multi-Child Isolation
 Each child's data is strictly isolated. Categories, activities, achievements, and time goals are all filtered by `childId` to prevent any cross-contamination.

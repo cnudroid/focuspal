@@ -5,9 +5,9 @@ title: FocusPal Blog
 
 # Welcome to FocusPal
 
-**ADHD-friendly screen time and activity tracker for families**
+**Screen time and activity tracker for the whole family**
 
-FocusPal helps children develop healthy time management habits through engaging timer experiences and visual progress tracking. Built specifically for families with multiple children, featuring intuitive timer visualizations inspired by the Time Timer concept.
+FocusPal helps children develop healthy time management habits through engaging timer experiences and visual progress tracking. Built specifically for families with multiple children, featuring intuitive timer visualizations inspired by the Time Timer concept—especially helpful for kids who need extra support with focus and transitions.
 
 ## Features
 

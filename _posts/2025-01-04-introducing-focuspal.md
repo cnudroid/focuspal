@@ -4,7 +4,7 @@ title: "See Time, Build Focus, Change Lives: Introducing FocusPal"
 date: 2025-01-04
 categories: [announcement, features]
 author: FocusPal Team
-excerpt: "FocusPal is an iOS app designed from the ground up for ADHD minds—and for the families who love them. Make time visible, activities rewarding, and parenting less stressful."
+excerpt: "FocusPal is an iOS app that helps children understand time through visual timers. Make time visible, activities rewarding, and parenting less stressful."
 ---
 
 ## The Struggle Every Parent Knows
@@ -13,31 +13,31 @@ It's 5 PM on a Tuesday. You tell your daughter, "You have thirty minutes until d
 
 She hears infinity.
 
-By dinner time, she's still immersed in her activity—not because she's ignoring you, but because she genuinely can't *feel* time passing. Sound familiar? If you're parenting a child with ADHD or executive function challenges, this scene probably plays out daily in your home. The morning routine takes twice as long. Homework sessions end in frustration. Transitions between activities trigger meltdowns. And the hardest part? Your child isn't being difficult—they're experiencing time differently than you.
+By dinner time, she's still immersed in her activity—not because she's ignoring you, but because she genuinely can't *feel* time passing. Sound familiar? This scene plays out daily in homes everywhere. The morning routine takes twice as long. Homework sessions end in frustration. Transitions between activities trigger meltdowns. And the hardest part? Your child isn't being difficult—they're experiencing time differently than you.
 
-What your child struggles with has a name: time blindness. And it affects millions of children. According to research, over 6 million children in the US have ADHD, and time perception challenges are one of the most frustrating aspects for families. But here's the good news: **what if you could make time visible?**
+Many children struggle to understand time as an abstract concept. Whether it's difficulty with focus, executive function challenges, or simply being young, millions of kids need help making time tangible. But here's the good news: **what if you could make time visible?**
 
 ## Enter FocusPal: The Timer App Your Family Has Been Waiting For
 
-Most timer apps are built for people who can naturally feel time passing. They assume you understand that "ten minutes" is shorter than "an hour." But children with ADHD? They need to *see* it.
+Most timer apps are built for people who can naturally feel time passing. They assume you understand that "ten minutes" is shorter than "an hour." But many children need to *see* it.
 
-FocusPal is an iOS app designed from the ground up for ADHD minds—and for the families who love them. It's not just another countdown clock. It's a complete family productivity system that makes time tangible, activities rewarding, and parenting less stressful.
+FocusPal is an iOS app designed to help children understand time visually. It's not just another countdown clock. It's a complete family productivity system that makes time tangible, activities rewarding, and parenting less stressful.
 
 Think of it as the digital evolution of the physical Time Timer, reimagined for modern families with powerful features that go far beyond a simple countdown.
 
 ## Key Features That Transform Time Management
 
-### ADHD-Friendly Visual Timers That Actually Work
+### Visual Timers That Actually Work
 
 FocusPal offers three visual timer modes, so your child can choose the style that works best for them:
 
-**The Circular Timer** - Our signature visual timer uses the Time Timer concept that's research-backed for ADHD support. It shows time as a disappearing colored wedge, creating a visual representation that's immediately understandable. Your child can literally watch time disappear.
+**The Circular Timer** - Our signature visual timer uses the Time Timer concept, backed by research on visual learning. It shows time as a disappearing colored wedge, creating a visual representation that's immediately understandable. Your child can literally watch time disappear.
 
 **The Bar Timer** - A simple, straightforward progress bar for children who prefer linear visuals.
 
 **The Analog Timer** - A traditional clock-style display for kids who respond to analog visualizations.
 
-Beyond the visuals, FocusPal includes smart audio callouts at key intervals (10 minutes remaining, 1 minute remaining) to help children prepare for transitions. For families with time blindness, these gentle audio warnings are game-changers.
+Beyond the visuals, FocusPal includes smart audio callouts at key intervals (10 minutes remaining, 1 minute remaining) to help children prepare for transitions. These gentle audio warnings are game-changers for smooth activity changes.
 
 ### Multi-Child Family Support: One App for Everyone
 
@@ -160,11 +160,11 @@ No login required—the insights come to you.
 
 **Peace of Mind** - You know what your kids are doing with their time. You can see progress objectively rather than relying on how it felt.
 
-**Built for Your Family** - FocusPal isn't a generic time-tracking tool. It's specifically designed with ADHD brains in mind.
+**Built for Your Family** - FocusPal isn't a generic time-tracking tool. It's specifically designed with visual learners and focus challenges in mind.
 
-### For ADHD Families Specifically
+### For Children Who Need Extra Support
 
-**Research-Backed Design** - The circular timer visualization is inspired by decades of research showing that visual time representation helps individuals with ADHD understand time passage.
+**Research-Backed Design** - The circular timer visualization is inspired by research showing that visual time representation helps children understand time passage.
 
 **Reduced Cognitive Load** - The interface is intentionally simple. No unnecessary features or distracting elements. Children can focus on the task and the timer—nothing else.
 
@@ -172,7 +172,7 @@ No login required—the insights come to you.
 
 **Audio Callouts for Preparation** - Time warnings give children a chance to mentally prepare for transitions, reducing the shock and resistance that often occurs.
 
-**Multiple Approaches to Success** - Different timer styles (circular, bar, analog) mean you can find what works for your child's specific brain. One approach doesn't fit all ADHD learners.
+**Multiple Approaches to Success** - Different timer styles (circular, bar, analog) mean you can find what works for your child. One approach doesn't fit all learners.
 
 ## Getting Started Is Simple
 
@@ -185,7 +185,7 @@ Most families see the difference within the first week.
 
 ## The Bottom Line
 
-Every child needs help understanding time. Children with ADHD need it more than most. FocusPal doesn't just show a countdown—it transforms how your family relates to time itself. Parents report fewer transition conflicts, children report feeling more in control, and families report better overall routine management.
+Every child needs help understanding time—some more than others. FocusPal doesn't just show a countdown—it transforms how your family relates to time itself. Parents report fewer transition conflicts, children report feeling more in control, and families report better overall routine management.
 
 Your child isn't lazy or willfully ignoring transitions. They're experiencing time differently. FocusPal makes time visible, manageable, and even rewarding.
 
