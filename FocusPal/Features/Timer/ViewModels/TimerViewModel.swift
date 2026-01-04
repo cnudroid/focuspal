@@ -214,16 +214,9 @@ class TimerViewModel: ObservableObject {
         resetForNextSession()
     }
 
-    private static let globalCategoryKey = "globalCategories"
-
     private func loadCategories() {
-        // Try to load categories from shared storage first
-        if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
-           let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
-            categories = decoded.map { $0.toCategory(childId: currentChild.id) }.filter { $0.isActive }
-        } else {
-            categories = Category.defaultCategories(for: currentChild.id)
-        }
+        // Load categories from shared storage using CategoryData helper
+        categories = CategoryData.loadActive(for: currentChild.id)
 
         // Select first category and set its duration (only if no active timer)
         if timerManager.timerState(for: currentChild.id) == nil {
@@ -239,13 +232,8 @@ class TimerViewModel: ObservableObject {
     func reloadCategories() {
         let currentSelectedId = selectedCategory?.id
 
-        // Reload from shared storage
-        if let data = UserDefaults.standard.data(forKey: Self.globalCategoryKey),
-           let decoded = try? JSONDecoder().decode([CategoryData].self, from: data) {
-            categories = decoded.map { $0.toCategory(childId: currentChild.id) }.filter { $0.isActive }
-        } else {
-            categories = Category.defaultCategories(for: currentChild.id)
-        }
+        // Reload from shared storage using CategoryData helper
+        categories = CategoryData.loadActive(for: currentChild.id)
 
         // Try to keep the same category selected
         if let id = currentSelectedId,
@@ -258,11 +246,34 @@ class TimerViewModel: ObservableObject {
         }
     }
 
+    /// Select a category by ID (used for navigation from Schedule)
+    func selectCategory(byId categoryId: UUID) {
+        guard timerState == .idle else { return }  // Only allow selection when idle
+        if let category = categories.first(where: { $0.id == categoryId }) {
+            selectedCategory = category
+        }
+    }
+
     // MARK: - Timer Controls
 
     func startTimer() {
         guard let category = selectedCategory else { return }
 
+        // Handle reward category - deduct points before starting
+        if category.categoryType == .reward {
+            Task {
+                await deductRewardCost(for: category)
+                await MainActor.run {
+                    performTimerStart(category: category)
+                }
+            }
+        } else {
+            // Task category - start immediately
+            performTimerStart(category: category)
+        }
+    }
+
+    private func performTimerStart(category: Category) {
         let duration = category.recommendedDuration
         timeAdded = 0
 
@@ -274,6 +285,29 @@ class TimerViewModel: ObservableObject {
         timerState = .running
         remainingTime = duration
         progress = 1.0
+    }
+
+    /// Deducts points for starting a reward activity (allows negative balance for budgeting lesson)
+    private func deductRewardCost(for category: Category) async {
+        guard let pointsService = pointsService else {
+            // No points service - allow activity anyway
+            return
+        }
+
+        let baseCost = 10
+        let cost = Int(Double(baseCost) * category.pointsMultiplier)
+
+        do {
+            try await pointsService.deductPoints(
+                childId: currentChild.id,
+                amount: cost,
+                reason: .rewardCost
+            )
+            print("🎁 Deducted \(cost) points for reward activity: \(category.name)")
+        } catch {
+            print("⚠️ Failed to deduct points for reward: \(error)")
+            // Allow activity on error - don't block child
+        }
     }
 
     func pauseTimer() {
@@ -389,7 +423,8 @@ class TimerViewModel: ObservableObject {
                     isComplete: isComplete,
                     elapsedTime: duration,
                     recommendedDuration: category.recommendedDuration,
-                    checkEarlyBonus: checkEarlyBonus
+                    checkEarlyBonus: checkEarlyBonus,
+                    category: category
                 )
             } catch {
                 print("❌ Failed to log activity: \(error)")
@@ -421,7 +456,8 @@ class TimerViewModel: ObservableObject {
         isComplete: Bool,
         elapsedTime: TimeInterval,
         recommendedDuration: TimeInterval,
-        checkEarlyBonus: Bool = false
+        checkEarlyBonus: Bool = false,
+        category: Category?
     ) async {
         // Skip if points service is not available
         guard let pointsService = pointsService else {
@@ -429,45 +465,55 @@ class TimerViewModel: ObservableObject {
             return
         }
 
+        // Skip points for reward categories (already deducted on start)
+        if category?.categoryType == .reward {
+            print("ℹ️ Reward category - no completion points (already deducted on start)")
+            return
+        }
+
         var totalPointsEarned = 0
+        let multiplier = category?.pointsMultiplier ?? 1.0
 
         do {
             if isComplete {
-                // Award points for completing the activity
+                // Award points for completing the activity (with multiplier)
+                let earnedPoints = Int(10.0 * multiplier)
                 try await pointsService.awardPoints(
                     childId: currentChild.id,
-                    amount: 10,
+                    amount: earnedPoints,
                     reason: .activityComplete,
                     activityId: activityId
                 )
-                totalPointsEarned += 10
-                print("✅ Awarded 10 points for activity completion")
+                totalPointsEarned += earnedPoints
+                print("✅ Awarded \(earnedPoints) points for activity completion (multiplier: \(multiplier)x)")
 
                 // Reset consecutive incomplete counter on success
                 consecutiveIncompleteCount = 0
 
-                // Check for early finish bonus if requested
+                // Check for early finish bonus if requested (with multiplier)
                 if checkEarlyBonus {
                     let percentageCompleted = elapsedTime / recommendedDuration
                     if percentageCompleted < 0.8 {
+                        let bonusPoints = Int(5.0 * multiplier)
                         try await pointsService.awardPoints(
                             childId: currentChild.id,
-                            amount: 5,
+                            amount: bonusPoints,
                             reason: .earlyFinishBonus,
                             activityId: activityId
                         )
-                        totalPointsEarned += 5
-                        print("🎉 Awarded 5 bonus points for early finish!")
+                        totalPointsEarned += bonusPoints
+                        print("🎉 Awarded \(bonusPoints) bonus points for early finish!")
                     }
                 }
             } else {
-                // Deduct points for incomplete activity
+                // Deduct points for incomplete activity (with multiplier)
+                let deductedPoints = Int(5.0 * multiplier)
                 try await pointsService.deductPoints(
                     childId: currentChild.id,
-                    amount: 5,
+                    amount: deductedPoints,
                     reason: .activityIncomplete
                 )
-                print("⚠️ Deducted 5 points for incomplete activity")
+                print("⚠️ Deducted \(deductedPoints) points for incomplete activity")
 
                 // Track consecutive incomplete activities
                 consecutiveIncompleteCount += 1
@@ -504,40 +550,5 @@ class TimerViewModel: ObservableObject {
     }
 }
 
-// MARK: - CategoryData for UserDefaults persistence
-
-private struct CategoryData: Codable {
-    let id: UUID
-    let name: String
-    let iconName: String
-    let colorHex: String
-    let isActive: Bool
-    let sortOrder: Int
-    let isSystem: Bool
-    let recommendedDuration: TimeInterval
-
-    init(from category: Category) {
-        self.id = category.id
-        self.name = category.name
-        self.iconName = category.iconName
-        self.colorHex = category.colorHex
-        self.isActive = category.isActive
-        self.sortOrder = category.sortOrder
-        self.isSystem = category.isSystem
-        self.recommendedDuration = category.recommendedDuration
-    }
-
-    func toCategory(childId: UUID) -> Category {
-        Category(
-            id: id,
-            name: name,
-            iconName: iconName,
-            colorHex: colorHex,
-            isActive: isActive,
-            sortOrder: sortOrder,
-            isSystem: isSystem,
-            childId: childId,
-            recommendedDuration: recommendedDuration
-        )
-    }
-}
+// Note: CategoryData is now defined in FocusPal/Core/Models/CategoryData.swift
+// and shared across the app for UserDefaults persistence and Siri integration.

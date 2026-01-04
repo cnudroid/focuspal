@@ -14,6 +14,17 @@ import Combine
 @MainActor
 class ServiceContainer: ObservableObject {
 
+    // MARK: - Navigation State
+
+    /// Category ID to auto-select when navigating to Timer tab from Schedule or Siri
+    @Published var pendingTimerCategoryId: UUID?
+
+    /// Flag indicating we should navigate to Timer tab (from Siri)
+    @Published var pendingSiriTimerNavigation: Bool = false
+
+    /// Flag to auto-start timer after category selection (for Siri)
+    @Published var shouldAutoStartTimer: Bool = false
+
     // MARK: - Repositories
 
     lazy var childRepository: ChildRepositoryProtocol = {

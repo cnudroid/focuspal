@@ -271,30 +271,3 @@ class DailyTasksViewModel: ObservableObject {
         return "\(formatter.string(from: start)) - \(formatter.string(from: end))"
     }
 }
-
-// MARK: - CategoryData for UserDefaults persistence
-
-private struct CategoryData: Codable {
-    let id: UUID
-    let name: String
-    let iconName: String
-    let colorHex: String
-    let isActive: Bool
-    let sortOrder: Int
-    let isSystem: Bool
-    let recommendedDuration: TimeInterval
-
-    func toCategory(childId: UUID) -> Category {
-        Category(
-            id: id,
-            name: name,
-            iconName: iconName,
-            colorHex: colorHex,
-            isActive: isActive,
-            sortOrder: sortOrder,
-            isSystem: isSystem,
-            childId: childId,
-            recommendedDuration: recommendedDuration
-        )
-    }
-}

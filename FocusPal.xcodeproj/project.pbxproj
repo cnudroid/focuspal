@@ -21,6 +21,7 @@
 		0DC6D21DA822F901169DB477 /* StatCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972AD8776B35623C08E99EDB /* StatCard.swift */; };
 		122C48A2CD8F22A3DDD5061D /* ParentDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A864DCA943BAF70B19B21329 /* ParentDashboardView.swift */; };
 		130359CB6635E9E72D41FA8B /* TimerMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9191A377FECD25FB62F5BD69 /* TimerMode.swift */; };
+		13BB65DCB64008667DFA7044 /* ScheduledTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EB44C9572EC9B07DCA567E /* ScheduledTask.swift */; };
 		152AF4AD74AE6D966405AF0F /* AchievementNotificationHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B374E8649F1E740935BC0DD /* AchievementNotificationHelperTests.swift */; };
 		15566CD2C59B1250F66B06C6 /* PINServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39594139C2A31B4E3B328E89 /* PINServiceProtocol.swift */; };
 		15EED656E0478B6705A01C6A /* AchievementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E977C0B4B788316285ABB9D /* AchievementService.swift */; };
@@ -30,6 +31,7 @@
 		1ACBFB06AB510B2D80964A51 /* WeeklyProgressCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3757DA023BF5E19B1984DE6A /* WeeklyProgressCard.swift */; };
 		1BAAC8376FE9C6ED65AEF1AE /* PINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D931B42E22E204EEBCD159 /* PINServiceTests.swift */; };
 		1CBB82EC8CC44D9D942EF89E /* CategoryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A545357F85890C83193F72 /* CategoryServiceProtocol.swift */; };
+		1F08C8D3328846DD9A9DC7D3 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9246A151C976A5F7884EA9 /* CalendarService.swift */; };
 		203681891B479C1826C585D3 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177E28672D8AA1E3E42EC0E /* AnalyticsService.swift */; };
 		20FE25E9CC8C01C8C40A6272 /* ChildEntityMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDAC4628BE8EE160AC1A5C6F /* ChildEntityMapper.swift */; };
 		232A18605453C07976324880 /* TimeGoalRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2187F7249083C8255993AA34 /* TimeGoalRepositoryProtocol.swift */; };
@@ -50,6 +52,7 @@
 		3552DEAC17B9E8E8A0678372 /* TimerFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E80CBEC64292E7F83BBB01 /* TimerFlowUITests.swift */; };
 		36AFBCEBF0108091812D9091 /* CoreDataAchievementRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D242C98DD77DBF3D90CDE32F /* CoreDataAchievementRepository.swift */; };
 		3719D7615EE919C689D9C73C /* ActivityEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F16611F143BAC85DD6CBCB /* ActivityEditView.swift */; };
+		3723BED2E1F075A1E23E43B9 /* TaskSchedulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA89B6A9C95278EB784C1F14 /* TaskSchedulerView.swift */; };
 		385F169E2087D355BFCE5445 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9F1C760A9CAD49E8127C4C /* Constants.swift */; };
 		38FB954DCE012D9A3D964DC8 /* CoreDataPointsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DD78198DA4FD3F6EA6FD6E /* CoreDataPointsRepositoryTests.swift */; };
 		3BBC5EDC057931E02E9325B4 /* AchievementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2764F74A9E8606B51A0DECA6 /* AchievementTests.swift */; };
@@ -83,6 +86,9 @@
 		5E182479532A97A8A2700DEB /* CoreDataChildRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A6FC04F4839E1BECB4295E /* CoreDataChildRepository.swift */; };
 		5E37F92384634FDB762217C6 /* SyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CC779DD20DAFD32E06C89E /* SyncCoordinator.swift */; };
 		5E99ADDE88A3697F40E0562B /* BarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BA8760399F1D8C442B19A0 /* BarChart.swift */; };
+		5ED4E693EEA50E470F77830E /* TaskSchedulerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3E06DBDDE4B93E57B01682 /* TaskSchedulerViewModel.swift */; };
+		613A0E6FBBCB55295093A0D1 /* CategoryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C8BA73CE219D78A3AF73D3 /* CategoryData.swift */; };
+		6226ACD7046FA317337F8938 /* MockCalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86659E9EE9F449D29786BAE1 /* MockCalendarService.swift */; };
 		627185FB638B5101356BFE5F /* DailyTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C0E988BDF982932321D8F6 /* DailyTasksView.swift */; };
 		64747F86B0B0DB6F58A1F464 /* TimerAudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9B2E558BBC11DD7E9E0ED9 /* TimerAudioService.swift */; };
 		64F408854A0F4D3AA2868831 /* MockAchievementRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E4C4B13EB3DEA21F8F9E8C /* MockAchievementRepository.swift */; };
@@ -109,6 +115,7 @@
 		7A2BD62F1FEB1E696153B304 /* PointsServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC6915AEC02158AA204F72A /* PointsServiceTests.swift */; };
 		7C33799B22A31DC6B4D954E2 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913CE1A01F7F0351041FA309 /* Spacing.swift */; };
 		7CE456E5BD8A659EC10689C3 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2750D7B60786AB243429989E /* Animations.swift */; };
+		7CEFE533B749D4C148340BC9 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF304712AD06381428C50BD4 /* ScheduleViewModel.swift */; };
 		7F81683285EF251A5DAC33AE /* ActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BEFA0A254F5A41E6758D60 /* ActivityService.swift */; };
 		8057655C8C7A894FCC036129 /* WeeklyEmailScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FA040035F07D4810C06519 /* WeeklyEmailScheduler.swift */; };
 		80BEBD4F3F2A05AC49271C73 /* CreateProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB443DB5855CEDB71783EEE8 /* CreateProfileView.swift */; };
@@ -123,6 +130,7 @@
 		8AD23ECBE803FD0616F1D360 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BD9567C0D9F95EB8F5724A /* TimerView.swift */; };
 		8E4101FE8A3655E2DDACCDE5 /* ProfileCreationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41944FA0A8C14D4FF6BD4322 /* ProfileCreationUITests.swift */; };
 		8F78571E6BD9A7557F6AB8B8 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96705FBF192E38C5460B4E86 /* LoadingView.swift */; };
+		90197C50C3C0511E8D80E042 /* TaskEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82EDAE536633385324486CA /* TaskEditorView.swift */; };
 		90A0DAA991788EF565EAE06E /* CoreDataTimeGoalRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52328E7D9B7970BD577B19BC /* CoreDataTimeGoalRepository.swift */; };
 		93D8352D1E06AB913D036782 /* OnboardingContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D462712A4E8D96EC0B72E18B /* OnboardingContainerView.swift */; };
 		93F1C396EBCE0EFC1B22E6E7 /* ProfileSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157CC61C424E8E993ACE6CBF /* ProfileSelectionView.swift */; };
@@ -131,6 +139,7 @@
 		9586423259A100BEDC908525 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8293F29EA47D58C462AEA6B /* ContentView.swift */; };
 		95C5D7643DCE8294B2919775 /* ServiceContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A9845E227858E34D0D0809 /* ServiceContainer.swift */; };
 		95EE545BFE7AF1F2655F217A /* CoreDataRewardsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989ABF48EE1E00D0E5F4F2E2 /* CoreDataRewardsRepositoryTests.swift */; };
+		96BA29A6456571474E018CE4 /* SiriNavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA19C49E28FCA84F4E0DFEF /* SiriNavigationState.swift */; };
 		96ED627A4650A0D543E5D947 /* BalanceMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB87110A92E14E11EE5B671D /* BalanceMeter.swift */; };
 		96F20D83C235CE053FAF12C2 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A5003AFE5357814DD0A7ED /* Persistence.swift */; };
 		98D2D0865E9B467C739FEE1F /* ProfileSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C084BC47C8ED4EECA50CA9C /* ProfileSelectionViewModel.swift */; };
@@ -151,6 +160,7 @@
 		A5815C1A6E3521CD1F054F01 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBE9F3D0F5D7FCED6228E72 /* WeeklySummary.swift */; };
 		A5B0BEC2110592706AEEF49E /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D7CC3B764C1DE8AF84BBC /* CloudKitManager.swift */; };
 		A898430E08968E1E71C0EFA9 /* FocusPal.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A328C1ABB98521AA52C6F6CE /* FocusPal.xcdatamodeld */; };
+		A962124EE7E5A8510D917F36 /* FocusPalShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C806E571F19B5319DD3643F9 /* FocusPalShortcuts.swift */; };
 		A9623A332BCAF793094EA7D3 /* ProgressRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD42681BFCC2DF817B6BEAB /* ProgressRingView.swift */; };
 		A9750E804483B3DD253D08DE /* ParentProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7122CE8192472E41CE585B0 /* ParentProfileView.swift */; };
 		A98C16C9410FBE13DCE913DB /* TimeGoalServiceIntegrationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE47B309E8B3F755F08E973 /* TimeGoalServiceIntegrationExample.swift */; };
@@ -164,6 +174,7 @@
 		B33AA68CFDE038216AEF5C3A /* StreakBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628AFFFA466BA46C40C87BC9 /* StreakBadge.swift */; };
 		B3A4FE14703E2904D39A4E33 /* TierProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A5BC55D8BAA19BA9D58D3A /* TierProgressView.swift */; };
 		B410A5433E0A33BF6533EEA1 /* CategorySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA4E1698643D72BF5BD48DB /* CategorySettingsView.swift */; };
+		B52688B3F990323FF65FF7D9 /* CategoryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BFFCD818A65111E7E095D4 /* CategoryEntity.swift */; };
 		B61734A9C1DF304B4258F5DF /* CircularTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12394E58041C982A22B90AAF /* CircularTimerView.swift */; };
 		B816D4A7F906140FD3007560 /* PINSetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E37EBD6F9803C6275F63B55 /* PINSetupViewModel.swift */; };
 		B89A38B7D892391B34E4445C /* ActivityLogPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14D9287C2D6DD2795985114 /* ActivityLogPage.swift */; };
@@ -171,12 +182,16 @@
 		BBA9DF63F393A66C9687D557 /* BaseUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823DA88592C4A3E00740A3A8 /* BaseUITest.swift */; };
 		BC593E979BD47351A03F7D1C /* TimeGoalServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153F0A5B32E07D63ED9DEC0A /* TimeGoalServiceProtocol.swift */; };
 		BD6036A79A4E6EC67E359EA8 /* FocusPalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BCE2FD47E54210E5472011 /* FocusPalTests.swift */; };
+		BF39301C42766241D34381FB /* CalendarServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A90687B77CB58B10DE2F009 /* CalendarServiceProtocol.swift */; };
 		BF5F1C487759B0EAF21ED12F /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF207B61FE8E604C11FC9FED /* AchievementsView.swift */; };
 		C179B77A6BDB7328B44BF720 /* EmailContentBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4767AC6754779FF0EB5A16 /* EmailContentBuilderTests.swift */; };
 		C1A519AF38EA728B42E32FD0 /* WeeklyRewardHistoryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEBF5CC0221B38B45B93C037 /* WeeklyRewardHistoryRow.swift */; };
 		C39A1913602B5C0C1FA36040 /* MockParentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9B5F2E2D43C98D030DA34E9 /* MockParentRepository.swift */; };
+		C3C3A288CBB7E5EBC055EF19 /* ChildEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC17A020ECEC7D5255420D52 /* ChildEntity.swift */; };
 		C4848832C8F4BFABDEF49005 /* RewardsServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73B79871B9DDE7E0EBD9505 /* RewardsServiceProtocol.swift */; };
+		C4AF80BBB73379A293214174 /* ScheduledTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A54261042FC9CDC9C7AFEC3 /* ScheduledTasksView.swift */; };
 		C4BC80DED1DB35F07E1ED6F0 /* ChildPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF02A0D0D14DAE2EB60B0805 /* ChildPoints.swift */; };
+		C7CAC77226E7436AB13DAC68 /* StartTimerIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749E2DA5F765BB426121F69F /* StartTimerIntent.swift */; };
 		C92ED7D656B8DA8D1A07D49A /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59DD8FF32A3E070CF9DCF61 /* Achievement.swift */; };
 		C9AD0ED536935A6FFD4A5F19 /* PINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AF7409D5CA970E038ED768 /* PINService.swift */; };
 		CCD1AE364D60A68962056286 /* CategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB227DC46F8B5447A797E33 /* CategoryTests.swift */; };
@@ -218,6 +233,7 @@
 		FB626E6E8A3AAACFB5386BE7 /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFBDCAA5C69C46877C28245 /* LandingView.swift */; };
 		FC214444EDD0263A43C4213C /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399485656A65B5F2A5CEE706 /* NotificationService.swift */; };
 		FC42E6BAD0CC3C5D38C2C108 /* ParentAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F81B675925CBA456883AD9 /* ParentAuthViewModel.swift */; };
+		FC7AC73861ACDCA62DEDEBC7 /* ClockMascot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3755F87F6C611B147F0B2913 /* ClockMascot.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -242,7 +258,9 @@
 		00F16611F143BAC85DD6CBCB /* ActivityEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEditView.swift; sourceTree = "<group>"; };
 		0325C75AC3959E38DF7A6C95 /* QuickStatsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickStatsCard.swift; sourceTree = "<group>"; };
 		0334D0D0C9050A58C69ED53A /* MockRewardsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRewardsService.swift; sourceTree = "<group>"; };
+		03C8BA73CE219D78A3AF73D3 /* CategoryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryData.swift; sourceTree = "<group>"; };
 		05BD9567C0D9F95EB8F5724A /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		0A90687B77CB58B10DE2F009 /* CalendarServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarServiceProtocol.swift; sourceTree = "<group>"; };
 		0C73CD95B9325883421B00B1 /* ActivityRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRepositoryProtocol.swift; sourceTree = "<group>"; };
 		0EE47B309E8B3F755F08E973 /* TimeGoalServiceIntegrationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalServiceIntegrationExample.swift; sourceTree = "<group>"; };
 		0FD42681BFCC2DF817B6BEAB /* ProgressRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRingView.swift; sourceTree = "<group>"; };
@@ -280,6 +298,7 @@
 		318E96D5818DCBEFD2E5CD05 /* TimeGoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalsView.swift; sourceTree = "<group>"; };
 		31B56587BC607A26B081336B /* CoreDataParentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataParentRepository.swift; sourceTree = "<group>"; };
 		358FA3C9591D0442E15DB251 /* Shadows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shadows.swift; sourceTree = "<group>"; };
+		3755F87F6C611B147F0B2913 /* ClockMascot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockMascot.swift; sourceTree = "<group>"; };
 		3757DA023BF5E19B1984DE6A /* WeeklyProgressCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyProgressCard.swift; sourceTree = "<group>"; };
 		377B39CA3709E5D7FE8448B1 /* SyncServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncServiceProtocol.swift; sourceTree = "<group>"; };
 		39594139C2A31B4E3B328E89 /* PINServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINServiceProtocol.swift; sourceTree = "<group>"; };
@@ -295,6 +314,7 @@
 		43FA44687388EB97316683BB /* WeeklyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartView.swift; sourceTree = "<group>"; };
 		44F72AA37C972262E8202CF7 /* CategoryEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEditorView.swift; sourceTree = "<group>"; };
 		4559D39FE55EA7121B806E0E /* ParentProfilePromptViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentProfilePromptViewModel.swift; sourceTree = "<group>"; };
+		45BFFCD818A65111E7E095D4 /* CategoryEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEntity.swift; sourceTree = "<group>"; };
 		4609EF8D21F9D1FBD0EC29A2 /* TodayActivityList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayActivityList.swift; sourceTree = "<group>"; };
 		46C0E988BDF982932321D8F6 /* DailyTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTasksView.swift; sourceTree = "<group>"; };
 		47053AA286A82AD7CD4828DF /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
@@ -327,6 +347,7 @@
 		73015CB1783EB9094C1B70A6 /* FocusPal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FocusPal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F4D6B11BD9573B353F3717 /* FocusPalUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FocusPalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7470D536420BEB275B871DB8 /* AchievementRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementRepositoryProtocol.swift; sourceTree = "<group>"; };
+		749E2DA5F765BB426121F69F /* StartTimerIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartTimerIntent.swift; sourceTree = "<group>"; };
 		75821F4560E13C2B64FCF5AE /* ManualEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryView.swift; sourceTree = "<group>"; };
 		76FA040035F07D4810C06519 /* WeeklyEmailScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyEmailScheduler.swift; sourceTree = "<group>"; };
 		77BA96C0EC7FE2CCAF234559 /* RewardsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardsViewModel.swift; sourceTree = "<group>"; };
@@ -339,6 +360,8 @@
 		82AF7409D5CA970E038ED768 /* PINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINService.swift; sourceTree = "<group>"; };
 		85BFB0F574821A2FCA9563EB /* TimeGoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalService.swift; sourceTree = "<group>"; };
 		85C0158B0FE9BF6A1BDC871C /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
+		86659E9EE9F449D29786BAE1 /* MockCalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarService.swift; sourceTree = "<group>"; };
+		87EB44C9572EC9B07DCA567E /* ScheduledTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledTask.swift; sourceTree = "<group>"; };
 		8CB458A93284E8A973DF9871 /* StatisticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewModel.swift; sourceTree = "<group>"; };
 		8D47E9D4099EA2A9BC1DC3D7 /* RewardsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardsServiceTests.swift; sourceTree = "<group>"; };
 		8E37EBD6F9803C6275F63B55 /* PINSetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINSetupViewModel.swift; sourceTree = "<group>"; };
@@ -361,6 +384,7 @@
 		989ABF48EE1E00D0E5F4F2E2 /* CoreDataRewardsRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataRewardsRepositoryTests.swift; sourceTree = "<group>"; };
 		99638B08ED1ABFAA9B18224B /* ActivityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityTests.swift; sourceTree = "<group>"; };
 		99C1C5424FC3E15553B24D54 /* PINChangeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINChangeViewModelTests.swift; sourceTree = "<group>"; };
+		9A54261042FC9CDC9C7AFEC3 /* ScheduledTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledTasksView.swift; sourceTree = "<group>"; };
 		9CC6915AEC02158AA204F72A /* PointsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointsServiceTests.swift; sourceTree = "<group>"; };
 		9CD82A78834FBE6E89D9087C /* FocusPalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusPalApp.swift; sourceTree = "<group>"; };
 		9DCA56292456FBA2E322627E /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
@@ -375,6 +399,7 @@
 		A9A530941FFD0A5A0465EC82 /* TimerPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPage.swift; sourceTree = "<group>"; };
 		AA5A4F3CCAF8D7950A66F34C /* TierBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierBadge.swift; sourceTree = "<group>"; };
 		ABC67340A9303BCEF66DE3D8 /* CoreDataPointsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPointsRepository.swift; sourceTree = "<group>"; };
+		AC17A020ECEC7D5255420D52 /* ChildEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildEntity.swift; sourceTree = "<group>"; };
 		AD575E57E89CE91E6CDBB9A7 /* TestCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCoreDataStack.swift; sourceTree = "<group>"; };
 		AD76A7FF0CDAF1B42B87139F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AEB227DC46F8B5447A797E33 /* CategoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTests.swift; sourceTree = "<group>"; };
@@ -395,6 +420,8 @@
 		C4DD78198DA4FD3F6EA6FD6E /* CoreDataPointsRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPointsRepositoryTests.swift; sourceTree = "<group>"; };
 		C5DB2E5D36463C98CA73A06B /* PINEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINEntryView.swift; sourceTree = "<group>"; };
 		C6B68ACCDD48A811853BF1D0 /* PermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
+		C806E571F19B5319DD3643F9 /* FocusPalShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusPalShortcuts.swift; sourceTree = "<group>"; };
+		C82EDAE536633385324486CA /* TaskEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorView.swift; sourceTree = "<group>"; };
 		C9846940F3612B0857BF9956 /* CategoryEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEntityMapper.swift; sourceTree = "<group>"; };
 		C98492F4F78852D8F56EA230 /* CoreDataCategoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataCategoryRepository.swift; sourceTree = "<group>"; };
 		CA3E741164AEF9453AB72906 /* WeeklySummaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklySummaryService.swift; sourceTree = "<group>"; };
@@ -402,10 +429,12 @@
 		CB65458FB96D898342776118 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
 		CC1768431FBCF6B4BF27F16E /* PieChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChart.swift; sourceTree = "<group>"; };
 		CC204C1E79F45607C3BD7380 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
+		CCA19C49E28FCA84F4E0DFEF /* SiriNavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriNavigationState.swift; sourceTree = "<group>"; };
 		CDDD8DCBE8E8235116E413F5 /* CoreDataRewardsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataRewardsRepository.swift; sourceTree = "<group>"; };
 		CE997E29F2488D6A5EF08236 /* ActivitySummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySummaryCard.swift; sourceTree = "<group>"; };
 		CF207B61FE8E604C11FC9FED /* AchievementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsView.swift; sourceTree = "<group>"; };
 		CF2FD4BB6915ECD19621176B /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		CF304712AD06381428C50BD4 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
 		D242C98DD77DBF3D90CDE32F /* CoreDataAchievementRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataAchievementRepository.swift; sourceTree = "<group>"; };
 		D3BE216ED6085C362AB1135B /* SharedMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMocks.swift; sourceTree = "<group>"; };
 		D462712A4E8D96EC0B72E18B /* OnboardingContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContainerView.swift; sourceTree = "<group>"; };
@@ -414,6 +443,7 @@
 		D90237BE0AF53825C1FED9DD /* ProfileCreationPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCreationPage.swift; sourceTree = "<group>"; };
 		D9568FD4143193AFDBD1953E /* ParentControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentControlsView.swift; sourceTree = "<group>"; };
 		DA5887B1CE7000F95A38FA7F /* AnalyticsService+Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnalyticsService+Notifications.swift"; sourceTree = "<group>"; };
+		DA89B6A9C95278EB784C1F14 /* TaskSchedulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSchedulerView.swift; sourceTree = "<group>"; };
 		DAC1ABA3E71150881AC9AAEA /* MockCategoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCategoryService.swift; sourceTree = "<group>"; };
 		DAC515FC17C7A245BC046328 /* TimerViewModelBugTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModelBugTests.swift; sourceTree = "<group>"; };
 		DCB6387AA8876CA38500D5E6 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
@@ -449,9 +479,11 @@
 		F9B5F2E2D43C98D030DA34E9 /* MockParentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockParentRepository.swift; sourceTree = "<group>"; };
 		FAD9F60C19EBDE95F0D54E2C /* AchievementServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementServiceProtocol.swift; sourceTree = "<group>"; };
 		FB0EF94EC24F4A56F602C2AD /* LandingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPage.swift; sourceTree = "<group>"; };
+		FC9246A151C976A5F7884EA9 /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
 		FC9F1C760A9CAD49E8127C4C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FCE8B88723AA317515EEC402 /* EmailContentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailContentBuilder.swift; sourceTree = "<group>"; };
 		FDAC4628BE8EE160AC1A5C6F /* ChildEntityMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildEntityMapper.swift; sourceTree = "<group>"; };
+		FE3E06DBDDE4B93E57B01682 /* TaskSchedulerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSchedulerViewModel.swift; sourceTree = "<group>"; };
 		FEA4E1698643D72BF5BD48DB /* CategorySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsView.swift; sourceTree = "<group>"; };
 		FEF446F8E92A4283FF747CAC /* ChildTimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildTimerState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -505,6 +537,16 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		0AED167146E3D8937E6D6C65 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9A54261042FC9CDC9C7AFEC3 /* ScheduledTasksView.swift */,
+				C82EDAE536633385324486CA /* TaskEditorView.swift */,
+				DA89B6A9C95278EB784C1F14 /* TaskSchedulerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		0B4F589E9F3266938ED6CC12 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
@@ -531,6 +573,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		12B039C8FDE2E1353E49AEB9 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				F891450FFEDD57F2FAFB32EB /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		140B76FF508A68B5D9E22E4A /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -550,11 +600,28 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		173EEB2EDADB2A620BAA33CE /* AppShortcuts */ = {
+			isa = PBXGroup;
+			children = (
+				C806E571F19B5319DD3643F9 /* FocusPalShortcuts.swift */,
+			);
+			path = AppShortcuts;
+			sourceTree = "<group>";
+		};
 		18E842FCAEB16277C169641C /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		1A258A8EA23E3E73CD4B0B05 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				45BFFCD818A65111E7E095D4 /* CategoryEntity.swift */,
+				AC17A020ECEC7D5255420D52 /* ChildEntity.swift */,
+			);
+			path = Entities;
 			sourceTree = "<group>";
 		};
 		1A3BC94E8EB97B04AA7C7E21 /* Services */ = {
@@ -660,6 +727,14 @@
 			path = Repositories;
 			sourceTree = "<group>";
 		};
+		4847E0DFA4D725AD2A88983E /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				749E2DA5F765BB426121F69F /* StartTimerIntent.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
 		4C0AD0CE44FB1CA5D822A43E /* Features */ = {
 			isa = PBXGroup;
 			children = (
@@ -740,6 +815,15 @@
 				F0D2900724A4EC72441129DB /* Info.plist */,
 			);
 			path = FocusPalTests;
+			sourceTree = "<group>";
+		};
+		6C03320763EA3C7D454FDCA5 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				CF304712AD06381428C50BD4 /* ScheduleViewModel.swift */,
+				FE3E06DBDDE4B93E57B01682 /* TaskSchedulerViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		6E1CA6FD6A4FCC01D9898909 = {
@@ -916,11 +1000,13 @@
 				E59DD8FF32A3E070CF9DCF61 /* Achievement.swift */,
 				E4553CAD06F9551DCF5D477C /* Activity.swift */,
 				BA83B1A7D80275DBDF294EF6 /* Category.swift */,
+				03C8BA73CE219D78A3AF73D3 /* CategoryData.swift */,
 				963FE5B9D60DA6DB69827A7B /* Child.swift */,
 				BF02A0D0D14DAE2EB60B0805 /* ChildPoints.swift */,
 				FEF446F8E92A4283FF747CAC /* ChildTimerState.swift */,
 				554B70FB071FBE1D8AB1256B /* Parent.swift */,
 				12B35FEFC94829AEE03F3A04 /* Reward.swift */,
+				87EB44C9572EC9B07DCA567E /* ScheduledTask.swift */,
 				C44CA5FB1381B381265E00D8 /* TimeGoal.swift */,
 				AEBE9F3D0F5D7FCED6228E72 /* WeeklySummary.swift */,
 			);
@@ -956,6 +1042,15 @@
 			path = Timer;
 			sourceTree = "<group>";
 		};
+		970B4BA40BE5D881D407B92E /* Schedule */ = {
+			isa = PBXGroup;
+			children = (
+				6C03320763EA3C7D454FDCA5 /* ViewModels */,
+				0AED167146E3D8937E6D6C65 /* Views */,
+			);
+			path = Schedule;
+			sourceTree = "<group>";
+		};
 		9ACCBC4E3D8EAC497F4F8775 /* Statistics */ = {
 			isa = PBXGroup;
 			children = (
@@ -964,6 +1059,14 @@
 				2A0C875ED9783F2094E2C7A7 /* Views */,
 			);
 			path = Statistics;
+			sourceTree = "<group>";
+		};
+		A0FA619B82B37382F1668249 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				CCA19C49E28FCA84F4E0DFEF /* SiriNavigationState.swift */,
+			);
+			path = Navigation;
 			sourceTree = "<group>";
 		};
 		A5C47ACC9651485EF8E5A1F3 /* Views */ = {
@@ -1039,6 +1142,7 @@
 			isa = PBXGroup;
 			children = (
 				69B89C5A0539BB7C6A3CD65D /* MockActivityService.swift */,
+				86659E9EE9F449D29786BAE1 /* MockCalendarService.swift */,
 				DAC1ABA3E71150881AC9AAEA /* MockCategoryService.swift */,
 				3B334CB9B3D161E34A7E7B01 /* MockNotificationService.swift */,
 				B8272EE5F87D1A7E2C6CD80D /* MockPointsService.swift */,
@@ -1089,6 +1193,7 @@
 				B9BEFA0A254F5A41E6758D60 /* ActivityService.swift */,
 				3177E28672D8AA1E3E42EC0E /* AnalyticsService.swift */,
 				DA5887B1CE7000F95A38FA7F /* AnalyticsService+Notifications.swift */,
+				FC9246A151C976A5F7884EA9 /* CalendarService.swift */,
 				19444D8D2DC1C63530E080B5 /* CategoryService.swift */,
 				FCE8B88723AA317515EEC402 /* EmailContentBuilder.swift */,
 				813F93AAC1E316A72967A0C6 /* EmailService.swift */,
@@ -1132,6 +1237,9 @@
 				7E1B65C215B24D5B0BC41999 /* ParentControls */,
 				4F501028C7DA394D2F9572DA /* ProfileSelection */,
 				A90B111287A924C934DD1CC3 /* Rewards */,
+				970B4BA40BE5D881D407B92E /* Schedule */,
+				12B039C8FDE2E1353E49AEB9 /* Shared */,
+				D440CF29046F85252C3AB949 /* Siri */,
 				9ACCBC4E3D8EAC497F4F8775 /* Statistics */,
 				9275D84A91186654E70E748A /* Timer */,
 			);
@@ -1156,6 +1264,17 @@
 				981B357603A682A936FB405E /* HomeViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		D440CF29046F85252C3AB949 /* Siri */ = {
+			isa = PBXGroup;
+			children = (
+				173EEB2EDADB2A620BAA33CE /* AppShortcuts */,
+				1A258A8EA23E3E73CD4B0B05 /* Entities */,
+				4847E0DFA4D725AD2A88983E /* Intents */,
+				A0FA619B82B37382F1668249 /* Navigation */,
+			);
+			path = Siri;
 			sourceTree = "<group>";
 		};
 		DA932678884174B31F9A269D /* ViewModels */ = {
@@ -1267,6 +1386,7 @@
 				FAD9F60C19EBDE95F0D54E2C /* AchievementServiceProtocol.swift */,
 				54B97DB9A9BBE1ED4E3C4E6C /* ActivityServiceProtocol.swift */,
 				F272C8377D80F9E8302E0A1A /* AnalyticsServiceProtocol.swift */,
+				0A90687B77CB58B10DE2F009 /* CalendarServiceProtocol.swift */,
 				91A545357F85890C83193F72 /* CategoryServiceProtocol.swift */,
 				5D4D71B34A2597CE896A65D8 /* NotificationServiceProtocol.swift */,
 				5C105CBABC9FBDD1A6A6CD9C /* PointsServiceProtocol.swift */,
@@ -1293,6 +1413,14 @@
 				81752F679BE76FD4942305B7 /* TimerViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F891450FFEDD57F2FAFB32EB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3755F87F6C611B147F0B2913 /* ClockMascot.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		F9391C3BDADB63D11417AA76 /* Products */ = {
@@ -1459,8 +1587,12 @@
 				96ED627A4650A0D543E5D947 /* BalanceMeter.swift in Sources */,
 				5E99ADDE88A3697F40E0562B /* BarChart.swift in Sources */,
 				6E64F1C0C90C7C953AF62BF1 /* BarTimerView.swift in Sources */,
+				1F08C8D3328846DD9A9DC7D3 /* CalendarService.swift in Sources */,
+				BF39301C42766241D34381FB /* CalendarServiceProtocol.swift in Sources */,
 				26CA52C0F60722059DB8D201 /* Category.swift in Sources */,
+				613A0E6FBBCB55295093A0D1 /* CategoryData.swift in Sources */,
 				3C9ABFC4CDF98A5C52E4AD2F /* CategoryEditorView.swift in Sources */,
+				B52688B3F990323FF65FF7D9 /* CategoryEntity.swift in Sources */,
 				BA0ABA94F61252BCED7319BA /* CategoryEntityMapper.swift in Sources */,
 				A211267E50FFB755DCB70585 /* CategoryManagementView.swift in Sources */,
 				0A5E4181AAA22A2AA0BF6502 /* CategoryManagementViewModel.swift in Sources */,
@@ -1470,11 +1602,13 @@
 				B410A5433E0A33BF6533EEA1 /* CategorySettingsView.swift in Sources */,
 				4881666D65C6EF71B739CF13 /* CategorySettingsViewModel.swift in Sources */,
 				9ECAC914E65D687A830B6497 /* Child.swift in Sources */,
+				C3C3A288CBB7E5EBC055EF19 /* ChildEntity.swift in Sources */,
 				20FE25E9CC8C01C8C40A6272 /* ChildEntityMapper.swift in Sources */,
 				C4BC80DED1DB35F07E1ED6F0 /* ChildPoints.swift in Sources */,
 				8105EAEA48A7ABC4F8C6FD30 /* ChildRepositoryProtocol.swift in Sources */,
 				780D82ABF332E1E1560CF078 /* ChildTimerState.swift in Sources */,
 				B61734A9C1DF304B4258F5DF /* CircularTimerView.swift in Sources */,
+				FC7AC73861ACDCA62DEDEBC7 /* ClockMascot.swift in Sources */,
 				A5B0BEC2110592706AEEF49E /* CloudKitManager.swift in Sources */,
 				F2E65E7800EDC5FEE3E81D7B /* Colors.swift in Sources */,
 				385F169E2087D355BFCE5445 /* Constants.swift in Sources */,
@@ -1500,6 +1634,7 @@
 				E53D6C5B16275EF9415F72F3 /* ErrorView.swift in Sources */,
 				A898430E08968E1E71C0EFA9 /* FocusPal.xcdatamodeld in Sources */,
 				D3A35A62B9726A6032ECFBAF /* FocusPalApp.swift in Sources */,
+				A962124EE7E5A8510D917F36 /* FocusPalShortcuts.swift in Sources */,
 				5C4009BC32EF0D3A5D58096E /* HomeView.swift in Sources */,
 				D829F700E78BD5A82EDA92E6 /* HomeViewModel.swift in Sources */,
 				9FD751E69BF6A00F9E6E5AC9 /* IconButton.swift in Sources */,
@@ -1510,6 +1645,7 @@
 				64F408854A0F4D3AA2868831 /* MockAchievementRepository.swift in Sources */,
 				0358424197A3A7B9FE8537F5 /* MockActivityRepository.swift in Sources */,
 				470E29C2C28748C317BDAE25 /* MockActivityService.swift in Sources */,
+				6226ACD7046FA317337F8938 /* MockCalendarService.swift in Sources */,
 				9A2FBD2F713CD772588B0E24 /* MockCategoryService.swift in Sources */,
 				74E0AADAD81EF9C532799DC5 /* MockChildRepository.swift in Sources */,
 				D319473E5FA7EF9FD9026728 /* MockNotificationService.swift in Sources */,
@@ -1564,10 +1700,15 @@
 				C4848832C8F4BFABDEF49005 /* RewardsServiceProtocol.swift in Sources */,
 				0C232455120760C64511AEE6 /* RewardsView.swift in Sources */,
 				2B76735E19F700794AD7BECD /* RewardsViewModel.swift in Sources */,
+				7CEFE533B749D4C148340BC9 /* ScheduleViewModel.swift in Sources */,
+				13BB65DCB64008667DFA7044 /* ScheduledTask.swift in Sources */,
+				C4AF80BBB73379A293214174 /* ScheduledTasksView.swift in Sources */,
 				A1304C7A1166E2DB99827E7D /* SecondaryButton.swift in Sources */,
 				95C5D7643DCE8294B2919775 /* ServiceContainer.swift in Sources */,
 				7925D8CEEB17376551F21543 /* Shadows.swift in Sources */,
+				96BA29A6456571474E018CE4 /* SiriNavigationState.swift in Sources */,
 				7C33799B22A31DC6B4D954E2 /* Spacing.swift in Sources */,
+				C7CAC77226E7436AB13DAC68 /* StartTimerIntent.swift in Sources */,
 				0DC6D21DA822F901169DB477 /* StatCard.swift in Sources */,
 				AABAB3462BD820A1233B8C65 /* StatisticsView.swift in Sources */,
 				41D5633367F74AF218D00411 /* StatisticsViewModel.swift in Sources */,
@@ -1575,6 +1716,9 @@
 				5E37F92384634FDB762217C6 /* SyncCoordinator.swift in Sources */,
 				65FF324F17BD2913E76A7B28 /* SyncService.swift in Sources */,
 				6CC29343312FF92A8EEE6A0F /* SyncServiceProtocol.swift in Sources */,
+				90197C50C3C0511E8D80E042 /* TaskEditorView.swift in Sources */,
+				3723BED2E1F075A1E23E43B9 /* TaskSchedulerView.swift in Sources */,
+				5ED4E693EEA50E470F77830E /* TaskSchedulerViewModel.swift in Sources */,
 				87BB21E37D337582CEF62B42 /* TierBadge.swift in Sources */,
 				B3A4FE14703E2904D39A4E33 /* TierProgressView.swift in Sources */,
 				710603E33C98D160D3F122BD /* TimeGoal.swift in Sources */,

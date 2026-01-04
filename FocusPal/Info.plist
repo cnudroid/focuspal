@@ -18,6 +18,10 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>FocusPal needs full calendar access to sync scheduled tasks from your calendar and help your child stay organized.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>FocusPal needs calendar access to sync scheduled tasks from your calendar and help your child stay organized.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 </dict>

@@ -163,32 +163,6 @@ private struct TimeGoalSetting: Codable {
     let isActive: Bool
 }
 
-/// Codable wrapper for Category persistence (matches CategorySettingsViewModel)
-private struct CategoryData: Codable {
-    let id: UUID
-    let name: String
-    let iconName: String
-    let colorHex: String
-    let isActive: Bool
-    let sortOrder: Int
-    let isSystem: Bool
-    let recommendedDuration: TimeInterval
-
-    func toCategory() -> Category {
-        Category(
-            id: id,
-            name: name,
-            iconName: iconName,
-            colorHex: colorHex,
-            isActive: isActive,
-            sortOrder: sortOrder,
-            isSystem: isSystem,
-            childId: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!,
-            recommendedDuration: recommendedDuration
-        )
-    }
-}
-
 struct TimeGoalRow: View {
     @Binding var goal: TimeGoalItem
 

@@ -71,6 +71,39 @@ struct ContentView: View {
         .onChange(of: completedTimerAlert) { newValue in
             showingCompletedAlert = newValue != nil
         }
+        // Handle Siri navigation
+        .task {
+            await handleSiriNavigation()
+        }
+        .onReceive(SiriNavigationState.shared.$pendingTimerStart) { pending in
+            if pending != nil {
+                Task { await handleSiriNavigation() }
+            }
+        }
+    }
+
+    @MainActor
+    private func handleSiriNavigation() async {
+        guard hasCompletedOnboarding else { return }
+
+        if let pending = SiriNavigationState.shared.consumePendingTimerStart() {
+            // Fetch the child for this timer
+            do {
+                if let child = try await serviceContainer.childRepository.fetch(by: pending.childId) {
+                    // Set the current child
+                    currentChild = child
+
+                    // Set the pending category for timer view
+                    serviceContainer.pendingTimerCategoryId = pending.categoryId
+
+                    // Signal to navigate to timer tab and auto-start
+                    serviceContainer.pendingSiriTimerNavigation = true
+                    serviceContainer.shouldAutoStartTimer = true
+                }
+            } catch {
+                print("Failed to load child for Siri timer: \(error)")
+            }
+        }
     }
 
     private func dismissCompletedAlert() {
@@ -85,6 +118,7 @@ struct ContentView: View {
 /// Tab identifiers for programmatic navigation
 enum AppTab: Hashable {
     case home
+    case schedule
     case timer
     case log
     case stats
@@ -104,6 +138,12 @@ struct MainTabView: View {
                     Label("Home", systemImage: "house.fill")
                 }
                 .tag(AppTab.home)
+
+            ScheduledTasksView(child: currentChild, selectedTab: $selectedTab)
+                .tabItem {
+                    Label("Schedule", systemImage: "calendar")
+                }
+                .tag(AppTab.schedule)
 
             TimerView(
                 timerManager: serviceContainer.multiChildTimerManager,
@@ -140,6 +180,13 @@ struct MainTabView: View {
                     Label("Rewards", systemImage: "trophy.fill")
                 }
                 .tag(AppTab.rewards)
+        }
+        // Handle Siri navigation to timer tab
+        .onReceive(serviceContainer.$pendingSiriTimerNavigation) { shouldNavigate in
+            if shouldNavigate {
+                selectedTab = .timer
+                serviceContainer.pendingSiriTimerNavigation = false
+            }
         }
     }
 }

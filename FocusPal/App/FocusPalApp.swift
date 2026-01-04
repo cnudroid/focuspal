@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import AppIntents
 
 /// Main entry point for the FocusPal application.
 /// Configures the app lifecycle, dependency injection container, and root view.
@@ -26,6 +27,11 @@ struct FocusPalApp: App {
                 .task {
                     // Check and send weekly email if due on app launch
                     serviceContainer.checkWeeklyEmailOnLaunch()
+
+                    // Register App Shortcuts with the system for Siri integration
+                    if #available(iOS 16.0, *) {
+                        FocusPalShortcuts.updateAppShortcutParameters()
+                    }
                 }
         }
     }

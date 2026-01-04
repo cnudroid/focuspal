@@ -9,6 +9,7 @@ import SwiftUI
 
 /// Main timer view with visual countdown and controls.
 struct TimerView: View {
+    @EnvironmentObject var serviceContainer: ServiceContainer
     @StateObject private var viewModel: TimerViewModel
     @State private var showingParentControls = false
     @State private var showingNameEditor = false
@@ -163,6 +164,41 @@ struct TimerView: View {
                     Text("Did you finish \(state.categoryName)?")
                 } else {
                     Text("Did you finish the activity?")
+                }
+            }
+            .onAppear {
+                // Check if navigated from Schedule or Siri with a pending category
+                if let categoryId = serviceContainer.pendingTimerCategoryId {
+                    viewModel.selectCategory(byId: categoryId)
+                    serviceContainer.pendingTimerCategoryId = nil
+
+                    // Auto-start if triggered from Siri
+                    if serviceContainer.shouldAutoStartTimer {
+                        // Small delay to allow UI to update before starting
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            if viewModel.timerState == .idle {
+                                viewModel.startTimer()
+                            }
+                        }
+                        serviceContainer.shouldAutoStartTimer = false
+                    }
+                }
+            }
+            .onChange(of: serviceContainer.pendingTimerCategoryId) { newCategoryId in
+                // Handle navigation from Schedule tab when Timer view is already visible
+                if let categoryId = newCategoryId {
+                    viewModel.selectCategory(byId: categoryId)
+                    serviceContainer.pendingTimerCategoryId = nil
+
+                    // Auto-start if triggered from Siri
+                    if serviceContainer.shouldAutoStartTimer {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            if viewModel.timerState == .idle {
+                                viewModel.startTimer()
+                            }
+                        }
+                        serviceContainer.shouldAutoStartTimer = false
+                    }
                 }
             }
         }
@@ -363,13 +399,24 @@ struct CategoryChip: View {
                 HStack(spacing: 6) {
                     Image(systemName: category.iconName)
                     Text(category.name)
+                    // Type indicator for reward categories
+                    if category.categoryType == .reward {
+                        Image(systemName: "gift.fill")
+                            .font(.caption2)
+                    }
                 }
                 .font(.subheadline.weight(.medium))
 
-                // Show duration
-                Text("\(category.durationMinutes) min")
-                    .font(.caption2)
-                    .opacity(0.8)
+                // Show duration and points info
+                HStack(spacing: 4) {
+                    Text("\(category.durationMinutes) min")
+                    if category.pointsMultiplier != 1.0 {
+                        Text("•")
+                        Text("\(category.pointsMultiplier, specifier: "%.2g")x")
+                    }
+                }
+                .font(.caption2)
+                .opacity(0.8)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)

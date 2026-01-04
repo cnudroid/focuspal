@@ -40,6 +40,8 @@ targets:
       path: FocusPal/Info.plist
       properties:
         UILaunchScreen: {}
+        NSCalendarsUsageDescription: "FocusPal needs calendar access to sync scheduled tasks from your calendar and help your child stay organized."
+        NSCalendarsFullAccessUsageDescription: "FocusPal needs full calendar access to sync scheduled tasks from your calendar and help your child stay organized."
 
   FocusPalTests:
     type: bundle.unit-test

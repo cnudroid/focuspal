@@ -40,9 +40,6 @@ class CategorySettingsViewModel: ObservableObject {
         isLoading = false
     }
 
-    // Fixed UUID for global categories
-    private static let globalChildId = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
-
     func addCategory(_ category: Category) {
         let newCategory = Category(
             id: category.id,
@@ -53,8 +50,10 @@ class CategorySettingsViewModel: ObservableObject {
             sortOrder: categories.count,
             isSystem: false,
             parentCategoryId: category.parentCategoryId,
-            childId: Self.globalChildId,
-            recommendedDuration: category.recommendedDuration
+            childId: CategoryData.globalChildId,
+            recommendedDuration: category.recommendedDuration,
+            categoryType: category.categoryType,
+            pointsMultiplier: category.pointsMultiplier
         )
         categories.append(newCategory)
         saveCategories()
@@ -86,7 +85,9 @@ class CategorySettingsViewModel: ObservableObject {
                 isSystem: categories[index].isSystem,
                 parentCategoryId: categories[index].parentCategoryId,
                 childId: categories[index].childId,
-                recommendedDuration: categories[index].recommendedDuration
+                recommendedDuration: categories[index].recommendedDuration,
+                categoryType: categories[index].categoryType,
+                pointsMultiplier: categories[index].pointsMultiplier
             )
         }
         saveCategories()
@@ -110,42 +111,5 @@ class CategorySettingsViewModel: ObservableObject {
         if let encoded = try? JSONEncoder().encode(categoryData) {
             UserDefaults.standard.set(encoded, forKey: Self.globalCategoryKey)
         }
-    }
-}
-
-/// Codable wrapper for Category persistence
-private struct CategoryData: Codable {
-    let id: UUID
-    let name: String
-    let iconName: String
-    let colorHex: String
-    let isActive: Bool
-    let sortOrder: Int
-    let isSystem: Bool
-    let recommendedDuration: TimeInterval
-
-    init(from category: Category) {
-        self.id = category.id
-        self.name = category.name
-        self.iconName = category.iconName
-        self.colorHex = category.colorHex
-        self.isActive = category.isActive
-        self.sortOrder = category.sortOrder
-        self.isSystem = category.isSystem
-        self.recommendedDuration = category.recommendedDuration
-    }
-
-    func toCategory() -> Category {
-        Category(
-            id: id,
-            name: name,
-            iconName: iconName,
-            colorHex: colorHex,
-            isActive: isActive,
-            sortOrder: sortOrder,
-            isSystem: isSystem,
-            childId: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!,
-            recommendedDuration: recommendedDuration
-        )
     }
 }
