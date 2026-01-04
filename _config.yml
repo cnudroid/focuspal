@@ -1,0 +1,30 @@
+title: FocusPal
+description: ADHD-friendly screen time and activity tracker for families
+url: "https://cnudroid.github.io"
+baseurl: "/focuspal"
+theme: minima
+
+author:
+  name: FocusPal Team
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Exclude from build
+exclude:
+  - FocusPal/
+  - FocusPal.xcodeproj/
+  - FocusPalTests/
+  - FocusPalUITests/
+  - docs/
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - .git/
+  - .github/
+  - project.yml
