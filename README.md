@@ -61,12 +61,47 @@ Eight unlockable achievements to motivate consistency:
 - Progress reports per child
 - PIN change functionality
 
+### Points & Rewards System
+Motivate children with tangible rewards:
+- **Points for Completion**: Earn 10 points per activity
+- **Bonus Points**: Extra points for early finishes and beating averages
+- **Weekly Tiers**: Bronze (100pts), Silver (250pts), Gold (500pts), Platinum (1000pts)
+- **Streak Rewards**: Track current and longest weekly reward streaks
+- **Reward History**: View all-time achievement records
+
+### Siri Voice Integration
+Hands-free timer control:
+- "Start Homework timer in FocusPal"
+- "Start Reading in FocusPal"
+- "FocusPal start timer"
+- Automatic category and child detection
+- iOS 16+ App Intent support
+
+### Calendar Integration & Scheduled Tasks
+Plan and organize activities:
+- **iOS Calendar Sync**: Import events from your calendar
+- **Scheduled Tasks**: Create tasks with title, duration, and notes
+- **Recurring Tasks**: Daily, weekly, or monthly patterns
+- **Smart Reminders**: Configurable notification before task time
+- **Time Slots**: View by Morning, Afternoon, and Evening
+- **Google Calendar Support**: Framework ready for integration
+
+### Weekly Email Reports
+Stay informed with automated summaries:
+- HTML-formatted weekly activity reports
+- Points earned and tier progression
+- Top categories and time breakdown
+- Achievement highlights and streak status
+- Configurable delivery schedule
+
 ### Smart Notifications
 - Timer completion alerts
 - 5-minute and 1-minute warnings
 - Time goal threshold notifications
 - Streak celebrations and reminders
 - Daily goal reminders
+- Scheduled task reminders
+- Achievement unlock celebrations
 
 ## Benefits
 
@@ -75,12 +110,16 @@ Eight unlockable achievements to motivate consistency:
 - **Achievement Motivation**: Unlock badges for consistent behavior
 - **Independence**: Start and manage their own activity timers
 - **Positive Reinforcement**: Celebrate streaks and milestones
+- **Points & Rewards**: Earn points and unlock weekly reward tiers
+- **Voice Control**: Start timers hands-free with Siri
 
 ### For Parents
 - **Multi-Child Management**: One app for the whole family
 - **Insight & Reports**: Understand how children spend their time
 - **Goal Setting**: Encourage balance across activities
 - **Low Friction**: Quick setup, minimal ongoing maintenance
+- **Calendar Integration**: Sync with family calendars for better planning
+- **Weekly Email Summaries**: Automated reports delivered to your inbox
 
 ### For Families with ADHD
 - **Time Timer Style**: Research-backed visual countdown
@@ -141,6 +180,11 @@ FocusPal follows clean architecture principles with clear separation of concerns
 | `TimeGoalService` | Monitor daily time usage against goals |
 | `AnalyticsService` | Generate statistics and balance scores |
 | `NotificationService` | Schedule all local notifications |
+| `CalendarService` | iOS calendar integration and task management |
+| `PointsService` | Point awarding and transaction history |
+| `RewardsService` | Weekly reward tier tracking and redemption |
+| `EmailService` | Email generation and delivery |
+| `WeeklyEmailScheduler` | Automated weekly report scheduling |
 
 ### Data Models
 
@@ -152,6 +196,9 @@ FocusPal follows clean architecture principles with clear separation of concerns
 | `TimeGoal` | Daily time targets per category |
 | `Achievement` | Unlockable badges with progress |
 | `ChildTimerState` | Persisted timer state for recovery |
+| `ScheduledTask` | Calendar-integrated scheduled activities |
+| `WeeklyReward` | Points and tier tracking per week |
+| `ChildPoints` | Daily points tracking |
 
 ## Project Structure
 
@@ -183,7 +230,11 @@ FocusPal/
 │   ├── ParentControls/            # Settings & category management
 │   ├── Onboarding/                # Setup flow
 │   ├── Landing/                   # Profile selection
-│   └── ProfileSelection/          # Child switcher
+│   ├── ProfileSelection/          # Child switcher
+│   ├── Rewards/                   # Points and rewards system
+│   ├── Schedule/                  # Calendar and scheduled tasks
+│   ├── Siri/                      # Voice control intents
+│   └── DailyTasks/                # Daily task management
 │
 ├── DesignSystem/
 │   ├── Tokens/                    # Colors, typography, spacing
@@ -261,6 +312,30 @@ FocusPal/
 4. Create custom categories with icon and color
 5. Set recommended duration per category
 
+### Using Siri Voice Commands
+
+1. Say "Hey Siri, start Homework timer in FocusPal"
+2. Siri will confirm the timer has started
+3. Works with any configured category
+4. Auto-selects child if only one profile exists
+
+### Scheduling Tasks
+
+1. Navigate to the Schedule tab
+2. Tap "+" to add a new task
+3. Set title, duration, and optional notes
+4. Configure reminder notifications
+5. For recurring tasks, select frequency pattern
+6. View tasks organized by Morning, Afternoon, Evening
+
+### Earning Rewards
+
+1. Complete activities to earn points (10 pts each)
+2. Get bonus points for early completion
+3. Track weekly tier progress (Bronze → Platinum)
+4. View reward history in the Rewards tab
+5. Maintain streaks for bonus achievements
+
 ## Technical Highlights
 
 ### Timer Persistence
@@ -274,6 +349,15 @@ The circular timer visualization is inspired by research showing that visual tim
 
 ### Multi-Child Isolation
 Each child's data is strictly isolated. Categories, activities, achievements, and time goals are all filtered by `childId` to prevent any cross-contamination.
+
+### Siri Integration
+Native iOS App Intents enable voice control for starting timers, with smart entity resolution for categories and children.
+
+### Calendar Sync
+Full EventKit integration allows importing events from iOS Calendar, with support for recurring tasks and configurable reminders.
+
+### Points & Rewards Engine
+Sophisticated point calculation with base points, bonuses, and penalties. Weekly tier system with streak tracking encourages consistent engagement.
 
 ## Testing
 
