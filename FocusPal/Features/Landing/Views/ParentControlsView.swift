@@ -17,6 +17,8 @@ struct ParentControlsView: View {
     @State private var showReports = false
     @State private var showPINChange = false
     @State private var showParentProfilePrompt = false
+    @State private var showScheduler = false
+    @State private var selectedChildForSchedule: Child?
     var onAddChild: (() -> Void)?
 
     var body: some View {
@@ -81,6 +83,25 @@ struct ParentControlsView: View {
                     }
                     .buttonStyle(.plain)
                     .foregroundColor(.primary)
+                }
+
+                // Schedule section
+                Section("Schedule") {
+                    ForEach(viewModel.children) { child in
+                        Button {
+                            selectedChildForSchedule = child
+                        } label: {
+                            HStack {
+                                Label("Schedule for \(child.name)", systemImage: "calendar.badge.plus")
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.primary)
+                    }
                 }
 
                 // Reports section
@@ -173,6 +194,9 @@ struct ParentControlsView: View {
                         await viewModel.checkParentProfile()
                     }
                 })
+            }
+            .sheet(item: $selectedChildForSchedule) { child in
+                TaskSchedulerView(child: child)
             }
         }
     }

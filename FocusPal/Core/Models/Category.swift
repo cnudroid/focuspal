@@ -7,6 +7,33 @@
 
 import Foundation
 
+/// Defines whether a category earns points (task) or costs points (reward)
+enum CategoryType: String, Codable, CaseIterable {
+    case task = "task"       // Earns points on completion
+    case reward = "reward"   // Costs points to start
+
+    var displayName: String {
+        switch self {
+        case .task: return "Task"
+        case .reward: return "Reward"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .task: return "Earns points when completed"
+        case .reward: return "Costs points to start"
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .task: return "checkmark.circle.fill"
+        case .reward: return "gift.fill"
+        }
+    }
+}
+
 /// Domain model representing an activity category.
 /// Categories organize activities and can have parent-child relationships.
 struct Category: Identifiable, Equatable, Hashable {
@@ -20,6 +47,8 @@ struct Category: Identifiable, Equatable, Hashable {
     var parentCategoryId: UUID?
     let childId: UUID
     var recommendedDuration: TimeInterval  // Duration in seconds
+    var categoryType: CategoryType         // Task earns points, Reward costs points
+    var pointsMultiplier: Double           // Multiplier for points earned/spent (default 1.0)
 
     init(
         id: UUID = UUID(),
@@ -31,7 +60,9 @@ struct Category: Identifiable, Equatable, Hashable {
         isSystem: Bool = false,
         parentCategoryId: UUID? = nil,
         childId: UUID,
-        recommendedDuration: TimeInterval = 25 * 60  // Default 25 minutes
+        recommendedDuration: TimeInterval = 25 * 60,  // Default 25 minutes
+        categoryType: CategoryType = .task,
+        pointsMultiplier: Double = 1.0
     ) {
         self.id = id
         self.name = name
@@ -43,6 +74,8 @@ struct Category: Identifiable, Equatable, Hashable {
         self.parentCategoryId = parentCategoryId
         self.childId = childId
         self.recommendedDuration = recommendedDuration
+        self.categoryType = categoryType
+        self.pointsMultiplier = pointsMultiplier
     }
 
     /// Duration formatted as minutes
@@ -84,7 +117,9 @@ extension Category {
                 sortOrder: 0,
                 isSystem: true,
                 childId: effectiveId,
-                recommendedDuration: 25 * 60  // 25 minutes
+                recommendedDuration: 25 * 60,  // 25 minutes
+                categoryType: .task,
+                pointsMultiplier: 1.0
             ),
             Category(
                 id: deterministicId(name: "Reading", childId: effectiveId),
@@ -94,7 +129,9 @@ extension Category {
                 sortOrder: 1,
                 isSystem: true,
                 childId: effectiveId,
-                recommendedDuration: 30 * 60  // 30 minutes
+                recommendedDuration: 30 * 60,  // 30 minutes
+                categoryType: .task,
+                pointsMultiplier: 1.0
             ),
             Category(
                 id: deterministicId(name: "Screen Time", childId: effectiveId),
@@ -104,7 +141,9 @@ extension Category {
                 sortOrder: 2,
                 isSystem: true,
                 childId: effectiveId,
-                recommendedDuration: 45 * 60  // 45 minutes
+                recommendedDuration: 45 * 60,  // 45 minutes
+                categoryType: .reward,
+                pointsMultiplier: 1.0
             ),
             Category(
                 id: deterministicId(name: "Playing", childId: effectiveId),
@@ -114,7 +153,9 @@ extension Category {
                 sortOrder: 3,
                 isSystem: true,
                 childId: effectiveId,
-                recommendedDuration: 60 * 60  // 60 minutes
+                recommendedDuration: 60 * 60,  // 60 minutes
+                categoryType: .reward,
+                pointsMultiplier: 1.0
             ),
             Category(
                 id: deterministicId(name: "Sports", childId: effectiveId),
@@ -124,7 +165,9 @@ extension Category {
                 sortOrder: 4,
                 isSystem: true,
                 childId: effectiveId,
-                recommendedDuration: 45 * 60  // 45 minutes
+                recommendedDuration: 45 * 60,  // 45 minutes
+                categoryType: .task,
+                pointsMultiplier: 1.0
             ),
             Category(
                 id: deterministicId(name: "Music", childId: effectiveId),
@@ -134,7 +177,9 @@ extension Category {
                 sortOrder: 5,
                 isSystem: true,
                 childId: effectiveId,
-                recommendedDuration: 30 * 60  // 30 minutes
+                recommendedDuration: 30 * 60,  // 30 minutes
+                categoryType: .task,
+                pointsMultiplier: 1.0
             )
         ]
     }

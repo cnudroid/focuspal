@@ -25,6 +25,14 @@ struct RewardsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
+                    // Mascot with encouraging message
+                    ClockMascot(
+                        size: 100,
+                        message: rewardsMascotMessage,
+                        mood: rewardsMascotMood
+                    )
+                    .padding(.top, 8)
+
                     // Week header with date range
                     weekHeader
 
@@ -471,6 +479,34 @@ struct RewardsView: View {
                     }
                 }
             }
+        }
+    }
+}
+
+// MARK: - Mascot Helpers
+
+extension RewardsView {
+    var rewardsMascotMessage: String {
+        if viewModel.isMaxTier {
+            return "You're a superstar!"
+        } else if viewModel.currentTier != nil {
+            return "Amazing progress!"
+        } else if viewModel.currentPoints > 0 {
+            return "Keep earning points!"
+        } else {
+            return "Let's earn rewards!"
+        }
+    }
+
+    var rewardsMascotMood: ClockMascot.MascotMood {
+        if viewModel.isMaxTier {
+            return .celebrating
+        } else if viewModel.currentTier != nil {
+            return .excited
+        } else if viewModel.currentPoints > 0 {
+            return .encouraging
+        } else {
+            return .happy
         }
     }
 }

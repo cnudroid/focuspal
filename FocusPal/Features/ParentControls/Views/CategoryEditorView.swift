@@ -31,8 +31,11 @@ struct CategoryEditorView: View {
     @State private var selectedIcon: String = "book.fill"
     @State private var selectedColor: String = "#4A90D9"
     @State private var durationMinutes: Int = 25
+    @State private var selectedCategoryType: CategoryType = .task
+    @State private var pointsMultiplier: Double = 1.0
 
     private let durationOptions = [5, 10, 15, 20, 25, 30, 45, 60, 90, 120]
+    private let multiplierOptions: [Double] = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
 
     var body: some View {
         NavigationStack {
@@ -55,6 +58,53 @@ struct CategoryEditorView: View {
                     Text("Timer Duration")
                 } footer: {
                     Text("How long should the timer run for this activity?")
+                }
+
+                // Category Type section
+                Section {
+                    Picker("Category Type", selection: $selectedCategoryType) {
+                        Text("Task").tag(CategoryType.task)
+                        Text("Reward").tag(CategoryType.reward)
+                    }
+                    .pickerStyle(.segmented)
+
+                    // Explanation of selected type
+                    HStack(spacing: 12) {
+                        Image(systemName: selectedCategoryType.iconName)
+                            .font(.title2)
+                            .foregroundColor(selectedCategoryType == .task ? .green : .orange)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(selectedCategoryType == .task ? "Earns Points" : "Costs Points")
+                                .font(.subheadline.weight(.medium))
+                            Text(selectedCategoryType == .task
+                                ? "Child earns points when they complete this activity"
+                                : "Child spends points to start this activity")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                } header: {
+                    Text("Category Type")
+                }
+
+                // Points Multiplier section
+                Section {
+                    Picker("Points Multiplier", selection: $pointsMultiplier) {
+                        ForEach(multiplierOptions, id: \.self) { multiplier in
+                            Text("\(multiplier, specifier: "%.2g")x").tag(multiplier)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                } header: {
+                    Text("Points Multiplier")
+                } footer: {
+                    if selectedCategoryType == .task {
+                        Text("Points earned: \(Int(10 * pointsMultiplier)) per completion")
+                    } else {
+                        Text("Points cost: \(Int(10 * pointsMultiplier)) to start")
+                    }
                 }
 
                 // Icon section
@@ -91,19 +141,41 @@ struct CategoryEditorView: View {
                 // Preview section
                 Section("Preview") {
                     HStack(spacing: 12) {
-                        Image(systemName: selectedIcon)
-                            .font(.title2)
-                            .foregroundColor(.white)
-                            .frame(width: 44, height: 44)
-                            .background(Color(hex: selectedColor))
-                            .cornerRadius(10)
+                        ZStack(alignment: .bottomTrailing) {
+                            Image(systemName: selectedIcon)
+                                .font(.title2)
+                                .foregroundColor(.white)
+                                .frame(width: 44, height: 44)
+                                .background(Color(hex: selectedColor))
+                                .cornerRadius(10)
+
+                            // Type indicator badge
+                            Image(systemName: selectedCategoryType.iconName)
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundColor(.white)
+                                .padding(3)
+                                .background(selectedCategoryType == .task ? Color.green : Color.orange)
+                                .clipShape(Circle())
+                                .offset(x: 4, y: 4)
+                        }
 
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(name.isEmpty ? "Category Name" : name)
-                                .font(.headline)
-                            Text("\(durationMinutes) minutes")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
+                            HStack(spacing: 4) {
+                                Text(name.isEmpty ? "Category Name" : name)
+                                    .font(.headline)
+                                Text("(\(selectedCategoryType.displayName))")
+                                    .font(.caption)
+                                    .foregroundColor(selectedCategoryType == .task ? .green : .orange)
+                            }
+                            HStack(spacing: 8) {
+                                Text("\(durationMinutes) min")
+                                if pointsMultiplier != 1.0 {
+                                    Text("\(pointsMultiplier, specifier: "%.2g")x pts")
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                         }
                     }
                     .padding(.vertical, 4)
@@ -142,6 +214,8 @@ struct CategoryEditorView: View {
             selectedIcon = category.iconName
             selectedColor = category.colorHex
             durationMinutes = category.durationMinutes
+            selectedCategoryType = category.categoryType
+            pointsMultiplier = category.pointsMultiplier
         }
     }
 
@@ -155,7 +229,9 @@ struct CategoryEditorView: View {
                 iconName: selectedIcon,
                 colorHex: selectedColor,
                 childId: UUID(),
-                recommendedDuration: TimeInterval(durationMinutes * 60)
+                recommendedDuration: TimeInterval(durationMinutes * 60),
+                categoryType: selectedCategoryType,
+                pointsMultiplier: pointsMultiplier
             )
         case .edit(let existing):
             category = Category(
@@ -168,7 +244,9 @@ struct CategoryEditorView: View {
                 isSystem: existing.isSystem,
                 parentCategoryId: existing.parentCategoryId,
                 childId: existing.childId,
-                recommendedDuration: TimeInterval(durationMinutes * 60)
+                recommendedDuration: TimeInterval(durationMinutes * 60),
+                categoryType: selectedCategoryType,
+                pointsMultiplier: pointsMultiplier
             )
         }
 

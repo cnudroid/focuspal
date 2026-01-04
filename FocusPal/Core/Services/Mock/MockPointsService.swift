@@ -200,7 +200,7 @@ class MockPointsService: PointsServiceProtocol {
         switch reason {
         case .earlyFinishBonus, .beatAverageBonus, .achievementUnlock, .weeklyReward:
             return true
-        case .activityComplete, .activityIncomplete, .threeStrikePenalty:
+        case .activityComplete, .activityIncomplete, .threeStrikePenalty, .rewardCost:
             return false
         }
     }

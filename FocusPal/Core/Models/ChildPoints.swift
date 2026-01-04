@@ -16,6 +16,7 @@ enum PointsReason: String, CaseIterable, Codable {
     case threeStrikePenalty = "three_strike_penalty"
     case weeklyReward = "weekly_reward"
     case achievementUnlock = "achievement_unlock"
+    case rewardCost = "reward_cost"  // Deducted when starting a reward activity
 
     var displayName: String {
         switch self {
@@ -26,6 +27,7 @@ enum PointsReason: String, CaseIterable, Codable {
         case .threeStrikePenalty: return "Three Strike Penalty"
         case .weeklyReward: return "Weekly Reward"
         case .achievementUnlock: return "Achievement Unlocked"
+        case .rewardCost: return "Reward Redeemed"
         }
     }
 
@@ -38,6 +40,7 @@ enum PointsReason: String, CaseIterable, Codable {
         case .threeStrikePenalty: return "exclamationmark.triangle.fill"
         case .weeklyReward: return "star.circle.fill"
         case .achievementUnlock: return "trophy.fill"
+        case .rewardCost: return "gift.fill"
         }
     }
 }

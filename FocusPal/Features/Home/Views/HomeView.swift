@@ -25,6 +25,14 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
+                    // Mascot greeting
+                    ClockMascot(
+                        size: 100,
+                        message: greetingMessage,
+                        mood: mascotMood
+                    )
+                    .padding(.top, 8)
+
                     // Points display card at the top
                     PointsDisplayCard(
                         points: viewModel.todayPoints,
@@ -81,6 +89,37 @@ struct HomeView: View {
             .sheet(isPresented: $viewModel.showingQuickLog) {
                 QuickLogView(viewModel: activityLogViewModel)
             }
+        }
+    }
+
+    // MARK: - Mascot Helpers
+
+    private var greetingMessage: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        let name = currentChild.name
+
+        if viewModel.todayStats.activitiesCount == 0 {
+            if hour < 12 {
+                return "Good morning, \(name)!"
+            } else if hour < 17 {
+                return "Ready to focus, \(name)?"
+            } else {
+                return "Evening, \(name)!"
+            }
+        } else if viewModel.todayStats.activitiesCount >= 3 {
+            return "You're on fire, \(name)!"
+        } else {
+            return "Keep going, \(name)!"
+        }
+    }
+
+    private var mascotMood: ClockMascot.MascotMood {
+        if viewModel.todayStats.activitiesCount >= 3 {
+            return .celebrating
+        } else if viewModel.todayStats.activitiesCount > 0 {
+            return .excited
+        } else {
+            return .happy
         }
     }
 }
