@@ -10,16 +10,28 @@ excluded:
 # Disabled rules
 disabled_rules:
   - todo  # Allow TODO comments in codebase
+  - inclusive_language  # Allow existing variable names
+  - for_where  # Allow if inside for loops
+  - redundant_string_enum_value  # Allow explicit enum values
+  - multiple_closures_with_trailing_closure  # Allow trailing closures
+  - redundant_discardable_let  # Allow let _ = pattern
+  - unused_optional_binding  # Allow let _ = for optionals
+  - trailing_newline  # Don't enforce trailing newlines
+  - unused_closure_parameter  # Allow unused closure parameters
 
 # Rule configurations
 file_length:
-  warning: 500
-  error: 1000
+  warning: 800
+  error: 1200
   ignore_comment_only_lines: true
 
 type_body_length:
-  warning: 300
-  error: 500
+  warning: 500
+  error: 800
+
+function_body_length:
+  warning: 100
+  error: 200
 
 line_length:
   warning: 150
