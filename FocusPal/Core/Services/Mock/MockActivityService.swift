@@ -18,6 +18,7 @@ class MockActivityService: ActivityServiceProtocol {
     var logActivityCallCount = 0
     var fetchTodayCallCount = 0
     var deleteCallCount = 0
+    var deletedActivityIds: [UUID] = []
 
     // MARK: - ActivityServiceProtocol
 
@@ -76,6 +77,7 @@ class MockActivityService: ActivityServiceProtocol {
 
     func deleteActivity(_ activityId: UUID) async throws {
         deleteCallCount += 1
+        deletedActivityIds.append(activityId)
 
         if let error = mockError {
             throw error
@@ -101,6 +103,7 @@ class MockActivityService: ActivityServiceProtocol {
         logActivityCallCount = 0
         fetchTodayCallCount = 0
         deleteCallCount = 0
+        deletedActivityIds = []
     }
 
     func addMockActivities(_ count: Int, for childId: UUID, categoryId: UUID) {

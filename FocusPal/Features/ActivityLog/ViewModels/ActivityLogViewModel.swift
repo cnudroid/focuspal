@@ -154,9 +154,18 @@ class ActivityLogViewModel: ObservableObject {
     }
 
     func deleteActivities(at offsets: IndexSet) {
+        // IMPORTANT: Capture activity IDs immediately, before any async operation.
+        // This prevents a race condition where the activities array could change
+        // between when the user swipes and when the deletion executes.
+        // See issue #26 for details on the data loss bug this fixes.
+        let activityIdsToDelete = offsets.compactMap { index in
+            activities.indices.contains(index) ? activities[index].id : nil
+        }
+
+        guard !activityIdsToDelete.isEmpty else { return }
+
         Task {
-            for index in offsets {
-                let activityId = activities[index].id
+            for activityId in activityIdsToDelete {
                 try? await activityService.deleteActivity(activityId)
             }
             await loadActivities()
