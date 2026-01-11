@@ -235,7 +235,18 @@ jobs:
     runs-on: macos-14
     if: failure() && github.ref == 'refs/heads/main'
     steps:
+      - name: Check if Slack is configured
+        id: slack-check
+        run: |
+          if [ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]; then
+            echo "configured=true" >> $GITHUB_OUTPUT
+          else
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Slack webhook not configured, skipping notification"
+          fi
+
       - name: Send Slack notification
+        if: steps.slack-check.outputs.configured == 'true'
         uses: slackapi/slack-github-action@v1
         with:
           payload: |

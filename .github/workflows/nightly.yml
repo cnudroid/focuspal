@@ -14,16 +14,20 @@ jobs:
     name: Full Test Suite
     runs-on: macos-14
     strategy:
+      fail-fast: false
       matrix:
-        device:
-          - 'iPhone SE (3rd generation)'
-          - 'iPhone 14'
-          - 'iPhone 15 Pro Max'
-          - 'iPad (10th generation)'
-          - 'iPad Pro (12.9-inch) (6th generation)'
-        ios-version:
-          - '16.4'
-          - '17.2'
+        include:
+          # iOS 17.2 is the default simulator on Xcode 15.2
+          - device: 'iPhone SE (3rd generation)'
+            ios-version: '17.2'
+          - device: 'iPhone 14'
+            ios-version: '17.2'
+          - device: 'iPhone 15 Pro Max'
+            ios-version: '17.2'
+          - device: 'iPad (10th generation)'
+            ios-version: '17.2'
+          - device: 'iPad Pro (12.9-inch) (6th generation)'
+            ios-version: '17.2'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -186,19 +190,31 @@ jobs:
         with:
           path: AllTestResults
 
-      - name: Generate HTML report
+      - name: Generate test summary
         run: |
-          # Install xchtmlreport
-          brew install xchtmlreport
+          echo "# Test Results Summary" > test-report.md
+          echo "" >> test-report.md
 
-          # Generate reports for all result bundles
-          find AllTestResults -name "*.xcresult" -exec xchtmlreport -r {} \;
+          # Generate JSON summaries from all result bundles
+          for result in $(find AllTestResults -name "*.xcresult" 2>/dev/null); do
+            echo "Processing: $result"
+            basename=$(basename "$result" .xcresult)
+            echo "## $basename" >> test-report.md
+            xcrun xcresulttool get --path "$result" --format json 2>/dev/null | jq -r '
+              "- Tests: \(.metrics.testsCount // "N/A")",
+              "- Passed: \(.metrics.testsPassedCount // "N/A")",
+              "- Failed: \(.metrics.testsFailedCount // "N/A")"
+            ' >> test-report.md 2>/dev/null || echo "- Unable to parse results" >> test-report.md
+            echo "" >> test-report.md
+          done
 
-      - name: Upload HTML report
+          cat test-report.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload test report
         uses: actions/upload-artifact@v4
         with:
           name: nightly-test-report
-          path: "**/*.html"
+          path: test-report.md
 
       - name: Create summary
         run: |
@@ -218,7 +234,18 @@ jobs:
     runs-on: macos-14
     if: always()
     steps:
+      - name: Check if Slack is configured
+        id: slack-check
+        run: |
+          if [ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]; then
+            echo "configured=true" >> $GITHUB_OUTPUT
+          else
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Slack webhook not configured, skipping notification"
+          fi
+
       - name: Determine status
+        if: steps.slack-check.outputs.configured == 'true'
         id: status
         run: |
           if [ "${{ needs.full-test-suite.result }}" == "success" ] && \
@@ -233,6 +260,7 @@ jobs:
           fi
 
       - name: Send Slack notification
+        if: steps.slack-check.outputs.configured == 'true'
         uses: slackapi/slack-github-action@v1
         with:
           payload: |
