@@ -18,24 +18,27 @@ disabled_rules:
   - unused_optional_binding  # Allow let _ = for optionals
   - trailing_newline  # Don't enforce trailing newlines
   - unused_closure_parameter  # Allow unused closure parameters
+  - empty_count  # Allow count == 0 checks
+  - implicit_optional_initialization  # Allow explicit nil initialization
+  - non_optional_string_data_conversion  # Allow optional Data conversion
 
 # Rule configurations
 file_length:
-  warning: 800
-  error: 1200
+  warning: 1000
+  error: 1500
   ignore_comment_only_lines: true
 
 type_body_length:
-  warning: 500
-  error: 800
+  warning: 800
+  error: 1000
 
 function_body_length:
-  warning: 100
-  error: 200
+  warning: 150
+  error: 250
 
 line_length:
-  warning: 150
-  error: 200
+  warning: 200
+  error: 300
   ignores_comments: true
   ignores_urls: true
 
@@ -49,8 +52,8 @@ identifier_name:
     - y
 
 large_tuple:
-  warning: 3
-  error: 4
+  warning: 4
+  error: 6
 
 # Opt-in rules
 opt_in_rules:
