@@ -35,6 +35,7 @@ class TimerViewModel: ObservableObject {
     @Published var childName: String = "Buddy"
     @Published var timeAdded: TimeInterval = 0
     @Published var pendingCompletionState: ChildTimerState?  // For completion prompt
+    @Published var achievementNotifications: [AchievementNotificationHelper.UnlockNotification] = []
 
     // MARK: - Dependencies
 
@@ -42,6 +43,7 @@ class TimerViewModel: ObservableObject {
     private let activityService: ActivityServiceProtocol
     private let pointsService: PointsServiceProtocol?
     private let rewardsService: RewardsServiceProtocol?
+    private let achievementService: AchievementServiceProtocol?
     private let audioService = TimerAudioService()
     private var cancellables = Set<AnyCancellable>()
     private var updateTimer: Timer?
@@ -58,10 +60,12 @@ class TimerViewModel: ObservableObject {
         activityService: ActivityServiceProtocol? = nil,
         pointsService: PointsServiceProtocol? = nil,
         rewardsService: RewardsServiceProtocol? = nil,
+        achievementService: AchievementServiceProtocol? = nil,
         currentChild: Child? = nil
     ) {
         // Use real services by default
         let activityRepo = CoreDataActivityRepository(context: PersistenceController.shared.container.viewContext)
+        let achievementRepo = CoreDataAchievementRepository(context: PersistenceController.shared.container.viewContext)
         let notificationService = NotificationService()
 
         let manager = timerManager ?? MultiChildTimerManager(notificationService: notificationService)
@@ -71,6 +75,7 @@ class TimerViewModel: ObservableObject {
         self.activityService = activityService ?? ActivityService(repository: activityRepo)
         self.pointsService = pointsService
         self.rewardsService = rewardsService
+        self.achievementService = achievementService ?? AchievementService(repository: achievementRepo)
         self.currentChild = child
 
         // Check for existing timer state BEFORE setting initial values
@@ -426,6 +431,15 @@ class TimerViewModel: ObservableObject {
                     checkEarlyBonus: checkEarlyBonus,
                     category: category
                 )
+
+                // Handle achievements if service is available and activity was completed
+                if isComplete {
+                    await handleAchievementsForActivity(
+                        category: category,
+                        duration: duration,
+                        startTime: state.startTime
+                    )
+                }
             } catch {
                 print("❌ Failed to log activity: \(error)")
             }
@@ -547,6 +561,73 @@ class TimerViewModel: ObservableObject {
             print("❌ Failed to handle points: \(error)")
             // Continue gracefully - don't let points errors break the app
         }
+    }
+
+    // MARK: - Achievement Management
+
+    /// Handle achievement tracking for a completed activity
+    private func handleAchievementsForActivity(
+        category: Category,
+        duration: TimeInterval,
+        startTime: Date
+    ) async {
+        // Skip if achievement service is not available
+        guard let achievementService = achievementService else {
+            print("⚠️ Achievement service not available, skipping achievement tracking")
+            return
+        }
+
+        var newlyUnlocked: [Achievement] = []
+
+        do {
+            // Track timer completion achievement
+            let timerAchievements = try await achievementService.recordTimerCompletion(for: currentChild)
+            newlyUnlocked.append(contentsOf: timerAchievements)
+
+            // Track category-specific achievements
+            let minutes = Int(duration / 60)
+            let categoryAchievements = try await achievementService.recordCategoryTime(
+                minutes: minutes,
+                category: category,
+                for: currentChild
+            )
+            newlyUnlocked.append(contentsOf: categoryAchievements)
+
+            // Track time-based achievements (e.g., Early Bird)
+            let timeAchievements = try await achievementService.recordActivityTime(
+                startTime: startTime,
+                for: currentChild
+            )
+            newlyUnlocked.append(contentsOf: timeAchievements)
+
+            // Display notifications for newly unlocked achievements
+            if !newlyUnlocked.isEmpty {
+                let notifications = AchievementNotificationHelper.createUnlockNotifications(from: newlyUnlocked)
+                await MainActor.run {
+                    achievementNotifications.append(contentsOf: notifications)
+                }
+
+                // Trigger haptic feedback for achievement unlock
+                if #available(iOS 13.0, *) {
+                    AchievementNotificationHelper.triggerHapticFeedback()
+                }
+
+                print("🏆 Unlocked \(newlyUnlocked.count) achievement(s)!")
+                for achievement in newlyUnlocked {
+                    if let type = AchievementType(rawValue: achievement.achievementTypeId) {
+                        print("   ✨ \(type.name)")
+                    }
+                }
+            }
+        } catch {
+            print("❌ Failed to handle achievements: \(error)")
+            // Continue gracefully - don't let achievement errors break the app
+        }
+    }
+
+    /// Dismiss an achievement notification
+    func dismissAchievementNotification(_ notification: AchievementNotificationHelper.UnlockNotification) {
+        achievementNotifications.removeAll { $0.id == notification.id }
     }
 }
 
