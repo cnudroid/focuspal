@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var currentChild: Child?
     @State private var completedTimerAlert: ChildTimerState?
     @State private var showingCompletedAlert = false
+    @State private var showingRecoveryAlert = false
 
     var body: some View {
         Group {
@@ -70,6 +71,19 @@ struct ContentView: View {
         }
         .onChange(of: completedTimerAlert) { newValue in
             showingCompletedAlert = newValue != nil
+        }
+        // Show recovery alert when timers are restored
+        .onReceive(serviceContainer.multiChildTimerManager.$hasRestoredTimers) { hasRestored in
+            if hasRestored {
+                showingRecoveryAlert = true
+            }
+        }
+        .alert("Timer Restored", isPresented: $showingRecoveryAlert) {
+            Button("Continue") {
+                serviceContainer.multiChildTimerManager.acknowledgeTimerRestoration()
+            }
+        } message: {
+            Text("Your timer has been restored from your last session. It's still running!")
         }
         // Handle Siri navigation
         .task {

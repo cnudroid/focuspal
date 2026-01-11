@@ -22,12 +22,17 @@ class MultiChildTimerManager: ObservableObject {
     /// Timers that have completed and need to show alerts
     @Published var completedTimers: [ChildTimerState] = []
 
+    /// Indicates if timers were restored from a previous session
+    @Published private(set) var hasRestoredTimers: Bool = false
+
     // MARK: - Private Properties
 
     private static let storageKey = "multiChildTimerStates"
     private var updateTimer: Timer?
+    private var persistenceTimer: Timer?  // Timer for aggressive persistence
     private var cancellables = Set<AnyCancellable>()
     private let notificationService: NotificationServiceProtocol
+    private let persistenceInterval: TimeInterval = 10.0  // Save state every 10 seconds
 
     // MARK: - Initialization
 
@@ -35,7 +40,13 @@ class MultiChildTimerManager: ObservableObject {
         self.notificationService = notificationService
         loadPersistedStates()
         startUpdateLoop()
+        startAggressivePersistence()
         setupNotificationObservers()
+    }
+
+    deinit {
+        persistenceTimer?.invalidate()
+        updateTimer?.invalidate()
     }
 
     // MARK: - Public Methods
@@ -116,6 +127,20 @@ class MultiChildTimerManager: ObservableObject {
         Array(activeTimers.keys)
     }
 
+    /// Acknowledge that the user has seen the timer restoration
+    func acknowledgeTimerRestoration() {
+        hasRestoredTimers = false
+    }
+
+    /// Public method to persist state when app enters background/inactive
+    /// Called from FocusPalApp's scenePhase observer
+    func persistStatesOnBackground() async {
+        if !activeTimers.isEmpty {
+            persistStates()
+            print("💾 Saved timer state on scene phase change")
+        }
+    }
+
     // MARK: - Private Methods
 
     private func startUpdateLoop() {
@@ -126,6 +151,28 @@ class MultiChildTimerManager: ObservableObject {
             }
         }
         RunLoop.current.add(updateTimer!, forMode: .common)
+    }
+
+    /// Start aggressive persistence - saves timer state every 10 seconds while timers are running
+    /// This ensures timer state is preserved even if the app is force quit
+    private func startAggressivePersistence() {
+        persistenceTimer = Timer.scheduledTimer(withTimeInterval: persistenceInterval, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                self?.aggressivePersist()
+            }
+        }
+        RunLoop.current.add(persistenceTimer!, forMode: .common)
+    }
+
+    /// Aggressively persist running timers to survive force quit
+    private func aggressivePersist() {
+        // Only persist if there are active running (not paused) timers
+        let hasRunningTimers = activeTimers.values.contains { !$0.isPaused }
+
+        if hasRunningTimers {
+            persistStates()
+            print("📝 Aggressively persisted timer state at \(Date())")
+        }
     }
 
     private func checkForCompletedTimers() {
@@ -162,17 +209,30 @@ class MultiChildTimerManager: ObservableObject {
     private func loadPersistedStates() {
         guard let data = UserDefaults.standard.data(forKey: Self.storageKey),
               let states = try? JSONDecoder().decode([ChildTimerState].self, from: data) else {
+            hasRestoredTimers = false
             return
         }
+
+        // Track if we restored any timers
+        var restoredCount = 0
 
         // Restore states, checking for completed timers
         for state in states {
             if state.isCompleted && !state.isPaused {
                 // Timer completed while app was closed
                 completedTimers.append(state)
+                restoredCount += 1
             } else {
                 activeTimers[state.childId] = state
+                restoredCount += 1
             }
+        }
+
+        // Set restoration flag if we restored any timers
+        hasRestoredTimers = restoredCount > 0
+
+        if hasRestoredTimers {
+            print("🔄 Restored \(restoredCount) timer(s) from previous session")
         }
     }
 
@@ -217,6 +277,7 @@ class MultiChildTimerManager: ObservableObject {
     }
 
     private func setupNotificationObservers() {
+        // Check for completed timers when app returns to foreground
         NotificationCenter.default.addObserver(
             forName: UIApplication.willEnterForegroundNotification,
             object: nil,
@@ -225,6 +286,63 @@ class MultiChildTimerManager: ObservableObject {
             Task { @MainActor in
                 self?.checkForCompletedTimers()
             }
+        }
+
+        // Save state when app enters background
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.didEnterBackgroundNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.handleEnterBackground()
+            }
+        }
+
+        // Save state when app will resign active (covers force quit scenarios)
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.willResignActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.handleWillResignActive()
+            }
+        }
+
+        // Save state when app will terminate (if we get this notification)
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.willTerminateNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.handleWillTerminate()
+            }
+        }
+    }
+
+    /// Handle app entering background - save timer state
+    private func handleEnterBackground() {
+        if !activeTimers.isEmpty {
+            persistStates()
+            print("💾 Saved timer state on entering background")
+        }
+    }
+
+    /// Handle app about to become inactive - save timer state
+    private func handleWillResignActive() {
+        if !activeTimers.isEmpty {
+            persistStates()
+            print("💾 Saved timer state on will resign active")
+        }
+    }
+
+    /// Handle app termination - save timer state
+    private func handleWillTerminate() {
+        if !activeTimers.isEmpty {
+            persistStates()
+            print("💾 Saved timer state on will terminate")
         }
     }
 }

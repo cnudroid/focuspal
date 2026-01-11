@@ -19,6 +19,9 @@ struct FocusPalApp: App {
     /// Service container for dependency injection
     @StateObject private var serviceContainer = ServiceContainer()
 
+    /// Track scene phase for lifecycle management
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -33,6 +36,30 @@ struct FocusPalApp: App {
                         FocusPalShortcuts.updateAppShortcutParameters()
                     }
                 }
+        }
+        .onChange(of: scenePhase) { newPhase in
+            handleScenePhaseChange(newPhase)
+        }
+    }
+
+    /// Handle scene phase changes to save timer state
+    private func handleScenePhaseChange(_ phase: ScenePhase) {
+        switch phase {
+        case .background:
+            // App is in background - save timer state
+            Task { @MainActor in
+                await serviceContainer.multiChildTimerManager.persistStatesOnBackground()
+            }
+        case .inactive:
+            // App is becoming inactive - save timer state
+            Task { @MainActor in
+                await serviceContainer.multiChildTimerManager.persistStatesOnBackground()
+            }
+        case .active:
+            // App is active - check for restored timers
+            break
+        @unknown default:
+            break
         }
     }
 }
