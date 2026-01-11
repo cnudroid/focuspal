@@ -37,11 +37,13 @@ jobs:
 
       - name: Run full test suite
         run: |
+          # Sanitize device name for file paths (remove parentheses, replace spaces)
+          SAFE_DEVICE=$(echo "${{ matrix.device }}" | tr '() ' '_--')
           xcodebuild test \
             -scheme ${{ env.SCHEME }} \
             -destination "platform=iOS Simulator,name=${{ matrix.device }},OS=${{ matrix.ios-version }}" \
             -enableCodeCoverage YES \
-            -resultBundlePath TestResults/Full-${{ matrix.device }}-${{ matrix.ios-version }}.xcresult \
+            -resultBundlePath "TestResults/Full-${SAFE_DEVICE}-${{ matrix.ios-version }}.xcresult" \
             | xcpretty
 
       - name: Upload test results
@@ -49,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nightly-results-${{ matrix.device }}-${{ matrix.ios-version }}
-          path: TestResults/Full-${{ matrix.device }}-${{ matrix.ios-version }}.xcresult
+          path: TestResults/Full-*.xcresult
 
   accessibility-audit:
     name: Accessibility Audit
