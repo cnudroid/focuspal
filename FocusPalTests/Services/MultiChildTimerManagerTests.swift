@@ -377,7 +377,7 @@ class MockNotificationService: NotificationServiceProtocol {
         canceledNotifications = true
     }
 
-    func scheduleAchievementNotification(title: String, message: String) {
+    func scheduleAchievementNotification(title: String, message _: String) {
         scheduledNotifications.append("achievement_\(title)")
     }
 
