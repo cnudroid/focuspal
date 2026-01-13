@@ -67,14 +67,25 @@ class MultiChildTimerManager: ObservableObject {
         activeTimers[child.id] = state
         persistStates()
         scheduleNotification(for: state)
+
+        // Start Live Activity for lock screen display
+        Task {
+            await LiveActivityManager.shared.startActivity(for: state)
+        }
     }
 
     /// Pause a child's timer
     func pauseTimer(for childId: UUID) {
         guard let state = activeTimers[childId], !state.isPaused else { return }
-        activeTimers[childId] = state.paused()
+        let pausedState = state.paused()
+        activeTimers[childId] = pausedState
         persistStates()
         cancelNotification(for: childId)
+
+        // Update Live Activity to show paused state
+        Task {
+            await LiveActivityManager.shared.updateActivity(for: pausedState)
+        }
     }
 
     /// Resume a child's timer
@@ -84,6 +95,11 @@ class MultiChildTimerManager: ObservableObject {
         activeTimers[childId] = resumedState
         persistStates()
         scheduleNotification(for: resumedState)
+
+        // Update Live Activity to show running state
+        Task {
+            await LiveActivityManager.shared.updateActivity(for: resumedState)
+        }
     }
 
     /// Stop a child's timer (without completing)
@@ -91,6 +107,11 @@ class MultiChildTimerManager: ObservableObject {
         activeTimers.removeValue(forKey: childId)
         persistStates()
         cancelNotification(for: childId)
+
+        // End Live Activity
+        Task {
+            await LiveActivityManager.shared.endActivity(for: childId)
+        }
     }
 
     /// Add time to a child's timer
@@ -106,6 +127,11 @@ class MultiChildTimerManager: ObservableObject {
             cancelNotification(for: childId)
             scheduleNotification(for: newState)
         }
+
+        // Update Live Activity with new time
+        Task {
+            await LiveActivityManager.shared.updateActivity(for: newState)
+        }
     }
 
     /// Mark a timer as completed and remove it from active timers
@@ -114,6 +140,12 @@ class MultiChildTimerManager: ObservableObject {
         guard let state = activeTimers.removeValue(forKey: childId) else { return nil }
         persistStates()
         cancelNotification(for: childId)
+
+        // End Live Activity
+        Task {
+            await LiveActivityManager.shared.endActivity(for: childId)
+        }
+
         return state
     }
 
@@ -186,9 +218,14 @@ class MultiChildTimerManager: ObservableObject {
             }
         }
 
-        // Remove completed timers from active
+        // Remove completed timers from active and end Live Activities
         for childId in completedChildIds {
             activeTimers.removeValue(forKey: childId)
+
+            // End Live Activity for completed timer
+            Task {
+                await LiveActivityManager.shared.endActivity(for: childId)
+            }
         }
 
         if !completedChildIds.isEmpty {
@@ -215,6 +252,7 @@ class MultiChildTimerManager: ObservableObject {
 
         // Track if we restored any timers
         var restoredCount = 0
+        var restoredActiveStates: [ChildTimerState] = []
 
         // Restore states, checking for completed timers
         for state in states {
@@ -224,6 +262,7 @@ class MultiChildTimerManager: ObservableObject {
                 restoredCount += 1
             } else {
                 activeTimers[state.childId] = state
+                restoredActiveStates.append(state)
                 restoredCount += 1
             }
         }
@@ -233,6 +272,13 @@ class MultiChildTimerManager: ObservableObject {
 
         if hasRestoredTimers {
             print("🔄 Restored \(restoredCount) timer(s) from previous session")
+
+            // Restart Live Activities for restored active timers
+            for state in restoredActiveStates {
+                Task {
+                    await LiveActivityManager.shared.startActivity(for: state)
+                }
+            }
         }
     }
 

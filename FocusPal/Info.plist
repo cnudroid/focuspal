@@ -24,5 +24,7 @@
 	<string>FocusPal needs calendar access to sync scheduled tasks from your calendar and help your child stay organized.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 </dict>
 </plist>

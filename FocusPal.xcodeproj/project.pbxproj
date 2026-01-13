@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -180,6 +180,9 @@
 		B89A38B7D892391B34E4445C /* ActivityLogPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14D9287C2D6DD2795985114 /* ActivityLogPage.swift */; };
 		BA0ABA94F61252BCED7319BA /* CategoryEntityMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9846940F3612B0857BF9956 /* CategoryEntityMapper.swift */; };
 		BBA9DF63F393A66C9687D557 /* BaseUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823DA88592C4A3E00740A3A8 /* BaseUITest.swift */; };
+		BC0E8E192F15CD7400E720A9 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC0E8E182F15CD7400E720A9 /* WidgetKit.framework */; };
+		BC0E8E1B2F15CD7400E720A9 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC0E8E1A2F15CD7400E720A9 /* SwiftUI.framework */; };
+		BC0E8E2C2F15CD7500E720A9 /* FocusPalWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BC0E8E162F15CD7400E720A9 /* FocusPalWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BC593E979BD47351A03F7D1C /* TimeGoalServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153F0A5B32E07D63ED9DEC0A /* TimeGoalServiceProtocol.swift */; };
 		BD6036A79A4E6EC67E359EA8 /* FocusPalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BCE2FD47E54210E5472011 /* FocusPalTests.swift */; };
 		BF39301C42766241D34381FB /* CalendarServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A90687B77CB58B10DE2F009 /* CalendarServiceProtocol.swift */; };
@@ -206,6 +209,8 @@
 		D829F700E78BD5A82EDA92E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981B357603A682A936FB405E /* HomeViewModel.swift */; };
 		D8F75EFF9DDB692A095AA8BB /* TimerViewModelBugTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC515FC17C7A245BC046328 /* TimerViewModelBugTests.swift */; };
 		D952B8A892506737D81CF546 /* MultiChildTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73CD7CBEFCF041DF6097AE0 /* MultiChildTimerManager.swift */; };
+		D952B8A892506737D81CF547 /* FocusPalTimerAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E0A1B2C3D4E5F6A7B8C9D0 /* FocusPalTimerAttributes.swift */; };
+		D952B8A892506737D81CF548 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E0A1B2C3D4E5F6A7B8C9D1 /* LiveActivityManager.swift */; };
 		DB13EEB32C3F1ED69EE10E40 /* PINChangeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C1C5424FC3E15553B24D54 /* PINChangeViewModelTests.swift */; };
 		DDF0A856B1C28BD43C7A7984 /* MockTimerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6583C9029B317357067EF16D /* MockTimerService.swift */; };
 		E1592E8A99A6AC640CA4E44F /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0842B34DB269BD73E5DCCA7 /* EmptyStateView.swift */; };
@@ -251,7 +256,28 @@
 			remoteGlobalIDString = D80FA009A331137175BE9B3F;
 			remoteInfo = FocusPal;
 		};
+		BC0E8E2A2F15CD7500E720A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6C63E86700E74EAA62ABEBB7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC0E8E152F15CD7400E720A9;
+			remoteInfo = FocusPalWidgetsExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BC0E8E2D2F15CD7500E720A9 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BC0E8E2C2F15CD7500E720A9 /* FocusPalWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00692154BF253017E1D30D07 /* FocusPal.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FocusPal.xcdatamodel; sourceTree = "<group>"; };
@@ -414,6 +440,9 @@
 		BA83B1A7D80275DBDF294EF6 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		BB87110A92E14E11EE5B671D /* BalanceMeter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceMeter.swift; sourceTree = "<group>"; };
 		BB92EBFBE730AE8E701ABAC6 /* LandingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewModel.swift; sourceTree = "<group>"; };
+		BC0E8E162F15CD7400E720A9 /* FocusPalWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FocusPalWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC0E8E182F15CD7400E720A9 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		BC0E8E1A2F15CD7400E720A9 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		BF02A0D0D14DAE2EB60B0805 /* ChildPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildPoints.swift; sourceTree = "<group>"; };
 		C1CC779DD20DAFD32E06C89E /* SyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinator.swift; sourceTree = "<group>"; };
 		C44CA5FB1381B381265E00D8 /* TimeGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoal.swift; sourceTree = "<group>"; };
@@ -459,6 +488,8 @@
 		E5BA8760399F1D8C442B19A0 /* BarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChart.swift; sourceTree = "<group>"; };
 		E6BB319832C9EBE117CA4A38 /* TimeGoalServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalServiceTests.swift; sourceTree = "<group>"; };
 		E73CD7CBEFCF041DF6097AE0 /* MultiChildTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiChildTimerManager.swift; sourceTree = "<group>"; };
+		E7E0A1B2C3D4E5F6A7B8C9D0 /* FocusPalTimerAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusPalTimerAttributes.swift; sourceTree = "<group>"; };
+		E7E0A1B2C3D4E5F6A7B8C9D1 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
 		E7F81B675925CBA456883AD9 /* ParentAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentAuthViewModel.swift; sourceTree = "<group>"; };
 		E8293F29EA47D58C462AEA6B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EB443DB5855CEDB71783EEE8 /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
@@ -487,6 +518,32 @@
 		FEA4E1698643D72BF5BD48DB /* CategorySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsView.swift; sourceTree = "<group>"; };
 		FEF446F8E92A4283FF747CAC /* ChildTimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildTimerState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		BC0E8E302F15CD7500E720A9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = BC0E8E152F15CD7400E720A9 /* FocusPalWidgetsExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		BC0E8E1C2F15CD7400E720A9 /* FocusPalWidgets */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (BC0E8E302F15CD7500E720A9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = FocusPalWidgets; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BC0E8E132F15CD7400E720A9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC0E8E1B2F15CD7400E720A9 /* SwiftUI.framework in Frameworks */,
+				BC0E8E192F15CD7400E720A9 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0098A2DE0B6048F004871AC7 /* Localizable */ = {
@@ -832,6 +889,8 @@
 				83D84CCF9191812D29A3C31D /* FocusPal */,
 				65A35FC57144265C1AC42CF0 /* FocusPalTests */,
 				75C74809850624E40EAB92D9 /* FocusPalUITests */,
+				BC0E8E1C2F15CD7400E720A9 /* FocusPalWidgets */,
+				BC0E8E172F15CD7400E720A9 /* Frameworks */,
 				F9391C3BDADB63D11417AA76 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -1168,6 +1227,15 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		BC0E8E172F15CD7400E720A9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BC0E8E182F15CD7400E720A9 /* WidgetKit.framework */,
+				BC0E8E1A2F15CD7400E720A9 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C06ABCD8F08F4141BC594A6F /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -1233,6 +1301,7 @@
 				F2E5196E805E7DB56C98A1AB /* DailyTasks */,
 				C06ABCD8F08F4141BC594A6F /* Home */,
 				0E919CB5750698F3CF1860DA /* Landing */,
+				E7E0A1B2C3D4E5F6A7B8C9D2 /* LiveActivity */,
 				23777566CBF852D87F4DA904 /* Onboarding */,
 				7E1B65C215B24D5B0BC41999 /* ParentControls */,
 				4F501028C7DA394D2F9572DA /* ProfileSelection */,
@@ -1398,6 +1467,15 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		E7E0A1B2C3D4E5F6A7B8C9D2 /* LiveActivity */ = {
+			isa = PBXGroup;
+			children = (
+				E7E0A1B2C3D4E5F6A7B8C9D0 /* FocusPalTimerAttributes.swift */,
+				E7E0A1B2C3D4E5F6A7B8C9D1 /* LiveActivityManager.swift */,
+			);
+			path = LiveActivity;
+			sourceTree = "<group>";
+		};
 		F2E5196E805E7DB56C98A1AB /* DailyTasks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1429,6 +1507,7 @@
 				73015CB1783EB9094C1B70A6 /* FocusPal.app */,
 				B44DD33B5DFC9A8002475115 /* FocusPalTests.xctest */,
 				73F4D6B11BD9573B353F3717 /* FocusPalUITests.xctest */,
+				BC0E8E162F15CD7400E720A9 /* FocusPalWidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1486,16 +1565,40 @@
 			productReference = B44DD33B5DFC9A8002475115 /* FocusPalTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		BC0E8E152F15CD7400E720A9 /* FocusPalWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC0E8E312F15CD7500E720A9 /* Build configuration list for PBXNativeTarget "FocusPalWidgetsExtension" */;
+			buildPhases = (
+				BC0E8E122F15CD7400E720A9 /* Sources */,
+				BC0E8E132F15CD7400E720A9 /* Frameworks */,
+				BC0E8E142F15CD7400E720A9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BC0E8E1C2F15CD7400E720A9 /* FocusPalWidgets */,
+			);
+			name = FocusPalWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = FocusPalWidgetsExtension;
+			productReference = BC0E8E162F15CD7400E720A9 /* FocusPalWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		D80FA009A331137175BE9B3F /* FocusPal */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4982AF18184AF2FD607F9EA9 /* Build configuration list for PBXNativeTarget "FocusPal" */;
 			buildPhases = (
 				18DDFCDA5465C321CD30AD4D /* Sources */,
 				211ECE24A2836D2800F3B54B /* Resources */,
+				BC0E8E2D2F15CD7500E720A9 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BC0E8E2B2F15CD7500E720A9 /* PBXTargetDependency */,
 			);
 			name = FocusPal;
 			packageProductDependencies = (
@@ -1511,6 +1614,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					51CED8714E3E3A67385DD430 = {
@@ -1519,6 +1623,9 @@
 					};
 					77994CF55E84DFA430C2CCA3 = {
 						DevelopmentTeam = "";
+					};
+					BC0E8E152F15CD7400E720A9 = {
+						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
@@ -1538,6 +1645,7 @@
 				D80FA009A331137175BE9B3F /* FocusPal */,
 				77994CF55E84DFA430C2CCA3 /* FocusPalTests */,
 				51CED8714E3E3A67385DD430 /* FocusPalUITests */,
+				BC0E8E152F15CD7400E720A9 /* FocusPalWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -1548,6 +1656,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4284FB963595335AE599BB9F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BC0E8E142F15CD7400E720A9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1654,6 +1769,8 @@
 				271946BFFA499D21675B690D /* MockRewardsService.swift in Sources */,
 				DDF0A856B1C28BD43C7A7984 /* MockTimerService.swift in Sources */,
 				D952B8A892506737D81CF546 /* MultiChildTimerManager.swift in Sources */,
+				D952B8A892506737D81CF547 /* FocusPalTimerAttributes.swift in Sources */,
+				D952B8A892506737D81CF548 /* LiveActivityManager.swift in Sources */,
 				FC214444EDD0263A43C4213C /* NotificationService.swift in Sources */,
 				03B2FDC2E5C167861091650D /* NotificationServiceProtocol.swift in Sources */,
 				93D8352D1E06AB913D036782 /* OnboardingContainerView.swift in Sources */,
@@ -1765,6 +1882,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BC0E8E122F15CD7400E720A9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C56711C67DA9B8D0A7516F34 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1813,6 +1937,11 @@
 			isa = PBXTargetDependency;
 			target = D80FA009A331137175BE9B3F /* FocusPal */;
 			targetProxy = 96346D1AF7FBABB09FAFE594 /* PBXContainerItemProxy */;
+		};
+		BC0E8E2B2F15CD7500E720A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC0E8E152F15CD7400E720A9 /* FocusPalWidgetsExtension */;
+			targetProxy = BC0E8E2A2F15CD7500E720A9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1966,6 +2095,87 @@
 			};
 			name = Release;
 		};
+		BC0E8E2E2F15CD7500E720A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 92U8D9TL66;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusPalWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusPalWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.focuspal.dev.FocusPalWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG WIDGET_EXTENSION $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BC0E8E2F2F15CD7500E720A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 92U8D9TL66;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusPalWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusPalWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.focuspal.dev.FocusPalWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "WIDGET_EXTENSION $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		C3AECA730D6D050CE081291C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2085,6 +2295,15 @@
 			buildConfigurations = (
 				07C8CC2A5F430071DF672735 /* Debug */,
 				A554591A8DAC96DCEE49462E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BC0E8E312F15CD7500E720A9 /* Build configuration list for PBXNativeTarget "FocusPalWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC0E8E2E2F15CD7500E720A9 /* Debug */,
+				BC0E8E2F2F15CD7500E720A9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
