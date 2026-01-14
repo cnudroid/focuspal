@@ -67,7 +67,7 @@ class WidgetDataService {
             }
 
             // Get points
-            let totalPoints = (try? await pointsService.getPoints(for: child.id)) ?? 0
+            let totalPoints = (try? await pointsService.getTotalPoints(for: child.id)) ?? 0
 
             // Get streak (simplified - count consecutive days with activity)
             let streak = await calculateStreak(for: child, activityService: activityService)

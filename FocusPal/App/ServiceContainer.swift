@@ -153,4 +153,27 @@ class ServiceContainer: ObservableObject {
             await weeklyEmailScheduler.checkAndSendIfDue()
         }
     }
+
+    /// Update widget data for the currently active child
+    func updateWidgetData() {
+        Task {
+            do {
+                // Get the active child
+                guard let activeChild = try await childRepository.fetchActiveChild() else {
+                    print("📊 No active child for widget update")
+                    return
+                }
+
+                // Update widget data
+                await WidgetDataService.shared.updateWidgetData(
+                    for: activeChild,
+                    activityService: activityService,
+                    pointsService: pointsService,
+                    timerManager: multiChildTimerManager
+                )
+            } catch {
+                print("❌ Failed to update widget data: \(error)")
+            }
+        }
+    }
 }

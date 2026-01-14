@@ -183,6 +183,9 @@
 		BC0E8E192F15CD7400E720A9 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC0E8E182F15CD7400E720A9 /* WidgetKit.framework */; };
 		BC0E8E1B2F15CD7400E720A9 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC0E8E1A2F15CD7400E720A9 /* SwiftUI.framework */; };
 		BC0E8E2C2F15CD7500E720A9 /* FocusPalWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BC0E8E162F15CD7400E720A9 /* FocusPalWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BC0E8E712F17776F00E720A9 /* WidgetDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0E8E702F17776F00E720A9 /* WidgetDataService.swift */; };
+		BC0E8E722F17776F00E720A9 /* WidgetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0E8E6F2F17776F00E720A9 /* WidgetData.swift */; };
+		BC0E8E732F17776F00E720A9 /* WidgetConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0E8E6E2F17776F00E720A9 /* WidgetConstants.swift */; };
 		BC593E979BD47351A03F7D1C /* TimeGoalServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153F0A5B32E07D63ED9DEC0A /* TimeGoalServiceProtocol.swift */; };
 		BD6036A79A4E6EC67E359EA8 /* FocusPalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BCE2FD47E54210E5472011 /* FocusPalTests.swift */; };
 		BF39301C42766241D34381FB /* CalendarServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A90687B77CB58B10DE2F009 /* CalendarServiceProtocol.swift */; };
@@ -443,6 +446,11 @@
 		BC0E8E162F15CD7400E720A9 /* FocusPalWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FocusPalWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC0E8E182F15CD7400E720A9 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		BC0E8E1A2F15CD7400E720A9 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		BC0E8E6C2F17760C00E720A9 /* FocusPal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FocusPal.entitlements; sourceTree = "<group>"; };
+		BC0E8E6D2F17764100E720A9 /* FocusPalWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FocusPalWidgetsExtension.entitlements; sourceTree = "<group>"; };
+		BC0E8E6E2F17776F00E720A9 /* WidgetConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConstants.swift; sourceTree = "<group>"; };
+		BC0E8E6F2F17776F00E720A9 /* WidgetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetData.swift; sourceTree = "<group>"; };
+		BC0E8E702F17776F00E720A9 /* WidgetDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDataService.swift; sourceTree = "<group>"; };
 		BF02A0D0D14DAE2EB60B0805 /* ChildPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildPoints.swift; sourceTree = "<group>"; };
 		C1CC779DD20DAFD32E06C89E /* SyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinator.swift; sourceTree = "<group>"; };
 		C44CA5FB1381B381265E00D8 /* TimeGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoal.swift; sourceTree = "<group>"; };
@@ -886,6 +894,7 @@
 		6E1CA6FD6A4FCC01D9898909 = {
 			isa = PBXGroup;
 			children = (
+				BC0E8E6D2F17764100E720A9 /* FocusPalWidgetsExtension.entitlements */,
 				83D84CCF9191812D29A3C31D /* FocusPal */,
 				65A35FC57144265C1AC42CF0 /* FocusPalTests */,
 				75C74809850624E40EAB92D9 /* FocusPalUITests */,
@@ -1042,6 +1051,7 @@
 		83D84CCF9191812D29A3C31D /* FocusPal */ = {
 			isa = PBXGroup;
 			children = (
+				BC0E8E6C2F17760C00E720A9 /* FocusPal.entitlements */,
 				E0356DF4DD9FCA6FC6FE7240 /* App */,
 				72FF0E263021F50FB4BC3757 /* Core */,
 				0B4F589E9F3266938ED6CC12 /* DesignSystem */,
@@ -1496,6 +1506,9 @@
 		F891450FFEDD57F2FAFB32EB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				BC0E8E6E2F17776F00E720A9 /* WidgetConstants.swift */,
+				BC0E8E6F2F17776F00E720A9 /* WidgetData.swift */,
+				BC0E8E702F17776F00E720A9 /* WidgetDataService.swift */,
 				3755F87F6C611B147F0B2913 /* ClockMascot.swift */,
 			);
 			path = Views;
@@ -1746,6 +1759,9 @@
 				77FA6F18BD9DAEA6E095030D /* EmailContentBuilder.swift in Sources */,
 				EDC5B270D6CD754A7E7A6DBA /* EmailService.swift in Sources */,
 				E1592E8A99A6AC640CA4E44F /* EmptyStateView.swift in Sources */,
+				BC0E8E712F17776F00E720A9 /* WidgetDataService.swift in Sources */,
+				BC0E8E722F17776F00E720A9 /* WidgetData.swift in Sources */,
+				BC0E8E732F17776F00E720A9 /* WidgetConstants.swift in Sources */,
 				E53D6C5B16275EF9415F72F3 /* ErrorView.swift in Sources */,
 				A898430E08968E1E71C0EFA9 /* FocusPal.xcdatamodeld in Sources */,
 				D3A35A62B9726A6032ECFBAF /* FocusPalApp.swift in Sources */,
@@ -1951,6 +1967,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FocusPal/FocusPal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 92U8D9TL66;
 				ENABLE_PREVIEWS = YES;
@@ -2055,6 +2072,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FocusPal/FocusPal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 92U8D9TL66;
 				ENABLE_PREVIEWS = YES;
@@ -2102,6 +2120,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = FocusPalWidgetsExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -2144,6 +2163,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = FocusPalWidgetsExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

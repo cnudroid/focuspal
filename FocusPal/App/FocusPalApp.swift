@@ -90,8 +90,8 @@ struct FocusPalApp: App {
                 await serviceContainer.multiChildTimerManager.persistStatesOnBackground()
             }
         case .active:
-            // App is active - check for restored timers
-            break
+            // App is active - update widget data
+            serviceContainer.updateWidgetData()
         @unknown default:
             break
         }

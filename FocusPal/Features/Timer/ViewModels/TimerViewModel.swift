@@ -440,6 +440,14 @@ class TimerViewModel: ObservableObject {
                         startTime: state.startTime
                     )
                 }
+
+                // Update widget data
+                await WidgetDataService.shared.updateWidgetData(
+                    for: currentChild,
+                    activityService: activityService,
+                    pointsService: pointsService ?? PointsService(repository: CoreDataPointsRepository(context: PersistenceController.shared.container.viewContext)),
+                    timerManager: timerManager
+                )
             } catch {
                 print("❌ Failed to log activity: \(error)")
             }
