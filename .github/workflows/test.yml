@@ -41,25 +41,36 @@ jobs:
 
       - name: Run unit tests
         run: |
+          set -o pipefail
           xcodebuild test \
             -scheme ${{ env.SCHEME }} \
             -destination "${{ env.DESTINATION }}" \
             -only-testing:FocusPalTests \
             -enableCodeCoverage YES \
             -resultBundlePath TestResults/UnitTests.xcresult \
-            | xcpretty
+            2>&1 | tee build.log | xcpretty
 
-      - name: Compress test results
-        if: always()
+      - name: Generate coverage report
         run: |
-          cd TestResults && zip -r UnitTests.xcresult.zip UnitTests.xcresult
+          echo "Checking xcresult contents:"
+          ls -la TestResults/UnitTests.xcresult/
+          du -sh TestResults/UnitTests.xcresult
+          xcrun xccov view --report --json TestResults/UnitTests.xcresult > coverage.json
+          echo "Coverage report generated:"
+          head -100 coverage.json
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.json
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-results
-          path: TestResults/UnitTests.xcresult.zip
+          path: TestResults/UnitTests.xcresult
 
   integration-tests:
     name: Integration Tests
@@ -81,17 +92,12 @@ jobs:
             -resultBundlePath TestResults/IntegrationTests.xcresult \
             | xcpretty
 
-      - name: Compress test results
-        if: always()
-        run: |
-          cd TestResults && zip -r IntegrationTests.xcresult.zip IntegrationTests.xcresult
-
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: integration-test-results
-          path: TestResults/IntegrationTests.xcresult.zip
+          path: TestResults/IntegrationTests.xcresult
 
   ui-tests:
     name: UI Tests
@@ -140,37 +146,17 @@ jobs:
 
   code-coverage:
     name: Code Coverage
-    needs: [unit-tests, integration-tests, ui-tests]
+    needs: [unit-tests]
     runs-on: macos-14
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download unit test results
+      - name: Download coverage report
         uses: actions/download-artifact@v4
         with:
-          name: unit-test-results
-          path: TestResults
-
-      - name: Download integration test results
-        uses: actions/download-artifact@v4
-        with:
-          name: integration-test-results
-          path: TestResults
-
-      - name: Extract test results
-        run: |
-          cd TestResults
-          unzip -o UnitTests.xcresult.zip
-          unzip -o IntegrationTests.xcresult.zip
-          echo "Contents of TestResults:"
-          ls -la
-          echo "Contents of UnitTests.xcresult:"
-          ls -la UnitTests.xcresult/
-
-      - name: Generate coverage report
-        run: |
-          xcrun xccov view --report --json TestResults/UnitTests.xcresult > coverage.json
+          name: coverage-report
+          path: .
 
       - name: Check coverage threshold
         run: |
