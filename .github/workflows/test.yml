@@ -49,12 +49,17 @@ jobs:
             -resultBundlePath TestResults/UnitTests.xcresult \
             | xcpretty
 
+      - name: Compress test results
+        if: always()
+        run: |
+          cd TestResults && zip -r UnitTests.xcresult.zip UnitTests.xcresult
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-results
-          path: TestResults/UnitTests.xcresult
+          path: TestResults/UnitTests.xcresult.zip
 
   integration-tests:
     name: Integration Tests
@@ -76,12 +81,17 @@ jobs:
             -resultBundlePath TestResults/IntegrationTests.xcresult \
             | xcpretty
 
+      - name: Compress test results
+        if: always()
+        run: |
+          cd TestResults && zip -r IntegrationTests.xcresult.zip IntegrationTests.xcresult
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: integration-test-results
-          path: TestResults/IntegrationTests.xcresult
+          path: TestResults/IntegrationTests.xcresult.zip
 
   ui-tests:
     name: UI Tests
@@ -140,20 +150,23 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: unit-test-results
-          path: TestResults/UnitTests.xcresult
+          path: TestResults
 
       - name: Download integration test results
         uses: actions/download-artifact@v4
         with:
           name: integration-test-results
-          path: TestResults/IntegrationTests.xcresult
+          path: TestResults
 
-      - name: List downloaded artifacts
+      - name: Extract test results
         run: |
+          cd TestResults
+          unzip -o UnitTests.xcresult.zip
+          unzip -o IntegrationTests.xcresult.zip
           echo "Contents of TestResults:"
-          ls -la TestResults/
+          ls -la
           echo "Contents of UnitTests.xcresult:"
-          ls -la TestResults/UnitTests.xcresult/ || echo "Not found"
+          ls -la UnitTests.xcresult/
 
       - name: Generate coverage report
         run: |
