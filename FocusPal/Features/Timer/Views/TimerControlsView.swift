@@ -16,6 +16,8 @@ struct TimerControlsView: View {
     let onStop: () -> Void
     let onCompleteEarly: () -> Void
 
+    @State private var showingDoneConfirmation = false
+
     var body: some View {
         VStack(spacing: 16) {
             HStack(spacing: 24) {
@@ -66,7 +68,9 @@ struct TimerControlsView: View {
 
             // Complete Early button - shown when running or paused
             if state == .running || state == .paused {
-                Button(action: onCompleteEarly) {
+                Button {
+                    showingDoneConfirmation = true
+                } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "checkmark.circle.fill")
                         Text("I'm Done!")
@@ -79,6 +83,14 @@ struct TimerControlsView: View {
                     .cornerRadius(24)
                 }
             }
+        }
+        .alert("Finish Early?", isPresented: $showingDoneConfirmation) {
+            Button("Yes, I'm done!", role: .destructive) {
+                onCompleteEarly()
+            }
+            Button("Keep going", role: .cancel) { }
+        } message: {
+            Text("Are you sure you want to finish early? You'll still earn points for the time completed.")
         }
     }
 }
