@@ -174,18 +174,6 @@ struct MainTabView: View {
                 }
                 .tag(AppTab.timer)
 
-            ActivityLogView(currentChild: currentChild)
-                .tabItem {
-                    Label("Log", systemImage: "list.bullet.clipboard")
-                }
-                .tag(AppTab.log)
-
-            StatisticsView(currentChild: currentChild)
-                .tabItem {
-                    Label("Stats", systemImage: "chart.bar.fill")
-                }
-                .tag(AppTab.stats)
-
             RewardsView(
                 rewardsService: serviceContainer.rewardsService,
                 currentChild: currentChild
@@ -194,6 +182,18 @@ struct MainTabView: View {
                     Label("Rewards", systemImage: "trophy.fill")
                 }
                 .tag(AppTab.rewards)
+
+            StatisticsView(currentChild: currentChild)
+                .tabItem {
+                    Label("Stats", systemImage: "chart.bar.fill")
+                }
+                .tag(AppTab.stats)
+
+            ActivityLogView(currentChild: currentChild)
+                .tabItem {
+                    Label("Log", systemImage: "list.bullet.clipboard")
+                }
+                .tag(AppTab.log)
         }
         // Handle Siri navigation to timer tab
         .onReceive(serviceContainer.$pendingSiriTimerNavigation) { shouldNavigate in
