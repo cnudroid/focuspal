@@ -148,9 +148,23 @@ jobs:
           name: integration-test-results
           path: TestResults
 
+      - name: List downloaded artifacts
+        run: |
+          echo "Contents of TestResults:"
+          ls -la TestResults/
+          echo "Looking for xcresult bundles:"
+          find TestResults -name "*.xcresult" -type d
+
       - name: Generate coverage report
         run: |
-          xcrun xccov view --report --json TestResults/UnitTests.xcresult > coverage.json
+          # Find the xcresult bundle (may be nested due to artifact structure)
+          XCRESULT=$(find TestResults -name "UnitTests.xcresult" -type d | head -1)
+          if [ -z "$XCRESULT" ]; then
+            echo "Error: UnitTests.xcresult not found"
+            exit 1
+          fi
+          echo "Using xcresult: $XCRESULT"
+          xcrun xccov view --report --json "$XCRESULT" > coverage.json
 
       - name: Check coverage threshold
         run: |
