@@ -140,31 +140,24 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: unit-test-results
-          path: TestResults
+          path: TestResults/UnitTests.xcresult
 
       - name: Download integration test results
         uses: actions/download-artifact@v4
         with:
           name: integration-test-results
-          path: TestResults
+          path: TestResults/IntegrationTests.xcresult
 
       - name: List downloaded artifacts
         run: |
           echo "Contents of TestResults:"
           ls -la TestResults/
-          echo "Looking for xcresult bundles:"
-          find TestResults -name "*.xcresult" -type d
+          echo "Contents of UnitTests.xcresult:"
+          ls -la TestResults/UnitTests.xcresult/ || echo "Not found"
 
       - name: Generate coverage report
         run: |
-          # Find the xcresult bundle (may be nested due to artifact structure)
-          XCRESULT=$(find TestResults -name "UnitTests.xcresult" -type d | head -1)
-          if [ -z "$XCRESULT" ]; then
-            echo "Error: UnitTests.xcresult not found"
-            exit 1
-          fi
-          echo "Using xcresult: $XCRESULT"
-          xcrun xccov view --report --json "$XCRESULT" > coverage.json
+          xcrun xccov view --report --json TestResults/UnitTests.xcresult > coverage.json
 
       - name: Check coverage threshold
         run: |
