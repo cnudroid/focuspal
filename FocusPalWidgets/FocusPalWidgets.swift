@@ -14,7 +14,13 @@ import WidgetKit
 @main
 struct FocusPalWidgetsBundle: WidgetBundle {
     var body: some Widget {
+        // Live Activity for lock screen timer
         FocusPalTimerLiveActivity()
+
+        // Home Screen Widgets
+        FocusPalSmallWidget()
+        FocusPalMediumWidget()
+        FocusPalLargeWidget()
     }
 }
 

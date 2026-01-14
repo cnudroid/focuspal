@@ -202,6 +202,13 @@ struct MainTabView: View {
                 serviceContainer.pendingSiriTimerNavigation = false
             }
         }
+        // Handle deep link navigation from widgets
+        .onReceive(serviceContainer.$pendingDeepLinkTab) { tab in
+            if let tab = tab {
+                selectedTab = tab
+                serviceContainer.pendingDeepLinkTab = nil
+            }
+        }
     }
 }
 

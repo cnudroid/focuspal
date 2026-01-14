@@ -36,9 +36,43 @@ struct FocusPalApp: App {
                         FocusPalShortcuts.updateAppShortcutParameters()
                     }
                 }
+                .onOpenURL { url in
+                    handleDeepLink(url)
+                }
         }
         .onChange(of: scenePhase) { newPhase in
             handleScenePhaseChange(newPhase)
+        }
+    }
+
+    /// Handle deep links from widgets and other sources
+    private func handleDeepLink(_ url: URL) {
+        print("📱 Deep link received: \(url)")
+
+        guard url.scheme == "focuspal" else { return }
+
+        switch url.host {
+        case "timer":
+            // Check for category parameter
+            if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+               let categoryId = components.queryItems?.first(where: { $0.name == "category" })?.value,
+               let uuid = UUID(uuidString: categoryId) {
+                // Navigate to timer with specific category
+                serviceContainer.pendingTimerCategoryId = uuid
+            }
+            serviceContainer.pendingDeepLinkTab = .timer
+
+        case "stats":
+            serviceContainer.pendingDeepLinkTab = .stats
+
+        case "rewards":
+            serviceContainer.pendingDeepLinkTab = .rewards
+
+        case "log":
+            serviceContainer.pendingDeepLinkTab = .log
+
+        default:
+            break
         }
     }
 

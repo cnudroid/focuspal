@@ -25,6 +25,9 @@ class ServiceContainer: ObservableObject {
     /// Flag to auto-start timer after category selection (for Siri)
     @Published var shouldAutoStartTimer: Bool = false
 
+    /// Tab to navigate to from deep link (widget tap)
+    @Published var pendingDeepLinkTab: AppTab?
+
     // MARK: - Repositories
 
     lazy var childRepository: ChildRepositoryProtocol = {
