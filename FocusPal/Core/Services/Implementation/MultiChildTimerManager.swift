@@ -67,6 +67,7 @@ class MultiChildTimerManager: ObservableObject {
         activeTimers[child.id] = state
         persistStates()
         scheduleNotification(for: state)
+        updateIdleTimerState()
 
         // Start Live Activity for lock screen display
         Task {
@@ -81,6 +82,7 @@ class MultiChildTimerManager: ObservableObject {
         activeTimers[childId] = pausedState
         persistStates()
         cancelNotification(for: childId)
+        updateIdleTimerState()
 
         // Update Live Activity to show paused state
         Task {
@@ -95,6 +97,7 @@ class MultiChildTimerManager: ObservableObject {
         activeTimers[childId] = resumedState
         persistStates()
         scheduleNotification(for: resumedState)
+        updateIdleTimerState()
 
         // Update Live Activity to show running state
         Task {
@@ -107,6 +110,7 @@ class MultiChildTimerManager: ObservableObject {
         activeTimers.removeValue(forKey: childId)
         persistStates()
         cancelNotification(for: childId)
+        updateIdleTimerState()
 
         // End Live Activity
         Task {
@@ -140,6 +144,7 @@ class MultiChildTimerManager: ObservableObject {
         guard let state = activeTimers.removeValue(forKey: childId) else { return nil }
         persistStates()
         cancelNotification(for: childId)
+        updateIdleTimerState()
 
         // End Live Activity
         Task {
@@ -230,6 +235,7 @@ class MultiChildTimerManager: ObservableObject {
 
         if !completedChildIds.isEmpty {
             persistStates()
+            updateIdleTimerState()
         }
 
         // Trigger UI update for remaining timers
@@ -240,6 +246,19 @@ class MultiChildTimerManager: ObservableObject {
         let states = Array(activeTimers.values)
         if let encoded = try? JSONEncoder().encode(states) {
             UserDefaults.standard.set(encoded, forKey: Self.storageKey)
+        }
+    }
+
+    /// Update the idle timer state based on running timers
+    /// Prevents screen from auto-locking while a timer is actively running
+    private func updateIdleTimerState() {
+        let hasRunningTimers = activeTimers.values.contains { !$0.isPaused }
+        UIApplication.shared.isIdleTimerDisabled = hasRunningTimers
+
+        if hasRunningTimers {
+            print("🔒 Screen auto-lock disabled (timer running)")
+        } else {
+            print("🔓 Screen auto-lock enabled (no running timers)")
         }
     }
 
@@ -272,6 +291,9 @@ class MultiChildTimerManager: ObservableObject {
 
         if hasRestoredTimers {
             print("🔄 Restored \(restoredCount) timer(s) from previous session")
+
+            // Update idle timer state for restored timers
+            updateIdleTimerState()
 
             // Restart Live Activities for restored active timers
             for state in restoredActiveStates {

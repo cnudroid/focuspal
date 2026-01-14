@@ -25,15 +25,14 @@ class LiveActivityManager: ObservableObject {
     /// Active Live Activities keyed by child ID (type-erased for iOS version compatibility)
     private var activeActivities: [UUID: Any] = [:]
 
+    /// Flag to track if initial cleanup has completed
+    private var hasCompletedInitialCleanup = false
+
     // MARK: - Initialization
 
     private init() {
-        // Clean up any stale activities on init
-        if #available(iOS 16.2, *) {
-            Task {
-                await cleanupStaleActivities()
-            }
-        }
+        // Note: Cleanup is now triggered lazily on first activity request
+        // to avoid race conditions with activity creation
     }
 
     // MARK: - Public Properties
@@ -73,6 +72,12 @@ class LiveActivityManager: ObservableObject {
         guard !state.isCompleted else {
             print("📱 Timer already completed, not starting Live Activity")
             return
+        }
+
+        // Ensure cleanup of stale activities happens before starting new ones
+        if !hasCompletedInitialCleanup {
+            await cleanupStaleActivities()
+            hasCompletedInitialCleanup = true
         }
 
         // End any existing activity for this child first
