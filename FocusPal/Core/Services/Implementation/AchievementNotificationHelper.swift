@@ -32,6 +32,10 @@ struct AchievementNotificationHelper {
             achievementType?.iconName ?? "star.fill"
         }
 
+        var emoji: String {
+            achievementType?.emoji ?? "⭐"
+        }
+
         init(achievement: Achievement) {
             self.achievement = achievement
             self.achievementType = AchievementType(rawValue: achievement.achievementTypeId)

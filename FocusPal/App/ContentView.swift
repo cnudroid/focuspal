@@ -147,7 +147,13 @@ struct MainTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView(selectedTab: $selectedTab, currentChild: currentChild)
+            HomeView(
+                selectedTab: $selectedTab,
+                currentChild: currentChild,
+                activityService: serviceContainer.activityService,
+                categoryService: serviceContainer.categoryService,
+                pointsService: serviceContainer.pointsService
+            )
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }
@@ -176,6 +182,7 @@ struct MainTabView: View {
 
             RewardsView(
                 rewardsService: serviceContainer.rewardsService,
+                achievementService: serviceContainer.achievementService,
                 currentChild: currentChild
             )
                 .tabItem {

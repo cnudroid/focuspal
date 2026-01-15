@@ -206,20 +206,13 @@ private struct TierMarker: View {
     let isUnlocked: Bool
     let isCurrent: Bool
 
-    @State private var isAnimating = false
-
     var body: some View {
         ZStack {
-            // Glow for current tier
+            // Static glow for current tier (no animation to save memory)
             if isCurrent {
                 Circle()
                     .fill(Color(hex: tier.colorHex).opacity(0.3))
                     .frame(width: 32, height: 32)
-                    .scaleEffect(isAnimating ? 1.2 : 0.8)
-                    .animation(
-                        Animation.easeInOut(duration: 1.0).repeatForever(autoreverses: true),
-                        value: isAnimating
-                    )
             }
 
             Circle()
@@ -234,11 +227,6 @@ private struct TierMarker: View {
                 Image(systemName: "checkmark")
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(.white)
-            }
-        }
-        .onAppear {
-            if isCurrent {
-                isAnimating = true
             }
         }
     }

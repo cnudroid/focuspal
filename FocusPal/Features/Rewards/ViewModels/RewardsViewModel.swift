@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 /// ViewModel for the Rewards screen.
 /// Manages weekly reward progress, tier calculations, and reward redemption.
@@ -19,15 +20,19 @@ class RewardsViewModel: ObservableObject {
     @Published var weeklyRewards: [WeeklyReward] = []
     @Published var rewardHistory: RewardHistory?
     @Published var unredeemedRewards: [WeeklyReward] = []
+    @Published var achievements: [AchievementDisplayItem] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var showRedemptionSuccess = false
     @Published var lastRedeemedTier: RewardTier?
+    @Published var showShareSheet = false
+    @Published var shareImage: UIImage?
 
     // MARK: - Dependencies
 
     private let rewardsService: RewardsServiceProtocol?
-    private let child: Child
+    private let achievementService: AchievementServiceProtocol?
+    let child: Child
 
     // MARK: - Computed Properties
 
@@ -81,6 +86,29 @@ class RewardsViewModel: ObservableObject {
         weeklyRewards.filter { !$0.isCurrentWeek }
     }
 
+    /// Unlocked achievement badges
+    var unlockedBadges: [AchievementDisplayItem] {
+        achievements.filter { $0.isUnlocked }
+    }
+
+    /// Achievements in progress (for "Coming Up" section)
+    var comingUpAchievements: [AchievementDisplayItem] {
+        achievements
+            .filter { !$0.isUnlocked && $0.progress > 0 }
+            .sorted { $0.progress > $1.progress }
+            .prefix(3)
+            .map { $0 }
+    }
+
+    /// Recently unlocked badges (within last 7 days)
+    var recentlyUnlockedBadges: [AchievementDisplayItem] {
+        let weekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
+        return unlockedBadges.filter { badge in
+            guard let unlockedDate = badge.unlockedDate else { return false }
+            return unlockedDate > weekAgo
+        }
+    }
+
     /// Encouraging message based on current progress
     var encouragementMessage: String {
         if let tier = currentTier {
@@ -110,9 +138,11 @@ class RewardsViewModel: ObservableObject {
 
     init(
         rewardsService: RewardsServiceProtocol? = nil,
+        achievementService: AchievementServiceProtocol? = nil,
         child: Child? = nil
     ) {
         self.rewardsService = rewardsService
+        self.achievementService = achievementService
         self.child = child ?? Child(name: "Test Child", age: 8)
 
         print("RewardsViewModel initialized for child: \(self.child.name) (\(self.child.id))")
@@ -136,8 +166,9 @@ class RewardsViewModel: ObservableObject {
             async let historyTask = loadWeeklyRewards()
             async let statsTask = loadRewardHistory()
             async let unredeemedTask = loadUnredeemedRewards()
+            async let achievementsTask = loadAchievements()
 
-            _ = await (progressTask, historyTask, statsTask, unredeemedTask)
+            _ = await (progressTask, historyTask, statsTask, unredeemedTask, achievementsTask)
         }
 
         isLoading = false
@@ -230,6 +261,130 @@ class RewardsViewModel: ObservableObject {
         }
     }
 
+    private func loadAchievements() async {
+        guard let service = achievementService else {
+            // Service not available - show empty state
+            achievements = []
+            return
+        }
+
+        do {
+            // Initialize achievements for this child (creates any missing achievement types)
+            try await service.initializeAchievements(for: child)
+
+            // Now fetch all achievements (will include all types with progress)
+            let allAchievements = try await service.fetchAllAchievements(for: child)
+            achievements = allAchievements.map { achievement in
+                let achievementType = AchievementType(rawValue: achievement.achievementTypeId)
+                return AchievementDisplayItem(
+                    id: achievement.id,
+                    name: achievementType?.name ?? "Achievement",
+                    description: achievementType?.description ?? "",
+                    iconName: achievementType?.iconName ?? "star.fill",
+                    emoji: achievementType?.emoji ?? "⭐",
+                    isUnlocked: achievement.isUnlocked,
+                    progress: achievement.progressPercentage,
+                    unlockedDate: achievement.unlockedDate
+                )
+            }
+        } catch {
+            print("Failed to load achievements: \(error)")
+        }
+    }
+
+    private func loadMockAchievements() {
+        let calendar = Calendar.current
+        let weekAgo = calendar.date(byAdding: .day, value: -5, to: Date())
+
+        achievements = [
+            AchievementDisplayItem(
+                id: UUID(),
+                name: "3-Day Streak",
+                description: "Complete activities for 3 days in a row",
+                iconName: "flame.fill",
+                emoji: "🔥",
+                isUnlocked: true,
+                progress: 100,
+                unlockedDate: weekAgo
+            ),
+            AchievementDisplayItem(
+                id: UUID(),
+                name: "Homework Hero",
+                description: "Complete 5 hours of homework",
+                iconName: "book.fill",
+                emoji: "📚",
+                isUnlocked: true,
+                progress: 100,
+                unlockedDate: calendar.date(byAdding: .day, value: -10, to: Date())
+            ),
+            AchievementDisplayItem(
+                id: UUID(),
+                name: "Reading Champion",
+                description: "Read for 10 hours total",
+                iconName: "book.closed.fill",
+                emoji: "📖",
+                isUnlocked: false,
+                progress: 65,
+                unlockedDate: nil
+            ),
+            AchievementDisplayItem(
+                id: UUID(),
+                name: "7-Day Streak",
+                description: "Complete activities for 7 days in a row",
+                iconName: "flame.fill",
+                emoji: "🔥",
+                isUnlocked: false,
+                progress: 43,
+                unlockedDate: nil
+            ),
+            AchievementDisplayItem(
+                id: UUID(),
+                name: "First Timer",
+                description: "Complete your first focus session",
+                iconName: "star.fill",
+                emoji: "⭐",
+                isUnlocked: true,
+                progress: 100,
+                unlockedDate: calendar.date(byAdding: .day, value: -14, to: Date())
+            ),
+            AchievementDisplayItem(
+                id: UUID(),
+                name: "Music Maestro",
+                description: "Practice music for 3 hours",
+                iconName: "music.note",
+                emoji: "🎵",
+                isUnlocked: false,
+                progress: 20,
+                unlockedDate: nil
+            )
+        ]
+    }
+
+    // MARK: - Share Methods
+
+    /// Generate and share an achievement card
+    func shareAchievement(_ achievement: AchievementDisplayItem) {
+        shareImage = CardShareService.generateAchievementCard(
+            achievement: achievement,
+            childName: child.name
+        )
+        showShareSheet = shareImage != nil
+    }
+
+    /// Generate and share a weekly summary card
+    func shareWeeklySummary() {
+        guard let history = rewardHistory else { return }
+
+        shareImage = CardShareService.generateWeeklyCard(
+            childName: child.name,
+            totalMinutes: Int(Double(currentPoints) * 1.5), // Approximate from points
+            streak: history.currentStreak,
+            tier: currentTier,
+            points: currentPoints
+        )
+        showShareSheet = shareImage != nil
+    }
+
     /// Load mock data when service is not available
     private func loadMockData() {
         let (weekStart, weekEnd) = WeeklyReward.currentWeekDates()
@@ -291,5 +446,8 @@ class RewardsViewModel: ObservableObject {
 
         // Mock unredeemed rewards
         unredeemedRewards = weeklyRewards.filter { !$0.isRedeemed && $0.tier != nil }
+
+        // Mock achievements
+        loadMockAchievements()
     }
 }

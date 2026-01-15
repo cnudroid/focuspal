@@ -17,6 +17,7 @@ struct ClockMascot: View {
     @State private var isWaving = false
     @State private var isBouncing = false
     @State private var eyesBlink = false
+    @State private var blinkTimer: Timer?
 
     enum MascotMood {
         case happy
@@ -53,6 +54,14 @@ struct ClockMascot: View {
                 startAnimations()
             }
         }
+        .onDisappear {
+            stopAnimations()
+        }
+    }
+
+    private func stopAnimations() {
+        blinkTimer?.invalidate()
+        blinkTimer = nil
     }
 
     private var clockCharacter: some View {
@@ -263,25 +272,25 @@ struct ClockMascot: View {
     }
 
     private func startAnimations() {
-        // Waving animation
+        // Waving animation - limited repeats to save memory
         withAnimation(
             Animation.easeInOut(duration: 0.5)
-                .repeatForever(autoreverses: true)
+                .repeatCount(10, autoreverses: true)
         ) {
             isWaving = true
         }
 
-        // Bouncing animation
+        // Bouncing animation - limited repeats to save memory
         withAnimation(
             Animation.easeInOut(duration: 0.8)
-                .repeatForever(autoreverses: true)
+                .repeatCount(8, autoreverses: true)
                 .delay(0.2)
         ) {
             isBouncing = true
         }
 
-        // Blinking animation
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+        // Blinking animation - store timer reference for cleanup
+        blinkTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [self] _ in
             withAnimation(.easeInOut(duration: 0.1)) {
                 eyesBlink = true
             }

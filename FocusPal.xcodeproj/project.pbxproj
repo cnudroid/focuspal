@@ -242,6 +242,11 @@
 		FC214444EDD0263A43C4213C /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399485656A65B5F2A5CEE706 /* NotificationService.swift */; };
 		FC42E6BAD0CC3C5D38C2C108 /* ParentAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F81B675925CBA456883AD9 /* ParentAuthViewModel.swift */; };
 		FC7AC73861ACDCA62DEDEBC7 /* ClockMascot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3755F87F6C611B147F0B2913 /* ClockMascot.swift */; };
+		F9L60VRAQBFWVW2D7YSH6LCP /* CardShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EPM327KEA9IIS5RIHAWHOX /* CardShareService.swift */; };
+		K9TYEMJR5EGWGUU68U8AE5W5 /* ShareableAchievementCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5I0YH8ZKRSBSL41SXIM6ECN /* ShareableAchievementCard.swift */; };
+		4D8TYK6ISYGRRJHU8V8EPOXC /* ShareableWeeklyCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = UMIT7C38IRLXJCBESG73WKFI /* ShareableWeeklyCard.swift */; };
+		UODZQVR9A21GFUI97SL326V7 /* BadgeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ZGF91K3JLMJYG57IKBDR668O /* BadgeDetailView.swift */; };
+		JLDHRF265NEI4PB87IEAVMA1 /* CelebrationAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FCAP3IGX4PIR34M2IZHKNM /* CelebrationAnimations.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -525,6 +530,11 @@
 		FE3E06DBDDE4B93E57B01682 /* TaskSchedulerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSchedulerViewModel.swift; sourceTree = "<group>"; };
 		FEA4E1698643D72BF5BD48DB /* CategorySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsView.swift; sourceTree = "<group>"; };
 		FEF446F8E92A4283FF747CAC /* ChildTimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildTimerState.swift; sourceTree = "<group>"; };
+		34EPM327KEA9IIS5RIHAWHOX /* CardShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardShareService.swift; sourceTree = "<group>"; };
+		E5I0YH8ZKRSBSL41SXIM6ECN /* ShareableAchievementCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareableAchievementCard.swift; sourceTree = "<group>"; };
+		UMIT7C38IRLXJCBESG73WKFI /* ShareableWeeklyCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareableWeeklyCard.swift; sourceTree = "<group>"; };
+		ZGF91K3JLMJYG57IKBDR668O /* BadgeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeDetailView.swift; sourceTree = "<group>"; };
+		F8FCAP3IGX4PIR34M2IZHKNM /* CelebrationAnimations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationAnimations.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -831,7 +841,9 @@
 			children = (
 				7F351AE28A099C315FDC9BB2 /* Components */,
 				2FCB4B2F45DBD5A7CC94C1C1 /* RewardsView.swift */,
-			);
+			
+				SGB38DQGHFVNKXHYCZKF7XFK /* ShareableCards */,
+				ZGF91K3JLMJYG57IKBDR668O /* BadgeDetailView.swift */,);
 			path = Views;
 			sourceTree = "<group>";
 		};
@@ -958,7 +970,8 @@
 				140B76FF508A68B5D9E22E4A /* Common */,
 				71A94686ABDEA7607C978996 /* Inputs */,
 				B17E616D576761957C9A3DF9 /* Progress */,
-			);
+			
+				S54BKPMBKQJJW2JZZO50YKDH /* Animations */,);
 			path = Components;
 			sourceTree = "<group>";
 		};
@@ -1539,6 +1552,24 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		SGB38DQGHFVNKXHYCZKF7XFK /* ShareableCards */ = {
+			isa = PBXGroup;
+			children = (
+				34EPM327KEA9IIS5RIHAWHOX /* CardShareService.swift */,
+				E5I0YH8ZKRSBSL41SXIM6ECN /* ShareableAchievementCard.swift */,
+				UMIT7C38IRLXJCBESG73WKFI /* ShareableWeeklyCard.swift */,
+			);
+			path = ShareableCards;
+			sourceTree = "<group>";
+		};
+		S54BKPMBKQJJW2JZZO50YKDH /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				F8FCAP3IGX4PIR34M2IZHKNM /* CelebrationAnimations.swift */,
+			);
+			path = Animations;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1877,7 +1908,12 @@
 				A5815C1A6E3521CD1F054F01 /* WeeklySummary.swift in Sources */,
 				A183BC0BAF4341A2924EFDF6 /* WeeklySummaryService.swift in Sources */,
 				4F61003693EF54743568D042 /* WelcomeView.swift in Sources */,
-			);
+			
+				F9L60VRAQBFWVW2D7YSH6LCP /* CardShareService.swift in Sources */,
+				K9TYEMJR5EGWGUU68U8AE5W5 /* ShareableAchievementCard.swift in Sources */,
+				4D8TYK6ISYGRRJHU8V8EPOXC /* ShareableWeeklyCard.swift in Sources */,
+				UODZQVR9A21GFUI97SL326V7 /* BadgeDetailView.swift in Sources */,
+				JLDHRF265NEI4PB87IEAVMA1 /* CelebrationAnimations.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A9B7F8A9B02E708EF09DF999 /* Sources */ = {

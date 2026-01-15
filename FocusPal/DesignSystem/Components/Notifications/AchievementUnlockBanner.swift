@@ -12,16 +12,29 @@ import SwiftUI
 struct AchievementUnlockBanner: View {
     let notification: AchievementNotificationHelper.UnlockNotification
     let onDismiss: () -> Void
+    var onShare: (() -> Void)?
 
     @State private var isVisible = false
+    @State private var showShareBounce = false
 
     var body: some View {
         HStack(spacing: 16) {
-            // Achievement icon
-            Image(systemName: notification.iconName)
-                .font(.system(size: 32))
-                .foregroundColor(.yellow)
-                .symbolEffect(.bounce, value: isVisible)
+            // Achievement icon with emoji
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.yellow.opacity(0.3), Color.orange.opacity(0.3)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 50, height: 50)
+
+                Text(notification.emoji)
+                    .font(.system(size: 28))
+            }
+            .symbolEffect(.bounce, value: isVisible)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Achievement Unlocked!")
@@ -41,11 +54,29 @@ struct AchievementUnlockBanner: View {
 
             Spacer()
 
-            // Dismiss button
-            Button(action: onDismiss) {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title2)
-                    .foregroundColor(.secondary)
+            VStack(spacing: 8) {
+                // Share button
+                if onShare != nil {
+                    Button {
+                        showShareBounce = true
+                        onShare?()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            showShareBounce = false
+                        }
+                    } label: {
+                        Image(systemName: "square.and.arrow.up.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                            .scaleEffect(showShareBounce ? 0.9 : 1.0)
+                    }
+                }
+
+                // Dismiss button
+                Button(action: onDismiss) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                }
             }
         }
         .padding()

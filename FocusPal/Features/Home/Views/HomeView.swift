@@ -14,10 +14,20 @@ struct HomeView: View {
     @Binding var selectedTab: AppTab
     let currentChild: Child
 
-    init(selectedTab: Binding<AppTab>, currentChild: Child) {
+    init(
+        selectedTab: Binding<AppTab>,
+        currentChild: Child,
+        activityService: ActivityServiceProtocol? = nil,
+        categoryService: CategoryServiceProtocol? = nil,
+        pointsService: PointsServiceProtocol? = nil
+    ) {
         _selectedTab = selectedTab
         self.currentChild = currentChild
-        _viewModel = StateObject(wrappedValue: HomeViewModel())
+        _viewModel = StateObject(wrappedValue: HomeViewModel(
+            activityService: activityService,
+            categoryService: categoryService,
+            pointsService: pointsService
+        ))
         _activityLogViewModel = StateObject(wrappedValue: ActivityLogViewModel(child: currentChild))
     }
 

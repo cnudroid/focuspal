@@ -162,9 +162,9 @@ class HomeViewModel: ObservableObject {
     func loadPoints() async {
         guard let child = currentChild else { return }
 
-        // Handle nil pointsService gracefully - service may not be implemented yet
+        // Handle nil pointsService gracefully - points will show as 0
         guard let pointsService = pointsService else {
-            // Set default values when service is not available
+            // Points service not available - show empty state
             todayPoints = nil
             weeklyPoints = 0
             pointsTrend = .neutral
@@ -285,15 +285,4 @@ class HomeViewModel: ObservableObject {
         // Fall back to default categories
         return Category.defaultCategories(for: childId)
     }
-}
-
-/// Mock category service for development
-private class SimpleMockCategoryService: CategoryServiceProtocol {
-    func fetchCategories(for child: Child) async throws -> [Category] { [] }
-    func fetchActiveCategories(for child: Child) async throws -> [Category] { [] }
-    func createCategory(_ category: Category) async throws -> Category { category }
-    func updateCategory(_ category: Category) async throws -> Category { category }
-    func deleteCategory(_ categoryId: UUID) async throws { }
-    func reorderCategories(_ categoryIds: [UUID]) async throws { }
-    func createDefaultCategories(for child: Child) async throws -> [Category] { [] }
 }
