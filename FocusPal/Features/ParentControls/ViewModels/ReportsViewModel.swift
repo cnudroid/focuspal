@@ -16,7 +16,9 @@ class ReportsViewModel: ObservableObject {
 
     @Published var selectedChild: Child?
     @Published var selectedDateRange: DateRange = .week
+    @Published var children: [Child] = []
     @Published var weeklySummary: AnalyticsWeeklySummary?
+    @Published var fullWeeklySummary: WeeklySummary?
     @Published var categoryBreakdown: [CategoryBreakdownItem] = []
     @Published var dailyBreakdown: [DailyBreakdownItem] = []
     @Published var balanceInsights: BalanceScore?
@@ -31,17 +33,29 @@ class ReportsViewModel: ObservableObject {
     private let activityService: ActivityServiceProtocol
     private let analyticsService: AnalyticsServiceProtocol
     private let categoryService: CategoryServiceProtocol
+    private let childRepository: ChildRepositoryProtocol
+    private let weeklySummaryService: WeeklySummaryServiceProtocol
+    private let pdfGenerator: PDFReportGeneratorProtocol
+    private let reportShareService: ReportShareService
 
     // MARK: - Initialization
 
     init(
         activityService: ActivityServiceProtocol,
         analyticsService: AnalyticsServiceProtocol,
-        categoryService: CategoryServiceProtocol
+        categoryService: CategoryServiceProtocol,
+        childRepository: ChildRepositoryProtocol,
+        weeklySummaryService: WeeklySummaryServiceProtocol,
+        pdfGenerator: PDFReportGeneratorProtocol? = nil,
+        reportShareService: ReportShareService? = nil
     ) {
         self.activityService = activityService
         self.analyticsService = analyticsService
         self.categoryService = categoryService
+        self.childRepository = childRepository
+        self.weeklySummaryService = weeklySummaryService
+        self.pdfGenerator = pdfGenerator ?? PDFReportGenerator()
+        self.reportShareService = reportShareService ?? ReportShareService()
     }
 
     // MARK: - Computed Properties
@@ -65,6 +79,16 @@ class ReportsViewModel: ObservableObject {
 
     // MARK: - Public Methods
 
+    /// Load all children for the picker
+    func loadChildren() async {
+        do {
+            children = try await childRepository.fetchAll()
+        } catch {
+            print("Failed to load children: \(error)")
+            children = []
+        }
+    }
+
     func loadData(for child: Child?) async {
         isLoading = true
         errorMessage = nil
@@ -80,18 +104,77 @@ class ReportsViewModel: ObservableObject {
             async let daily = loadDailyBreakdown(for: child, in: dateRange)
             async let balance = loadBalanceInsights(for: child, in: dateRange)
             async let trend = loadTrendData(for: child, in: dateRange)
+            async let fullSummary = loadFullWeeklySummary(for: child)
 
             weeklySummary = try await summary
             categoryBreakdown = try await breakdown
             dailyBreakdown = try await daily
             balanceInsights = try await balance
             weeklyTrend = try await trend
+            fullWeeklySummary = try await fullSummary
 
             isLoading = false
         } catch {
             errorMessage = "Failed to load report data: \(error.localizedDescription)"
             isLoading = false
         }
+    }
+
+    /// Load full weekly summary with points, tier, achievements, streak
+    private func loadFullWeeklySummary(for child: Child?) async throws -> WeeklySummary? {
+        guard let child = child else {
+            // For "All Children", aggregate summaries
+            let allSummaries = try await weeklySummaryService.generateSummariesForAllChildren()
+            return aggregateSummaries(allSummaries)
+        }
+
+        let dateRange = calculateDateRange()
+        return try await weeklySummaryService.generateSummary(for: child.id, weekStartDate: dateRange.start)
+    }
+
+    /// Aggregate multiple child summaries into one
+    private func aggregateSummaries(_ summaries: [WeeklySummary]) -> WeeklySummary? {
+        guard !summaries.isEmpty else { return nil }
+
+        let dateRange = calculateDateRange()
+
+        let totalActivities = summaries.reduce(0) { $0 + $1.totalActivities }
+        let completedActivities = summaries.reduce(0) { $0 + $1.completedActivities }
+        let incompleteActivities = summaries.reduce(0) { $0 + $1.incompleteActivities }
+        let totalMinutes = summaries.reduce(0) { $0 + $1.totalMinutes }
+        let pointsEarned = summaries.reduce(0) { $0 + $1.pointsEarned }
+        let pointsDeducted = summaries.reduce(0) { $0 + $1.pointsDeducted }
+        let netPoints = summaries.reduce(0) { $0 + $1.netPoints }
+        let achievementsUnlocked = summaries.reduce(0) { $0 + $1.achievementsUnlocked }
+
+        // Merge top categories from all children
+        var categoryMinutes: [String: Int] = [:]
+        for summary in summaries {
+            for category in summary.topCategories {
+                categoryMinutes[category.categoryName, default: 0] += category.minutes
+            }
+        }
+        let topCategories = categoryMinutes
+            .sorted { $0.value > $1.value }
+            .prefix(3)
+            .map { (categoryName: $0.key, minutes: $0.value) }
+
+        return WeeklySummary(
+            childName: "All Children",
+            weekStartDate: dateRange.start,
+            weekEndDate: Calendar.current.date(byAdding: .second, value: -1, to: dateRange.end) ?? dateRange.end,
+            totalActivities: totalActivities,
+            completedActivities: completedActivities,
+            incompleteActivities: incompleteActivities,
+            totalMinutes: totalMinutes,
+            pointsEarned: pointsEarned,
+            pointsDeducted: pointsDeducted,
+            netPoints: netPoints,
+            currentTier: nil, // No single tier for all children
+            topCategories: Array(topCategories),
+            achievementsUnlocked: achievementsUnlocked,
+            streak: 0 // No single streak for all children
+        )
     }
 
     func exportReportAsPDF() async -> Data? {
@@ -184,9 +267,58 @@ class ReportsViewModel: ObservableObject {
     }
 
     private func generatePDFData() async -> Data? {
-        // TODO: Implement PDF generation using PDFKit
-        // For now, return empty data to pass tests
-        return Data()
+        guard let summary = buildWeeklySummary() else {
+            return nil
+        }
+        return pdfGenerator.generatePDF(from: summary)
+    }
+
+    // MARK: - WeeklySummary Conversion
+
+    /// Build a WeeklySummary from the current data
+    /// Used for PDF generation and sharing
+    func buildWeeklySummary() -> WeeklySummary? {
+        // Prefer the full weekly summary if available (has rich data)
+        if let fullSummary = fullWeeklySummary {
+            return fullSummary
+        }
+
+        // Fallback to basic analytics data
+        guard let analyticsSummary = weeklySummary else {
+            return nil
+        }
+
+        let dateRange = calculateDateRange()
+        let childName = selectedChild?.name ?? "All Children"
+
+        // Convert category breakdown to top categories format
+        let topCategories: [(categoryName: String, minutes: Int)] = categoryBreakdown.prefix(3).map { item in
+            (categoryName: item.categoryName, minutes: item.minutes)
+        }
+
+        let totalActivities = analyticsSummary.activityCount
+
+        return WeeklySummary(
+            childName: childName,
+            weekStartDate: dateRange.start,
+            weekEndDate: Calendar.current.date(byAdding: .second, value: -1, to: dateRange.end) ?? dateRange.end,
+            totalActivities: totalActivities,
+            completedActivities: totalActivities,
+            incompleteActivities: 0,
+            totalMinutes: analyticsSummary.totalMinutes,
+            pointsEarned: 0,
+            pointsDeducted: 0,
+            netPoints: 0,
+            currentTier: nil,
+            topCategories: topCategories,
+            achievementsUnlocked: 0,
+            streak: 0
+        )
+    }
+
+    /// Get the report share service for external use
+    func getReportShareService() -> ReportShareService {
+        reportShareService
     }
 }
 

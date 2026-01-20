@@ -16,69 +16,147 @@ class CategoryManagementViewModel: ObservableObject {
     @Published var systemCategories: [Category] = []
     @Published var customCategories: [Category] = []
     @Published var isLoading = false
+    @Published var errorMessage: String?
 
     // MARK: - Dependencies
 
     private let categoryService: CategoryServiceProtocol
+    private let childRepository: ChildRepositoryProtocol
+    private var currentChild: Child?
 
     // MARK: - Initialization
 
-    init(categoryService: CategoryServiceProtocol? = nil) {
-        self.categoryService = categoryService ?? MockCategoryServiceLocal()
+    init(
+        categoryService: CategoryServiceProtocol,
+        childRepository: ChildRepositoryProtocol
+    ) {
+        self.categoryService = categoryService
+        self.childRepository = childRepository
     }
 
     // MARK: - Public Methods
 
     func loadCategories() async {
         isLoading = true
+        errorMessage = nil
 
-        // Mock data
-        let mockChildId = UUID()
+        do {
+            // Get the active child
+            guard let child = try await childRepository.fetchActiveChild() else {
+                // If no active child, try to get first child
+                let allChildren = try await childRepository.fetchAll()
+                guard let firstChild = allChildren.first else {
+                    errorMessage = "No child profile found. Please create a child profile first."
+                    isLoading = false
+                    return
+                }
+                currentChild = firstChild
+                await loadCategoriesForChild(firstChild)
+                return
+            }
 
-        systemCategories = [
-            Category(name: "Homework", iconName: "book.fill", colorHex: "#4A90D9", isSystem: true, childId: mockChildId),
-            Category(name: "Reading", iconName: "text.book.closed.fill", colorHex: "#7B68EE", isSystem: true, childId: mockChildId),
-            Category(name: "Screen Time", iconName: "tv.fill", colorHex: "#FF6B6B", isSystem: true, childId: mockChildId),
-            Category(name: "Playing", iconName: "gamecontroller.fill", colorHex: "#4ECDC4", isSystem: true, childId: mockChildId),
-            Category(name: "Sports", iconName: "figure.run", colorHex: "#45B7D1", isSystem: true, childId: mockChildId),
-            Category(name: "Music", iconName: "music.note", colorHex: "#F7DC6F", isSystem: true, childId: mockChildId)
-        ]
+            currentChild = child
+            await loadCategoriesForChild(child)
+        } catch {
+            errorMessage = "Failed to load categories: \(error.localizedDescription)"
+            isLoading = false
+        }
+    }
 
-        customCategories = [
-            Category(name: "Art", iconName: "paintbrush.fill", colorHex: "#E74C3C", isSystem: false, childId: mockChildId)
-        ]
+    private func loadCategoriesForChild(_ child: Child) async {
+        do {
+            let allCategories = try await categoryService.fetchCategories(for: child)
 
-        isLoading = false
+            // Separate system and custom categories
+            systemCategories = allCategories.filter { $0.isSystem }.sorted { $0.sortOrder < $1.sortOrder }
+            customCategories = allCategories.filter { !$0.isSystem }.sorted { $0.sortOrder < $1.sortOrder }
+
+            // If no categories exist, create defaults
+            if allCategories.isEmpty {
+                let defaults = try await categoryService.createDefaultCategories(for: child)
+                systemCategories = defaults.filter { $0.isSystem }.sorted { $0.sortOrder < $1.sortOrder }
+                customCategories = defaults.filter { !$0.isSystem }.sorted { $0.sortOrder < $1.sortOrder }
+            }
+
+            isLoading = false
+        } catch {
+            errorMessage = "Failed to load categories: \(error.localizedDescription)"
+            isLoading = false
+        }
     }
 
     func addCategory(name: String, icon: String, color: String) async {
-        let mockChildId = UUID()
+        guard let child = currentChild else {
+            errorMessage = "No child profile selected"
+            return
+        }
+
         let newCategory = Category(
             name: name,
             iconName: icon,
             colorHex: color,
+            sortOrder: customCategories.count,
             isSystem: false,
-            childId: mockChildId
+            childId: child.id
         )
-        customCategories.append(newCategory)
+
+        do {
+            let created = try await categoryService.createCategory(newCategory)
+            customCategories.append(created)
+        } catch {
+            errorMessage = "Failed to add category: \(error.localizedDescription)"
+        }
     }
 
     func deleteCategories(at offsets: IndexSet) {
-        customCategories.remove(atOffsets: offsets)
+        let categoriesToDelete = offsets.map { customCategories[$0] }
+
+        Task {
+            for category in categoriesToDelete {
+                do {
+                    try await categoryService.deleteCategory(category.id)
+                } catch {
+                    errorMessage = "Failed to delete category: \(error.localizedDescription)"
+                }
+            }
+            // Update local state
+            customCategories.remove(atOffsets: offsets)
+        }
     }
 
     func moveCategories(from source: IndexSet, to destination: Int) {
         customCategories.move(fromOffsets: source, toOffset: destination)
-    }
-}
 
-// Local mock
-private class MockCategoryServiceLocal: CategoryServiceProtocol {
-    func fetchCategories(for child: Child) async throws -> [Category] { [] }
-    func fetchActiveCategories(for child: Child) async throws -> [Category] { [] }
-    func createCategory(_ category: Category) async throws -> Category { category }
-    func updateCategory(_ category: Category) async throws -> Category { category }
-    func deleteCategory(_ categoryId: UUID) async throws { }
-    func reorderCategories(_ categoryIds: [UUID]) async throws { }
-    func createDefaultCategories(for child: Child) async throws -> [Category] { [] }
+        // Persist the new order
+        let categoryIds = customCategories.map { $0.id }
+        Task {
+            do {
+                try await categoryService.reorderCategories(categoryIds)
+            } catch {
+                errorMessage = "Failed to reorder categories: \(error.localizedDescription)"
+            }
+        }
+    }
+
+    func toggleCategoryActive(_ category: Category) async {
+        var updatedCategory = category
+        updatedCategory.isActive.toggle()
+
+        do {
+            let saved = try await categoryService.updateCategory(updatedCategory)
+
+            // Update local state
+            if category.isSystem {
+                if let index = systemCategories.firstIndex(where: { $0.id == category.id }) {
+                    systemCategories[index] = saved
+                }
+            } else {
+                if let index = customCategories.firstIndex(where: { $0.id == category.id }) {
+                    customCategories[index] = saved
+                }
+            }
+        } catch {
+            errorMessage = "Failed to update category: \(error.localizedDescription)"
+        }
+    }
 }

@@ -10,37 +10,49 @@ import Charts
 
 /// Parent reports view with detailed analytics.
 struct ReportsView: View {
+    @EnvironmentObject private var serviceContainer: ServiceContainer
     @StateObject private var viewModel: ReportsViewModel
     @State private var selectedChild: Child?
-    @State private var children: [Child] = []
+    @State private var hasInitializedWithRealServices = false
 
-    init(
-        activityService: ActivityServiceProtocol = MockActivityService(),
-        analyticsService: AnalyticsServiceProtocol = MockAnalyticsService(),
-        categoryService: CategoryServiceProtocol = MockCategoryService()
-    ) {
+    init() {
+        // Initialize with placeholder - will be replaced via environment on appear
         _viewModel = StateObject(wrappedValue: ReportsViewModel(
-            activityService: activityService,
-            analyticsService: analyticsService,
-            categoryService: categoryService
+            activityService: MockActivityService(),
+            analyticsService: MockAnalyticsService(),
+            categoryService: MockCategoryService(),
+            childRepository: MockChildRepository(),
+            weeklySummaryService: MockWeeklySummaryService()
         ))
+    }
+
+    /// Initializer with real services (for use with ServiceContainer)
+    init(serviceContainer: ServiceContainer, initialChild: Child? = nil) {
+        _viewModel = StateObject(wrappedValue: ReportsViewModel(
+            activityService: serviceContainer.activityService,
+            analyticsService: serviceContainer.analyticsService,
+            categoryService: serviceContainer.categoryService,
+            childRepository: serviceContainer.childRepository,
+            weeklySummaryService: serviceContainer.weeklySummaryService,
+            pdfGenerator: serviceContainer.pdfReportGenerator,
+            reportShareService: serviceContainer.reportShareService
+        ))
+        _selectedChild = State(initialValue: initialChild)
     }
 
     var body: some View {
         contentView
             .navigationTitle("Reports")
             .toolbar { toolbarContent }
-            .task { await viewModel.loadData(for: selectedChild) }
+            .task {
+                await viewModel.loadChildren()
+                await viewModel.loadData(for: selectedChild)
+            }
             .onChange(of: selectedChild) { newValue in
                 Task { await viewModel.loadData(for: newValue) }
             }
             .onChange(of: viewModel.selectedDateRange) { _ in
                 Task { await viewModel.loadData(for: selectedChild) }
-            }
-            .sheet(isPresented: $viewModel.showingExportSheet) {
-                if let pdfData = viewModel.exportedPDFData {
-                    ShareSheet(items: [pdfData])
-                }
             }
     }
 
@@ -56,7 +68,7 @@ struct ReportsView: View {
         VStack(spacing: 12) {
             Picker("Child", selection: $selectedChild) {
                 Text("All Children").tag(nil as Child?)
-                ForEach(children) { child in
+                ForEach(viewModel.children) { child in
                     Text(child.name).tag(child as Child?)
                 }
             }
@@ -108,7 +120,18 @@ struct ReportsView: View {
     private var reportScrollView: some View {
         ScrollView {
             VStack(spacing: 24) {
+                // Child header with name and tier
+                if let fullSummary = viewModel.fullWeeklySummary {
+                    ChildReportHeader(summary: fullSummary)
+                }
+
                 SummaryStatsSection(summary: viewModel.weeklySummary)
+
+                // Highlights section (achievements & streak)
+                if let fullSummary = viewModel.fullWeeklySummary,
+                   (fullSummary.achievementsUnlocked > 0 || fullSummary.streak > 0 || fullSummary.netPoints > 0) {
+                    HighlightsSection(summary: fullSummary)
+                }
 
                 if let trend = viewModel.weeklyTrend {
                     ReportsTrendIndicator(trend: trend)
@@ -116,10 +139,13 @@ struct ReportsView: View {
 
                 CategoryBreakdownSection(breakdown: viewModel.categoryBreakdown)
 
-                DailyBreakdownSection(
-                    breakdown: viewModel.dailyBreakdown,
-                    dateRange: viewModel.selectedDateRange
-                )
+                // Show daily breakdown only for Today tab
+                if viewModel.selectedDateRange == .day {
+                    DailyBreakdownSection(
+                        breakdown: viewModel.dailyBreakdown,
+                        dateRange: viewModel.selectedDateRange
+                    )
+                }
 
                 BalanceInsightsSection(
                     balance: viewModel.balanceInsights,
@@ -135,14 +161,23 @@ struct ReportsView: View {
         ToolbarItem(placement: .primaryAction) {
             Menu {
                 Button {
-                    Task { await exportPDF() }
+                    Task { await shareReportWithPDF() }
                 } label: {
-                    Label("Export PDF", systemImage: "arrow.down.doc")
+                    Label("Share Report (with PDF)", systemImage: "square.and.arrow.up")
                 }
+
                 Button {
-                    viewModel.shareReport()
+                    Task { await sharePDFOnly() }
                 } label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
+                    Label("Export PDF Only", systemImage: "arrow.down.doc")
+                }
+
+                Divider()
+
+                Button {
+                    shareViaEmail()
+                } label: {
+                    Label("Email Report", systemImage: "envelope")
                 }
             } label: {
                 Image(systemName: "ellipsis.circle")
@@ -150,10 +185,30 @@ struct ReportsView: View {
         }
     }
 
-    private func exportPDF() async {
-        if let _ = await viewModel.exportReportAsPDF() {
-            viewModel.showingExportSheet = true
-        }
+    private func shareReportWithPDF() async {
+        guard let summary = viewModel.buildWeeklySummary() else { return }
+        guard let viewController = ReportShareService.getRootViewController() else { return }
+
+        viewModel.getReportShareService().shareReport(
+            summaries: [summary],
+            includePDF: true,
+            from: viewController
+        )
+    }
+
+    private func sharePDFOnly() async {
+        guard let summary = viewModel.buildWeeklySummary() else { return }
+        guard let viewController = ReportShareService.getRootViewController() else { return }
+
+        viewModel.getReportShareService().sharePDFReport(
+            summaries: [summary],
+            from: viewController
+        )
+    }
+
+    private func shareViaEmail() {
+        guard let summary = viewModel.buildWeeklySummary() else { return }
+        viewModel.getReportShareService().shareViaEmail(summaries: [summary])
     }
 }
 
@@ -491,6 +546,112 @@ struct ShareSheet: UIViewControllerRepresentable {
     }
 }
 
+// MARK: - Child Report Header
+
+struct ChildReportHeader: View {
+    let summary: WeeklySummary
+
+    var body: some View {
+        HStack(spacing: 16) {
+            // Child avatar
+            ZStack {
+                Circle()
+                    .fill(Color.blue.opacity(0.1))
+                    .frame(width: 60, height: 60)
+
+                Text(String(summary.childName.prefix(1)).uppercased())
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.blue)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(summary.childName)
+                    .font(.title2)
+                    .fontWeight(.bold)
+
+                if let tier = summary.currentTier {
+                    TierBadge(tier: tier)
+                }
+            }
+
+            Spacer()
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - Highlights Section
+
+struct HighlightsSection: View {
+    let summary: WeeklySummary
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Highlights")
+                .font(.headline)
+
+            HStack(spacing: 12) {
+                if summary.netPoints > 0 {
+                    HighlightCard(
+                        icon: "star.fill",
+                        value: "\(summary.netPoints)",
+                        label: "Points",
+                        color: Color(hex: "#FFD700")
+                    )
+                }
+
+                if summary.achievementsUnlocked > 0 {
+                    HighlightCard(
+                        icon: "trophy.fill",
+                        value: "\(summary.achievementsUnlocked)",
+                        label: summary.achievementsUnlocked == 1 ? "Achievement" : "Achievements",
+                        color: .orange
+                    )
+                }
+
+                if summary.streak > 0 {
+                    HighlightCard(
+                        icon: "flame.fill",
+                        value: "\(summary.streak)",
+                        label: summary.streak == 1 ? "Week Streak" : "Weeks Streak",
+                        color: .red
+                    )
+                }
+            }
+        }
+    }
+}
+
+struct HighlightCard: View {
+    let icon: String
+    let value: String
+    let label: String
+    let color: Color
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(color)
+
+            Text(value)
+                .font(.title3)
+                .fontWeight(.bold)
+
+            Text(label)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
 // MARK: - Mock Analytics Service
 
 class MockAnalyticsService: AnalyticsServiceProtocol {
@@ -508,5 +669,36 @@ class MockAnalyticsService: AnalyticsServiceProtocol {
 
     func calculateDailyBreakdown(for child: Child?, in dateRange: DateInterval) async throws -> [DailyBreakdownItem] {
         []
+    }
+}
+
+// MARK: - Mock Weekly Summary Service
+
+class MockWeeklySummaryService: WeeklySummaryServiceProtocol {
+    func generateSummary(for childId: UUID, weekStartDate: Date) async throws -> WeeklySummary {
+        WeeklySummary(
+            childName: "Sample Child",
+            weekStartDate: weekStartDate,
+            weekEndDate: Calendar.current.date(byAdding: .day, value: 6, to: weekStartDate)!,
+            totalActivities: 10,
+            completedActivities: 8,
+            incompleteActivities: 2,
+            totalMinutes: 300,
+            pointsEarned: 200,
+            pointsDeducted: 20,
+            netPoints: 180,
+            currentTier: .silver,
+            topCategories: [
+                (categoryName: "Reading", minutes: 120),
+                (categoryName: "Homework", minutes: 100),
+                (categoryName: "Sports", minutes: 80)
+            ],
+            achievementsUnlocked: 1,
+            streak: 2
+        )
+    }
+
+    func generateSummariesForAllChildren() async throws -> [WeeklySummary] {
+        [try await generateSummary(for: UUID(), weekStartDate: Date())]
     }
 }

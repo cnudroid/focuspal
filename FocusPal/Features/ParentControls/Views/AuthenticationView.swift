@@ -13,67 +13,60 @@ struct AuthenticationView: View {
     let onAuthenticated: () -> Void
 
     @StateObject private var biometricViewModel = BiometricAuthViewModel()
-    // TODO: Implement ParentAuthViewModel
-    // @StateObject private var authViewModel = ParentAuthViewModel()
-    @State private var showSetup = false
+    @State private var isPinSet: Bool = false
+    @State private var hasCheckedPin: Bool = false
 
-    // TODO: Implement PINService
-    // private let pinService = PINService()
+    private let pinService = PINService()
 
     var body: some View {
         Group {
-            // Temporary stub - show authentication button
-            VStack {
-                Text("Parent Authentication")
-                    .font(.title)
-                Button("Authenticate") {
-                    onAuthenticated()
-                }
-                .padding()
-            }
-
-            // TODO: Uncomment when PINService is implemented
-            /*
-            if !pinService.isPinSet() {
+            if !hasCheckedPin {
+                // Show loading while checking PIN status
+                ProgressView()
+                    .onAppear {
+                        isPinSet = pinService.isPinSet()
+                        hasCheckedPin = true
+                    }
+            } else if !isPinSet {
+                // First time: show PIN setup
                 PINSetupView(pinService: pinService) {
+                    isPinSet = true
                     onAuthenticated()
                 }
             } else {
+                // PIN is set: show entry with biometric option
                 pinEntryWithBiometrics
             }
-            */
         }
         .task {
-            await tryBiometrics()
+            // Try biometric auth on appear if PIN is already set
+            if pinService.isPinSet() {
+                await tryBiometrics()
+            }
         }
     }
 
     private var pinEntryWithBiometrics: some View {
-        VStack {
-            Text("PIN Entry")
-            // TODO: Implement PINEntryView
-            /*
-            ZStack(alignment: .topTrailing) {
-                PINEntryView(pinService: pinService) {
-                    onAuthenticated()
-                }
-
-                // Biometric button overlay
-                if biometricViewModel.biometricType != .none {
-                    Button {
-                        Task {
-                            await tryBiometrics()
-                        }
-                    } label: {
-                        Image(systemName: biometricViewModel.biometricType == .faceID ? "faceid" : "touchid")
-                            .font(.title)
-                            .foregroundColor(.accentColor)
-                            .padding()
-                    }
-                    .padding(.top, 50)
-                }
+        ZStack(alignment: .topTrailing) {
+            PINEntryView(pinService: pinService) {
+                onAuthenticated()
             }
-            */
+
+            // Biometric button overlay
+            if biometricViewModel.biometricType != .none {
+                Button {
+                    Task {
+                        await tryBiometrics()
+                    }
+                } label: {
+                    Image(systemName: biometricViewModel.biometricType == .faceID ? "faceid" : "touchid")
+                        .font(.title)
+                        .foregroundColor(.accentColor)
+                        .padding()
+                }
+                .padding(.top, 60)
+                .padding(.trailing, 20)
+            }
         }
     }
 

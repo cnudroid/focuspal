@@ -9,6 +9,7 @@ import SwiftUI
 
 /// Parent controls dashboard with settings and management options.
 struct ParentDashboardView: View {
+    @EnvironmentObject private var serviceContainer: ServiceContainer
     @StateObject private var viewModel = ParentDashboardViewModel()
     @State private var showingAuth = false
 
@@ -17,8 +18,15 @@ struct ParentDashboardView: View {
             List {
                 // Child profiles section
                 Section("Child Profiles") {
-                    ForEach(viewModel.children) { child in
-                        ChildProfileRow(child: child)
+                    if viewModel.isLoading {
+                        ProgressView("Loading...")
+                    } else if viewModel.children.isEmpty {
+                        Text("No child profiles yet")
+                            .foregroundColor(.secondary)
+                    } else {
+                        ForEach(viewModel.children) { child in
+                            ChildProfileRow(child: child)
+                        }
                     }
 
                     Button {
@@ -49,9 +57,46 @@ struct ParentDashboardView: View {
                 // Reports section
                 Section("Reports") {
                     NavigationLink {
-                        ReportsView()
+                        ReportsView(serviceContainer: serviceContainer)
                     } label: {
                         Label("View Reports", systemImage: "chart.xyaxis.line")
+                    }
+                }
+
+                // Activity section - Stats and Log moved from kid tabs
+                Section("Activity") {
+                    // Child selector for multi-child families
+                    if viewModel.children.count > 1 {
+                        Picker("View stats for", selection: $viewModel.selectedChildIndex) {
+                            Text("All Children").tag(-1)
+                            ForEach(Array(viewModel.children.enumerated()), id: \.offset) { index, child in
+                                Text(child.name).tag(index)
+                            }
+                        }
+                    }
+
+                    NavigationLink {
+                        if let child = viewModel.selectedChild {
+                            StatisticsView(currentChild: child)
+                        } else if let firstChild = viewModel.children.first {
+                            StatisticsView(currentChild: firstChild)
+                        } else {
+                            Text("No child profiles found")
+                        }
+                    } label: {
+                        Label("Statistics", systemImage: "chart.bar.fill")
+                    }
+
+                    NavigationLink {
+                        if let child = viewModel.selectedChild {
+                            ActivityLogView(currentChild: child)
+                        } else if let firstChild = viewModel.children.first {
+                            ActivityLogView(currentChild: firstChild)
+                        } else {
+                            Text("No child profiles found")
+                        }
+                    } label: {
+                        Label("Activity Log", systemImage: "list.bullet.clipboard")
                     }
                 }
 
@@ -82,6 +127,9 @@ struct ParentDashboardView: View {
                 if !viewModel.isAuthenticated {
                     showingAuth = true
                 }
+            }
+            .task {
+                await viewModel.loadChildren()
             }
         }
     }

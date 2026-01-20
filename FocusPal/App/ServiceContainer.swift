@@ -28,6 +28,9 @@ class ServiceContainer: ObservableObject {
     /// Tab to navigate to from deep link (widget tap)
     @Published var pendingDeepLinkTab: AppTab?
 
+    /// Flag to show timer overlay (from deep links or task cards)
+    @Published var pendingTimerOverlay: Bool = false
+
     // MARK: - Repositories
 
     lazy var childRepository: ChildRepositoryProtocol = {
@@ -136,6 +139,23 @@ class ServiceContainer: ObservableObject {
             contentBuilder: emailContentBuilder,
             emailService: emailService,
             parentRepository: parentRepository
+        )
+    }()
+
+    // MARK: - Report Services
+
+    lazy var pdfReportGenerator: PDFReportGeneratorProtocol = {
+        PDFReportGenerator()
+    }()
+
+    lazy var emailCompatibleContentBuilder: EmailCompatibleContentBuilder = {
+        EmailCompatibleContentBuilder()
+    }()
+
+    lazy var reportShareService: ReportShareService = {
+        ReportShareService(
+            pdfGenerator: pdfReportGenerator,
+            emailContentBuilder: emailCompatibleContentBuilder
         )
     }()
 

@@ -22,6 +22,8 @@
 	<string>FocusPal needs full calendar access to sync scheduled tasks from your calendar and help your child stay organized.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>FocusPal needs calendar access to sync scheduled tasks from your calendar and help your child stay organized.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>FocusPal uses Face ID to quickly and securely access Parent Controls.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>NSSupportsLiveActivities</key>

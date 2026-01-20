@@ -17,8 +17,10 @@ struct ParentControlsView: View {
     @State private var showReports = false
     @State private var showPINChange = false
     @State private var showParentProfilePrompt = false
-    @State private var showScheduler = false
     @State private var selectedChildForSchedule: Child?
+    @State private var selectedChildForStats: Child?
+    @State private var selectedChildForLog: Child?
+    @State private var selectedChildForReport: Child?
     var onAddChild: (() -> Void)?
 
     var body: some View {
@@ -85,14 +87,60 @@ struct ParentControlsView: View {
                     .foregroundColor(.primary)
                 }
 
-                // Schedule section
-                Section("Schedule") {
-                    ForEach(viewModel.children) { child in
+                // Per-child management sections
+                ForEach(viewModel.children) { child in
+                    Section(child.name) {
+                        // Schedule
                         Button {
                             selectedChildForSchedule = child
                         } label: {
                             HStack {
-                                Label("Schedule for \(child.name)", systemImage: "calendar.badge.plus")
+                                Label("Schedule", systemImage: "calendar.badge.plus")
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.primary)
+
+                        // Statistics
+                        Button {
+                            selectedChildForStats = child
+                        } label: {
+                            HStack {
+                                Label("Statistics", systemImage: "chart.bar.fill")
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.primary)
+
+                        // Activity Log
+                        Button {
+                            selectedChildForLog = child
+                        } label: {
+                            HStack {
+                                Label("Activity Log", systemImage: "list.bullet.clipboard")
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.primary)
+
+                        // Reports
+                        Button {
+                            selectedChildForReport = child
+                        } label: {
+                            HStack {
+                                Label("Reports", systemImage: "chart.xyaxis.line")
                                 Spacer()
                                 Image(systemName: "chevron.right")
                                     .font(.caption)
@@ -104,21 +152,23 @@ struct ParentControlsView: View {
                     }
                 }
 
-                // Reports section
-                Section("Reports") {
-                    Button {
-                        showReports = true
-                    } label: {
-                        HStack {
-                            Label("View Reports", systemImage: "chart.xyaxis.line")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                // Combined reports section (all children)
+                if viewModel.children.count > 1 {
+                    Section("All Children") {
+                        Button {
+                            showReports = true
+                        } label: {
+                            HStack {
+                                Label("Combined Report", systemImage: "person.2.fill")
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.primary)
                     }
-                    .buttonStyle(.plain)
-                    .foregroundColor(.primary)
                 }
 
                 // PIN settings
@@ -197,6 +247,15 @@ struct ParentControlsView: View {
             }
             .sheet(item: $selectedChildForSchedule) { child in
                 TaskSchedulerView(child: child)
+            }
+            .sheet(item: $selectedChildForStats) { child in
+                StatisticsSheetView(child: child)
+            }
+            .sheet(item: $selectedChildForLog) { child in
+                ActivityLogSheetView(child: child)
+            }
+            .sheet(item: $selectedChildForReport) { child in
+                ChildReportSheetView(child: child)
             }
         }
     }
@@ -303,6 +362,61 @@ struct PINChangeSheetView: View {
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Cancel") {
+                            dismiss()
+                        }
+                    }
+                }
+        }
+    }
+}
+
+struct StatisticsSheetView: View {
+    @Environment(\.dismiss) private var dismiss
+    let child: Child
+
+    var body: some View {
+        NavigationStack {
+            StatisticsView(currentChild: child)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            dismiss()
+                        }
+                    }
+                }
+        }
+    }
+}
+
+struct ActivityLogSheetView: View {
+    @Environment(\.dismiss) private var dismiss
+    let child: Child
+
+    var body: some View {
+        NavigationStack {
+            ActivityLogView(currentChild: child)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            dismiss()
+                        }
+                    }
+                }
+        }
+    }
+}
+
+struct ChildReportSheetView: View {
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var serviceContainer: ServiceContainer
+    let child: Child
+
+    var body: some View {
+        NavigationStack {
+            ReportsView(serviceContainer: serviceContainer, initialChild: child)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
                             dismiss()
                         }
                     }

@@ -9,31 +9,45 @@ import SwiftUI
 
 /// View for managing activity categories.
 struct CategoryManagementView: View {
-    @StateObject private var viewModel = CategoryManagementViewModel()
+    @EnvironmentObject private var serviceContainer: ServiceContainer
+    @StateObject private var viewModel: CategoryManagementViewModel
     @State private var showingAddCategory = false
 
+    init() {
+        // Placeholder - will be replaced with real services via environment
+        _viewModel = StateObject(wrappedValue: CategoryManagementViewModel(
+            categoryService: PlaceholderCategoryService(),
+            childRepository: PlaceholderChildRepository()
+        ))
+    }
+
+    init(serviceContainer: ServiceContainer) {
+        _viewModel = StateObject(wrappedValue: CategoryManagementViewModel(
+            categoryService: serviceContainer.categoryService,
+            childRepository: serviceContainer.childRepository
+        ))
+    }
+
     var body: some View {
-        List {
-            // System categories
-            Section("Default Categories") {
-                ForEach(viewModel.systemCategories) { category in
-                    CategoryRow(category: category, isEditable: false)
+        Group {
+            if viewModel.isLoading {
+                ProgressView("Loading categories...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let error = viewModel.errorMessage {
+                VStack(spacing: 16) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.largeTitle)
+                        .foregroundColor(.orange)
+                    Text(error)
+                        .multilineTextAlignment(.center)
+                    Button("Retry") {
+                        Task { await viewModel.loadCategories() }
+                    }
+                    .buttonStyle(.bordered)
                 }
-            }
-
-            // Custom categories
-            Section("Custom Categories") {
-                ForEach(viewModel.customCategories) { category in
-                    CategoryRow(category: category, isEditable: true)
-                }
-                .onDelete(perform: viewModel.deleteCategories)
-                .onMove(perform: viewModel.moveCategories)
-
-                Button {
-                    showingAddCategory = true
-                } label: {
-                    Label("Add Category", systemImage: "plus.circle")
-                }
+                .padding()
+            } else {
+                categoryList
             }
         }
         .navigationTitle("Categories")
@@ -47,11 +61,63 @@ struct CategoryManagementView: View {
             await viewModel.loadCategories()
         }
     }
+
+    private var categoryList: some View {
+        List {
+            // System categories
+            Section("Default Categories") {
+                ForEach(viewModel.systemCategories) { category in
+                    CategoryRow(category: category, isEditable: false, onToggleActive: {
+                        Task { await viewModel.toggleCategoryActive(category) }
+                    })
+                }
+            }
+
+            // Custom categories
+            Section("Custom Categories") {
+                ForEach(viewModel.customCategories) { category in
+                    CategoryRow(category: category, isEditable: true, onToggleActive: {
+                        Task { await viewModel.toggleCategoryActive(category) }
+                    })
+                }
+                .onDelete(perform: viewModel.deleteCategories)
+                .onMove(perform: viewModel.moveCategories)
+
+                Button {
+                    showingAddCategory = true
+                } label: {
+                    Label("Add Category", systemImage: "plus.circle")
+                }
+            }
+        }
+    }
+}
+
+// Placeholder services for default init
+private class PlaceholderCategoryService: CategoryServiceProtocol {
+    func fetchCategories(for child: Child) async throws -> [Category] { [] }
+    func fetchActiveCategories(for child: Child) async throws -> [Category] { [] }
+    func createCategory(_ category: Category) async throws -> Category { category }
+    func updateCategory(_ category: Category) async throws -> Category { category }
+    func deleteCategory(_ categoryId: UUID) async throws { }
+    func reorderCategories(_ categoryIds: [UUID]) async throws { }
+    func createDefaultCategories(for child: Child) async throws -> [Category] { [] }
+}
+
+private class PlaceholderChildRepository: ChildRepositoryProtocol {
+    func fetchAll() async throws -> [Child] { [] }
+    func fetch(by id: UUID) async throws -> Child? { nil }
+    func fetchActiveChild() async throws -> Child? { nil }
+    func create(_ child: Child) async throws -> Child { child }
+    func update(_ child: Child) async throws -> Child { child }
+    func delete(_ id: UUID) async throws { }
+    func setActiveChild(_ id: UUID) async throws { }
 }
 
 struct CategoryRow: View {
     let category: Category
     let isEditable: Bool
+    var onToggleActive: (() -> Void)?
 
     var body: some View {
         HStack(spacing: 12) {
@@ -66,9 +132,26 @@ struct CategoryRow: View {
             Spacer()
 
             if !category.isActive {
-                Text("Hidden")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Button {
+                    onToggleActive?()
+                } label: {
+                    Text("Hidden")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color(.systemGray5))
+                        .cornerRadius(4)
+                }
+                .buttonStyle(.plain)
+            } else if isEditable {
+                Button {
+                    onToggleActive?()
+                } label: {
+                    Image(systemName: "eye")
+                        .foregroundColor(.secondary)
+                }
+                .buttonStyle(.plain)
             }
         }
     }
