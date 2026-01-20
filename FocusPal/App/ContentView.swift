@@ -130,56 +130,40 @@ struct ContentView: View {
 }
 
 /// Tab identifiers for programmatic navigation
+/// Restructured to 3 kid-friendly tabs: Today, Rewards, Me
 enum AppTab: Hashable {
-    case home
-    case schedule
-    case timer
-    case log
-    case stats
+    case today
     case rewards
+    case me
 }
 
 /// Main tab view for the primary app navigation
 struct MainTabView: View {
     @EnvironmentObject var serviceContainer: ServiceContainer
-    @State private var selectedTab: AppTab = .home
+    @State private var selectedTab: AppTab = .today
+    @State private var showingTimerOverlay = false
+    @State private var timerOverlayCategoryId: UUID?
+    @State private var showingDailyGift = false
+    @State private var dailyGiftContent: DailyGiftContent = .empty
+    @State private var hasCheckedDailyGift = false
     let currentChild: Child
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView(
-                selectedTab: $selectedTab,
+            // Today tab - main kid experience with tasks and mascot
+            TodayView(
                 currentChild: currentChild,
-                activityService: serviceContainer.activityService,
-                categoryService: serviceContainer.categoryService,
-                pointsService: serviceContainer.pointsService
+                onStartTimer: { categoryId in
+                    timerOverlayCategoryId = categoryId
+                    showingTimerOverlay = true
+                }
             )
                 .tabItem {
-                    Label("Home", systemImage: "house.fill")
+                    Label("Today", systemImage: "sun.max.fill")
                 }
-                .tag(AppTab.home)
+                .tag(AppTab.today)
 
-            ScheduledTasksView(child: currentChild, selectedTab: $selectedTab)
-                .tabItem {
-                    Label("Schedule", systemImage: "calendar")
-                }
-                .tag(AppTab.schedule)
-
-            TimerView(
-                timerManager: serviceContainer.multiChildTimerManager,
-                activityService: serviceContainer.activityService,
-                pointsService: serviceContainer.pointsService,
-                rewardsService: serviceContainer.rewardsService,
-                currentChild: currentChild
-            )
-                .id(currentChild.id)  // Force recreation when child changes
-                .transition(.identity)  // Prevent default transition animation
-                .animation(nil, value: currentChild.id)  // Disable animation on child switch
-                .tabItem {
-                    Label("Timer", systemImage: "timer")
-                }
-                .tag(AppTab.timer)
-
+            // Rewards tab - already kid-friendly
             RewardsView(
                 rewardsService: serviceContainer.rewardsService,
                 achievementService: serviceContainer.achievementService,
@@ -190,23 +174,42 @@ struct MainTabView: View {
                 }
                 .tag(AppTab.rewards)
 
-            StatisticsView(currentChild: currentChild)
+            // Me tab - avatar, points, simple progress
+            MeView(currentChild: currentChild)
                 .tabItem {
-                    Label("Stats", systemImage: "chart.bar.fill")
+                    Label("Me", systemImage: "person.fill")
                 }
-                .tag(AppTab.stats)
-
-            ActivityLogView(currentChild: currentChild)
-                .tabItem {
-                    Label("Log", systemImage: "list.bullet.clipboard")
-                }
-                .tag(AppTab.log)
+                .tag(AppTab.me)
         }
-        // Handle Siri navigation to timer tab
+        // Timer overlay - full screen cover
+        .fullScreenCover(isPresented: $showingTimerOverlay) {
+            TimerOverlayView(
+                currentChild: currentChild,
+                initialCategoryId: timerOverlayCategoryId,
+                onDismiss: {
+                    showingTimerOverlay = false
+                    timerOverlayCategoryId = nil
+                }
+            )
+        }
+        // Handle Siri navigation - trigger timer overlay instead of tab
         .onReceive(serviceContainer.$pendingSiriTimerNavigation) { shouldNavigate in
             if shouldNavigate {
-                selectedTab = .timer
+                if let categoryId = serviceContainer.pendingTimerCategoryId {
+                    timerOverlayCategoryId = categoryId
+                }
+                showingTimerOverlay = true
                 serviceContainer.pendingSiriTimerNavigation = false
+            }
+        }
+        // Handle timer overlay from service container
+        .onReceive(serviceContainer.$pendingTimerOverlay) { showOverlay in
+            if showOverlay {
+                if let categoryId = serviceContainer.pendingTimerCategoryId {
+                    timerOverlayCategoryId = categoryId
+                }
+                showingTimerOverlay = true
+                serviceContainer.pendingTimerOverlay = false
             }
         }
         // Handle deep link navigation from widgets
@@ -216,6 +219,147 @@ struct MainTabView: View {
                 serviceContainer.pendingDeepLinkTab = nil
             }
         }
+        // Check for daily gift on first appearance
+        .task {
+            guard !hasCheckedDailyGift else { return }
+            hasCheckedDailyGift = true
+            await checkDailyGift()
+        }
+        // Daily gift overlay
+        .fullScreenCover(isPresented: $showingDailyGift) {
+            DailyGiftBoxView(
+                childName: currentChild.name,
+                giftContent: dailyGiftContent,
+                onDismiss: {
+                    markGiftShown()
+                    showingDailyGift = false
+                }
+            )
+        }
+    }
+
+    // MARK: - Daily Gift Methods
+
+    private func checkDailyGift() async {
+        let lastShownKey = "DailyGiftLastShown_\(currentChild.id.uuidString)"
+        let lastShownDate = UserDefaults.standard.object(forKey: lastShownKey) as? Date
+        let today = Calendar.current.startOfDay(for: Date())
+
+        // Check if we've already shown the gift today
+        if let lastDate = lastShownDate, Calendar.current.isDate(lastDate, inSameDayAs: today) {
+            return
+        }
+
+        // Load gift content
+        await loadGiftContent()
+
+        // Show the gift
+        showingDailyGift = true
+    }
+
+    private func loadGiftContent() async {
+        var points = 0
+        var streak = 0
+        var activities = 0
+        var newBadges: [String] = []
+
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else {
+            dailyGiftContent = .empty
+            return
+        }
+
+        // Load yesterday's activities
+        do {
+            let dateRange = DateInterval(start: yesterday, end: today)
+            let yesterdayActivities = try await serviceContainer.activityService.fetchActivities(
+                for: currentChild,
+                dateRange: dateRange
+            )
+            activities = yesterdayActivities.filter { $0.isComplete }.count
+
+            // Calculate points from activities
+            points = yesterdayActivities.reduce(0) { total, activity in
+                total + (activity.isComplete ? activity.durationMinutes : 0)
+            }
+        } catch {
+            print("Error loading yesterday's activities: \(error)")
+        }
+
+        // Load recently unlocked achievements (last 24 hours)
+        do {
+            let recentAchievements = try await serviceContainer.achievementService.fetchUnlockedAchievements(for: currentChild)
+            let recentBadges = recentAchievements.filter { achievement in
+                guard let unlockedDate = achievement.unlockedDate else { return false }
+                return unlockedDate > yesterday
+            }
+
+            newBadges = recentBadges.compactMap { achievement in
+                AchievementType(rawValue: achievement.achievementTypeId)?.emoji
+            }
+        } catch {
+            print("Error loading achievements: \(error)")
+        }
+
+        // Simple streak calculation
+        do {
+            var currentStreak = 0
+            var checkDate = yesterday
+
+            for _ in 0..<14 {
+                let nextDay = calendar.date(byAdding: .day, value: 1, to: checkDate)!
+                let dayRange = DateInterval(start: checkDate, end: nextDay)
+                let dayActivities = try await serviceContainer.activityService.fetchActivities(
+                    for: currentChild,
+                    dateRange: dayRange
+                )
+
+                if dayActivities.contains(where: { $0.isComplete }) {
+                    currentStreak += 1
+                    checkDate = calendar.date(byAdding: .day, value: -1, to: checkDate)!
+                } else {
+                    break
+                }
+            }
+            streak = currentStreak
+        } catch {
+            print("Error calculating streak: \(error)")
+        }
+
+        // Generate encouragement message
+        let message = generateEncouragementMessage(points: points, streak: streak, activities: activities, badges: newBadges.count)
+
+        dailyGiftContent = DailyGiftContent(
+            pointsYesterday: points,
+            currentStreak: streak,
+            activitiesCompleted: activities,
+            newBadges: newBadges,
+            encouragementMessage: message
+        )
+    }
+
+    private func generateEncouragementMessage(points: Int, streak: Int, activities: Int, badges: Int) -> String? {
+        if points == 0 && activities == 0 {
+            return "Start a timer today to earn awesome rewards!"
+        }
+        if badges > 0 {
+            return "Amazing! You earned \(badges) new badge\(badges > 1 ? "s" : "")!"
+        }
+        if streak >= 7 {
+            return "Incredible! \(streak) days in a row! You're a superstar!"
+        } else if streak >= 3 {
+            return "You're on fire! Keep the streak going!"
+        }
+        if activities > 0 {
+            return "You completed \(activities) activit\(activities > 1 ? "ies" : "y")! Keep it up!"
+        }
+        return "Every day is a chance to learn and grow!"
+    }
+
+    private func markGiftShown() {
+        let key = "DailyGiftLastShown_\(currentChild.id.uuidString)"
+        UserDefaults.standard.set(Date(), forKey: key)
     }
 }
 
