@@ -498,7 +498,6 @@ private struct ConfettiPiece: View {
     }
 }
 
-
 // MARK: - Preview
 
 #Preview("Gift Box - Unopened") {

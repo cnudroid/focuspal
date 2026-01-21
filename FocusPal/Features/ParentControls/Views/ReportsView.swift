@@ -129,7 +129,7 @@ struct ReportsView: View {
 
                 // Highlights section (achievements & streak)
                 if let fullSummary = viewModel.fullWeeklySummary,
-                   (fullSummary.achievementsUnlocked > 0 || fullSummary.streak > 0 || fullSummary.netPoints > 0) {
+                   fullSummary.achievementsUnlocked > 0 || fullSummary.streak > 0 || fullSummary.netPoints > 0 {
                     HighlightsSection(summary: fullSummary)
                 }
 
