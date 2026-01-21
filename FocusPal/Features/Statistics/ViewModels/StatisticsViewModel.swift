@@ -63,6 +63,7 @@ class StatisticsViewModel: ObservableObject {
 
     private let activityService: ActivityServiceProtocol
     private let categoryService: CategoryServiceProtocol
+    private let achievementService: AchievementServiceProtocol
     private let child: Child
 
     // MARK: - Private Properties
@@ -74,14 +75,18 @@ class StatisticsViewModel: ObservableObject {
     init(
         activityService: ActivityServiceProtocol? = nil,
         categoryService: CategoryServiceProtocol? = nil,
+        achievementService: AchievementServiceProtocol? = nil,
         child: Child? = nil
     ) {
         // Use real services with CoreData repositories by default
-        let activityRepo = CoreDataActivityRepository(context: PersistenceController.shared.container.viewContext)
-        let categoryRepo = CoreDataCategoryRepository(context: PersistenceController.shared.container.viewContext)
+        let context = PersistenceController.shared.container.viewContext
+        let activityRepo = CoreDataActivityRepository(context: context)
+        let categoryRepo = CoreDataCategoryRepository(context: context)
+        let achievementRepo = CoreDataAchievementRepository(context: context)
 
         self.activityService = activityService ?? ActivityService(repository: activityRepo)
         self.categoryService = categoryService ?? CategoryService(repository: categoryRepo)
+        self.achievementService = achievementService ?? AchievementService(repository: achievementRepo)
         self.child = child ?? Child(name: "Test Child", age: 8)
 
         print("📊 StatisticsViewModel initialized for child: \(self.child.name) (\(self.child.id))")
@@ -109,8 +114,8 @@ class StatisticsViewModel: ObservableObject {
                 await loadWeeklyData(activities: activities)
             }
 
-            // Load achievements
-            loadAchievements()
+            // Load achievements from real data
+            await loadAchievements()
 
         } catch {
             errorMessage = "Failed to load statistics: \(error.localizedDescription)"
@@ -152,29 +157,47 @@ class StatisticsViewModel: ObservableObject {
         )
     }
 
-    private func loadAchievements() {
-        achievements = AchievementType.allCases.map { type in
-            let isUnlocked = [.firstTimer].contains(type)
-            let progress: Double
+    private func loadAchievements() async {
+        do {
+            // Initialize achievements for the child if they don't exist
+            try await achievementService.initializeAchievements(for: child)
 
-            switch type {
-            case .firstTimer: progress = 100
-            case .streak3Day: progress = 66
-            case .streak7Day: progress = 28
-            case .homeworkHero: progress = 45
-            default: progress = Double.random(in: 0...50)
+            // Fetch all achievements from the database
+            let allAchievements = try await achievementService.fetchAllAchievements(for: child)
+
+            // Map Achievement models to AchievementDisplayItem for the view
+            achievements = allAchievements.compactMap { achievement -> AchievementDisplayItem? in
+                guard let type = AchievementType(rawValue: achievement.achievementTypeId) else {
+                    return nil
+                }
+
+                return AchievementDisplayItem(
+                    id: achievement.id,
+                    name: type.name,
+                    description: type.description,
+                    iconName: type.iconName,
+                    emoji: type.emoji,
+                    isUnlocked: achievement.isUnlocked,
+                    progress: achievement.progressPercentage,
+                    unlockedDate: achievement.unlockedDate
+                )
             }
 
-            return AchievementDisplayItem(
-                id: UUID(),
-                name: type.name,
-                description: type.description,
-                iconName: type.iconName,
-                emoji: type.emoji,
-                isUnlocked: isUnlocked,
-                progress: progress,
-                unlockedDate: isUnlocked ? Date() : nil
-            )
+            // Sort: unlocked first (by date descending), then by progress descending
+            achievements.sort { lhs, rhs in
+                if lhs.isUnlocked && !rhs.isUnlocked { return true }
+                if !lhs.isUnlocked && rhs.isUnlocked { return false }
+                if lhs.isUnlocked && rhs.isUnlocked {
+                    return (lhs.unlockedDate ?? .distantPast) > (rhs.unlockedDate ?? .distantPast)
+                }
+                return lhs.progress > rhs.progress
+            }
+
+            print("📊 Loaded \(achievements.count) achievements (\(achievements.filter { $0.isUnlocked }.count) unlocked)")
+        } catch {
+            print("⚠️ Failed to load achievements: \(error.localizedDescription)")
+            // Fall back to empty state rather than mock data
+            achievements = []
         }
     }
 
@@ -264,7 +287,6 @@ class StatisticsViewModel: ObservableObject {
 
     private func calculateDailyBreakdown(from activities: [Activity]) -> [DailyBarData] {
         let calendar = Calendar.current
-        let dateRange = selectedTimePeriod.dateRange
 
         // Group activities by day
         var dailyMinutes: [Date: Int] = [:]
