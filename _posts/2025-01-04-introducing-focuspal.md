@@ -25,7 +25,7 @@ Many children struggle to understand time as an abstract concept. Whether it's d
 
 FocusPal is an iOS app designed to help children understand time visually while making focus feel like play. It's not just another countdown clock—it's a complete family productivity system that transforms time management into an engaging adventure.
 
-![FocusPal Today Screen](/assets/images/screenshots/today-screen.png)
+![FocusPal Today Screen](/focuspal/assets/images/screenshots/today-screen.png)
 *The Today tab greets your child with a friendly mascot and shows their daily progress*
 
 ---
@@ -37,17 +37,17 @@ Every child is different. That's why FocusPal offers five unique visual timer ex
 ### Classic Timer
 A modern ring-style progress indicator with a pulsing glow effect. Clean, elegant, and easy to read. The ring depletes clockwise as time passes, with colors shifting from blue to orange to red as the timer runs low.
 
-![Classic Timer](/assets/images/screenshots/timer-classic.png)
+![Classic Timer](/focuspal/assets/images/screenshots/timer-classic.png)
 
 ### Space Explorer
 Blast off into orbit! Watch a rocket circle a glowing planet as twinkling stars animate in the background. The fuel gauge depletes as time passes. Perfect for kids who love space and adventure.
 
-![Space Timer](/assets/images/screenshots/timer-space.png)
+![Space Timer](/focuspal/assets/images/screenshots/timer-space.png)
 
 ### Ocean Adventure
 Dive into an underwater world! Water drains from the tank as time passes, with colorful fish swimming by and bubbles floating up. Complete the timer to find the treasure chest!
 
-![Ocean Timer](/assets/images/screenshots/timer-ocean.png)
+![Ocean Timer](/focuspal/assets/images/screenshots/timer-ocean.png)
 
 ### Progress Bar
 A simple, straightforward horizontal bar for children who prefer linear visuals. Great for kids who like to see exactly how much time is left at a glance.
@@ -67,7 +67,7 @@ A traditional clock-style display with a sweeping hand for kids learning to read
 
 Every day starts with excitement! When your child opens FocusPal for the first time each day, a shaking gift box awaits them.
 
-![Daily Gift Box](/assets/images/screenshots/daily-gift.png)
+![Daily Gift Box](/focuspal/assets/images/screenshots/daily-gift.png)
 
 **Inside the gift box, they'll discover:**
 - Yesterday's points earned
@@ -84,7 +84,7 @@ It's a small touch that makes opening the app feel special every single day.
 
 The Today tab is mission control for your child's day. A friendly clock mascot greets them with an expression that changes based on their activity level.
 
-![Today Tab Overview](/assets/images/screenshots/today-overview.png)
+![Today Tab Overview](/focuspal/assets/images/screenshots/today-overview.png)
 
 **What your child sees:**
 - **Today's Points**: How many points they've earned with encouraging messages
@@ -107,7 +107,7 @@ FocusPal's gamification is built on principles that resonate with kids: visible 
 
 ### Weekly Tier Progression
 
-![Rewards Screen](/assets/images/screenshots/rewards-tiers.png)
+![Rewards Screen](/focuspal/assets/images/screenshots/rewards-tiers.png)
 
 Every week is a fresh start with four achievement tiers:
 - **Bronze** (100 points) - Getting started!
@@ -132,7 +132,7 @@ Eight unlockable badges celebrate different accomplishments:
 | Balance Master | 7 days of balanced activities |
 | Early Bird | Activity before 8 AM |
 
-![Badges Screen](/assets/images/screenshots/badges.png)
+![Badges Screen](/focuspal/assets/images/screenshots/badges.png)
 
 **Shareable Achievement Cards**: When your child unlocks a badge, they can generate a beautiful shareable card to celebrate with family and friends!
 
@@ -148,7 +148,7 @@ One app for your whole family. Each child gets their own complete profile with:
 - Custom avatar and theme color
 - Separate points and tier progression
 
-![Profile Selection](/assets/images/screenshots/profile-select.png)
+![Profile Selection](/focuspal/assets/images/screenshots/profile-select.png)
 
 Profile switching is instant—kids can quickly tap their avatar to switch who's using the app.
 
@@ -178,7 +178,7 @@ Pick a favorite color that appears throughout the app: Pink, Blue, Green, or Pur
 
 FocusPal syncs with your iOS Calendar to create a structured routine:
 
-![Schedule View](/assets/images/screenshots/schedule.png)
+![Schedule View](/focuspal/assets/images/screenshots/schedule.png)
 
 - **Recurring Tasks**: Set daily homework time, weekly piano practice, etc.
 - **Smart Reminders**: Notifications before tasks are due
@@ -193,7 +193,7 @@ When a scheduled task's time arrives, it appears in the Today tab's "Active" sec
 
 A PIN-protected (or Face ID) parent area gives you insights without being intrusive.
 
-![Parent Dashboard](/assets/images/screenshots/parent-dashboard.png)
+![Parent Dashboard](/focuspal/assets/images/screenshots/parent-dashboard.png)
 
 ### What Parents Can Do:
 - **Manage Profiles**: Add children, edit settings
