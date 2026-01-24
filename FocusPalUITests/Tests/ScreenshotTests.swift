@@ -15,19 +15,54 @@ class ScreenshotTests: BaseUITest {
         super.setUp()
         // Enable animations for prettier screenshots
         app.launchEnvironment.removeValue(forKey: "UITEST_DISABLE_ANIMATIONS")
+        // Skip timer restoration for clean screenshots
+        app.launchEnvironment["UITEST_SKIP_TIMER_RESTORE"] = "1"
+    }
+
+    // MARK: - Helper to dismiss any alerts
+
+    private func dismissAnyAlerts() {
+        // Dismiss "Timer Restored" or any other alerts
+        let alertButtons = ["OK", "Continue", "Dismiss", "Got it"]
+        for buttonName in alertButtons {
+            let button = app.alerts.buttons[buttonName]
+            if button.exists {
+                button.tap()
+                Thread.sleep(forTimeInterval: 0.3)
+            }
+        }
+    }
+
+    private func launchAndPrepare() {
+        launchWithSampleData()
+        sleep(1)
+        dismissAnyAlerts()
+        sleep(1)
+    }
+
+    private func launchSingleChildAndPrepare() {
+        launchWithSingleChild()
+        sleep(1)
+        dismissAnyAlerts()
+        sleep(1)
+    }
+
+    private func launchMultipleChildrenAndPrepare(count: Int) {
+        launchWithMultipleChildren(count: count)
+        sleep(1)
+        dismissAnyAlerts()
+        sleep(1)
     }
 
     // MARK: - Today Tab Screenshots
 
     func testScreenshot_TodayTab() {
-        launchWithSampleData()
-        sleep(2)
+        launchAndPrepare()
         takeScreenshot(named: "01-today-screen")
     }
 
     func testScreenshot_TodayTabWithTasks() {
-        launchWithSampleData()
-        sleep(2)
+        launchAndPrepare()
 
         // Navigate to Today if not already there
         if app.tabBars.buttons["Today"].exists {
@@ -41,42 +76,43 @@ class ScreenshotTests: BaseUITest {
     // MARK: - Timer Screenshots (via Timer Overlay)
 
     func testScreenshot_TimerClassic() {
-        launchWithSampleData()
-        sleep(2)
+        launchAndPrepare()
 
         // Tap Start Timer FAB to open timer overlay
         tapStartTimerButton()
-        sleep(2)
+        sleep(1)
+        dismissAnyAlerts()
+        sleep(1)
 
         takeScreenshot(named: "03-timer-classic")
     }
 
     func testScreenshot_TimerSpace() {
-        launchWithSampleData()
-        sleep(2)
+        launchAndPrepare()
 
         // Open timer overlay
         tapStartTimerButton()
         sleep(1)
+        dismissAnyAlerts()
 
         // Open theme picker and select Space
         selectTimerTheme("Space Explorer")
-        sleep(2)
+        sleep(1)
 
         takeScreenshot(named: "04-timer-space")
     }
 
     func testScreenshot_TimerOcean() {
-        launchWithSampleData()
-        sleep(2)
+        launchAndPrepare()
 
         // Open timer overlay
         tapStartTimerButton()
         sleep(1)
+        dismissAnyAlerts()
 
         // Open theme picker and select Ocean
         selectTimerTheme("Ocean Adventure")
-        sleep(2)
+        sleep(1)
 
         takeScreenshot(named: "05-timer-ocean")
     }
@@ -84,8 +120,7 @@ class ScreenshotTests: BaseUITest {
     // MARK: - Rewards Screenshots
 
     func testScreenshot_RewardsTab() {
-        launchWithSampleData()
-        sleep(1)
+        launchAndPrepare()
 
         if app.tabBars.buttons["Rewards"].exists {
             app.tabBars.buttons["Rewards"].tap()
@@ -96,8 +131,7 @@ class ScreenshotTests: BaseUITest {
     }
 
     func testScreenshot_BadgesView() {
-        launchWithSampleData()
-        sleep(1)
+        launchAndPrepare()
 
         if app.tabBars.buttons["Rewards"].exists {
             app.tabBars.buttons["Rewards"].tap()
@@ -118,17 +152,14 @@ class ScreenshotTests: BaseUITest {
     // MARK: - Profile Screenshots
 
     func testScreenshot_ProfileSelection() {
-        launchWithMultipleChildren(count: 3)
-        sleep(2)
-
+        launchMultipleChildrenAndPrepare(count: 3)
         takeScreenshot(named: "08-profile-select")
     }
 
     // MARK: - Me Tab Screenshots
 
     func testScreenshot_MeTab() {
-        launchWithSampleData()
-        sleep(1)
+        launchAndPrepare()
 
         if app.tabBars.buttons["Me"].exists {
             app.tabBars.buttons["Me"].tap()
@@ -141,8 +172,7 @@ class ScreenshotTests: BaseUITest {
     // MARK: - Parent Dashboard Screenshots
 
     func testScreenshot_ParentDashboard() {
-        launchWithSampleData()
-        sleep(1)
+        launchAndPrepare()
 
         // Navigate to Me tab
         if app.tabBars.buttons["Me"].exists {
@@ -169,9 +199,7 @@ class ScreenshotTests: BaseUITest {
     func testScreenshot_DailyGift() {
         // Launch fresh to see daily gift
         app.launchEnvironment["UITEST_SHOW_DAILY_GIFT"] = "1"
-        launchWithSampleData()
-
-        sleep(2)
+        launchAndPrepare()
         takeScreenshot(named: "11-daily-gift")
     }
 

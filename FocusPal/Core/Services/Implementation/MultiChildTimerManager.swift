@@ -263,6 +263,14 @@ class MultiChildTimerManager: ObservableObject {
     }
 
     private func loadPersistedStates() {
+        // Skip timer restoration during UI tests for clean screenshots
+        if ProcessInfo.processInfo.environment["UITEST_SKIP_TIMER_RESTORE"] == "1" {
+            hasRestoredTimers = false
+            // Clear any persisted state for clean test runs
+            UserDefaults.standard.removeObject(forKey: Self.storageKey)
+            return
+        }
+
         guard let data = UserDefaults.standard.data(forKey: Self.storageKey),
               let states = try? JSONDecoder().decode([ChildTimerState].self, from: data) else {
             hasRestoredTimers = false
