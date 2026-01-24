@@ -241,9 +241,13 @@ struct SpaceTimerView: View {
         switch state {
         case .idle: return .blue
         case .running:
-            if progress > 0.5 { return .blue }
-            else if progress > 0.25 { return .purple }
-            else { return .orange }
+            if progress > 0.5 {
+                return .blue
+            } else if progress > 0.25 {
+                return .purple
+            } else {
+                return .orange
+            }
         case .paused: return .purple
         case .completed: return .green
         }
@@ -254,9 +258,13 @@ struct SpaceTimerView: View {
         case .completed: return [.green, .mint]
         case .paused: return [.purple, .indigo]
         default:
-            if progress > 0.5 { return [.cyan, .blue] }
-            else if progress > 0.25 { return [.orange, .yellow] }
-            else { return [.red, .orange] }
+            if progress > 0.5 {
+                return [.cyan, .blue]
+            } else if progress > 0.25 {
+                return [.orange, .yellow]
+            } else {
+                return [.red, .orange]
+            }
         }
     }
 

@@ -277,9 +277,13 @@ struct OceanTimerView: View {
         switch state {
         case .idle: return [.cyan.opacity(0.8), .blue]
         case .running:
-            if progress > 0.5 { return [.cyan, .blue] }
-            else if progress > 0.25 { return [.teal, .blue] }
-            else { return [.orange.opacity(0.6), .blue] }
+            if progress > 0.5 {
+                return [.cyan, .blue]
+            } else if progress > 0.25 {
+                return [.teal, .blue]
+            } else {
+                return [.orange.opacity(0.6), .blue]
+            }
         case .paused: return [.purple.opacity(0.6), .indigo]
         case .completed: return [.green.opacity(0.8), .mint]
         }
