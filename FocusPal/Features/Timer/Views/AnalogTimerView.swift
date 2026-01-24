@@ -29,11 +29,12 @@ struct AnalogTimerView: View {
                     .rotationEffect(.degrees(Double(index) * 30))
             }
 
-            // Remaining time arc
+            // Remaining time arc (clockwise from top)
             Circle()
                 .trim(from: 0, to: progress)
                 .stroke(progressColor, lineWidth: 8)
                 .rotationEffect(.degrees(-90))
+                .scaleEffect(x: -1, y: 1) // Flip to make it go clockwise
                 .padding(20)
                 .animation(.easeInOut(duration: 0.3), value: progress)
 

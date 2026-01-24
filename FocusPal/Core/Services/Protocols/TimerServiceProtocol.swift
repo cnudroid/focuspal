@@ -63,4 +63,28 @@ enum TimerVisualizationMode: String, CaseIterable {
     case circular
     case bar
     case analog
+    case space
+    case ocean
+
+    /// User-friendly display name for the theme
+    var displayName: String {
+        switch self {
+        case .circular: return "Classic"
+        case .bar: return "Progress Bar"
+        case .analog: return "Clock"
+        case .space: return "Space Explorer"
+        case .ocean: return "Ocean Adventure"
+        }
+    }
+
+    /// SF Symbol icon for the theme
+    var iconName: String {
+        switch self {
+        case .circular: return "circle.circle"
+        case .bar: return "chart.bar.fill"
+        case .analog: return "clock.fill"
+        case .space: return "sparkles"
+        case .ocean: return "drop.fill"
+        }
+    }
 }

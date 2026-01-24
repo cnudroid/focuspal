@@ -7,99 +7,213 @@
 
 import SwiftUI
 
-/// ADHD-friendly circular timer with disappearing color wedge.
-/// Inspired by Time Timer - makes time tangible and visible.
+/// Modern circular timer with ring-style progress indicator.
+/// Clean, engaging design with smooth animations.
 struct CircularTimerView: View {
     let progress: Double
     let remainingTime: TimeInterval
     let state: TimerState
     var isRestoring: Bool = false
 
+    // Animation states
+    @State private var pulseScale: CGFloat = 1.0
+    @State private var glowOpacity: Double = 0.3
+    @State private var showMilestone: Bool = false
+    @State private var lastMilestone: Double = 1.0
+    @State private var showCompletion: Bool = false
+
     var body: some View {
-        ZStack {
-            clockFaceBackground
-            hourMarkers
-            timeWedgeView
-            innerCircle
-            timeDisplay
-            outerRing
-        }
-    }
-
-    private var clockFaceBackground: some View {
-        Circle()
-            .fill(Color(.systemBackground))
-            .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-    }
-
-    private var hourMarkers: some View {
-        ForEach(0..<12, id: \.self) { index in
-            Rectangle()
-                .fill(Color(.systemGray3))
-                .frame(width: index % 3 == 0 ? 4 : 2, height: index % 3 == 0 ? 15 : 10)
-                .offset(y: -125)
-                .rotationEffect(.degrees(Double(index) * 30))
-        }
-    }
-
-    private var timeWedgeView: some View {
         GeometryReader { geometry in
             let size = min(geometry.size.width, geometry.size.height)
 
-            if state == .idle {
-                // IDLE: Show filled circle (no stroke edges visible)
-                Circle()
-                    .fill(wedgeColor)
-                    .opacity(0.5)
-                    .frame(width: size - 20, height: size - 20)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-            } else {
-                // RUNNING/PAUSED: Use trim() stroke for animated wedge
-                let strokeWidth = (size / 2) - 10
+            ZStack {
+                // Background with subtle gradient
+                backgroundCircle(size: size)
 
-                Circle()
-                    .trim(from: 0, to: progress)
-                    .stroke(
-                        wedgeColor,
-                        style: StrokeStyle(
-                            lineWidth: strokeWidth,
-                            lineCap: .butt
-                        )
-                    )
-                    .rotationEffect(.degrees(-90 - (360 * progress)))
-                    .opacity(0.9)
-                    .frame(width: size, height: size)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                // Track ring (background)
+                trackRing(size: size)
+
+                // Progress ring
+                progressRing(size: size)
+
+                // Glow effect behind progress
+                if state == .running {
+                    glowEffect(size: size)
+                }
+
+                // Center content
+                centerContent(size: size)
+
+                // Tick marks
+                tickMarks(size: size)
+
+                // Milestone celebration
+                if showMilestone {
+                    milestoneEffect
+                }
+
+                // Completion celebration
+                if showCompletion {
+                    completionEffect
+                }
+            }
+            .frame(width: size, height: size)
+            .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+        }
+        .scaleEffect(pulseScale)
+        .onAppear {
+            if state == .running {
+                startAnimations()
+            }
+        }
+        .onChange(of: state) { newState in
+            if newState == .running {
+                startAnimations()
+            } else if newState == .completed {
+                triggerCompletion()
+            } else {
+                stopAnimations()
+            }
+        }
+        .onChange(of: progress) { newProgress in
+            checkMilestone(newProgress)
+        }
+    }
+
+    // MARK: - Background
+
+    private func backgroundCircle(size: CGFloat) -> some View {
+        Circle()
+            .fill(
+                RadialGradient(
+                    colors: [
+                        Color(.systemBackground),
+                        Color(.systemGray6)
+                    ],
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: size / 2
+                )
+            )
+            .shadow(color: .black.opacity(0.1), radius: 15, x: 0, y: 8)
+    }
+
+    // MARK: - Track Ring
+
+    private func trackRing(size: CGFloat) -> some View {
+        Circle()
+            .stroke(
+                Color(.systemGray5),
+                style: StrokeStyle(lineWidth: 20, lineCap: .round)
+            )
+            .frame(width: size * 0.75, height: size * 0.75)
+    }
+
+    // MARK: - Progress Ring
+
+    private func progressRing(size: CGFloat) -> some View {
+        Circle()
+            .trim(from: 0, to: progress)
+            .stroke(
+                AngularGradient(
+                    colors: progressColors,
+                    center: .center,
+                    startAngle: .degrees(-90),
+                    endAngle: .degrees(270)
+                ),
+                style: StrokeStyle(lineWidth: 20, lineCap: .round)
+            )
+            .frame(width: size * 0.75, height: size * 0.75)
+            .rotationEffect(.degrees(-90))
+            .scaleEffect(x: -1, y: 1) // Clockwise
+            .shadow(color: progressColors.first?.opacity(0.4) ?? .clear, radius: 8, x: 0, y: 4)
+    }
+
+    // MARK: - Glow Effect
+
+    private func glowEffect(size: CGFloat) -> some View {
+        Circle()
+            .trim(from: 0, to: progress)
+            .stroke(
+                progressColors.first ?? .blue,
+                style: StrokeStyle(lineWidth: 24, lineCap: .round)
+            )
+            .frame(width: size * 0.75, height: size * 0.75)
+            .rotationEffect(.degrees(-90))
+            .scaleEffect(x: -1, y: 1)
+            .blur(radius: 12)
+            .opacity(glowOpacity)
+    }
+
+    // MARK: - Center Content
+
+    private func centerContent(size: CGFloat) -> some View {
+        VStack(spacing: 8) {
+            // Time display
+            Text(formattedTime)
+                .font(.system(size: size * 0.15, weight: .bold, design: .rounded))
+                .monospacedDigit()
+                .foregroundColor(timeTextColor)
+
+            // State label
+            Text(stateLabel)
+                .font(.system(size: size * 0.045, weight: .semibold))
+                .foregroundColor(.secondary)
+                .textCase(.uppercase)
+                .tracking(2)
+
+            // Progress percentage
+            if state == .running || state == .paused {
+                Text("\(Int(progress * 100))%")
+                    .font(.system(size: size * 0.04, weight: .medium, design: .rounded))
+                    .foregroundColor(progressColors.first)
+                    .padding(.top, 4)
             }
         }
     }
 
-    private var innerCircle: some View {
-        Circle()
-            .fill(Color(.systemBackground))
-            .frame(width: 160, height: 160)
-            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-    }
+    // MARK: - Tick Marks
 
-    private var timeDisplay: some View {
-        VStack(spacing: 4) {
-            Text(formattedTime)
-                .font(.system(size: 44, weight: .bold, design: .rounded))
-                .monospacedDigit()
-                .foregroundColor(timeTextColor)
-
-            Text(stateLabel)
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.secondary)
-                .textCase(.uppercase)
-                .tracking(1.5)
+    private func tickMarks(size: CGFloat) -> some View {
+        ForEach(0..<12, id: \.self) { index in
+            RoundedRectangle(cornerRadius: 1)
+                .fill(index % 3 == 0 ? Color(.systemGray2) : Color(.systemGray4))
+                .frame(width: index % 3 == 0 ? 3 : 2, height: index % 3 == 0 ? 12 : 8)
+                .offset(y: -size * 0.44)
+                .rotationEffect(.degrees(Double(index) * 30))
         }
     }
 
-    private var outerRing: some View {
-        Circle()
-            .stroke(Color(.systemGray4), lineWidth: 3)
+    // MARK: - Milestone Effect
+
+    private var milestoneEffect: some View {
+        ZStack {
+            ForEach(0..<8, id: \.self) { index in
+                Image(systemName: ["star.fill", "sparkle", "heart.fill"][index % 3])
+                    .font(.system(size: 16))
+                    .foregroundColor([.yellow, .orange, .pink, .purple][index % 4])
+                    .offset(
+                        x: cos(Double(index) * .pi / 4) * 80,
+                        y: sin(Double(index) * .pi / 4) * 80
+                    )
+                    .scaleEffect(showMilestone ? 1.2 : 0)
+                    .opacity(showMilestone ? 1 : 0)
+            }
+        }
+        .animation(.spring(response: 0.4, dampingFraction: 0.6), value: showMilestone)
     }
+
+    // MARK: - Completion Effect
+
+    private var completionEffect: some View {
+        ZStack {
+            ForEach(0..<16, id: \.self) { index in
+                TimerConfettiPiece(index: index, isActive: showCompletion)
+            }
+        }
+    }
+
+    // MARK: - Helpers
 
     private var formattedTime: String {
         let totalSeconds = Int(remainingTime)
@@ -110,30 +224,29 @@ struct CircularTimerView: View {
 
     private var stateLabel: String {
         switch state {
-        case .idle: return "Ready to Focus"
-        case .running: return "Stay Focused"
+        case .idle: return "Ready"
+        case .running: return "Focusing"
         case .paused: return "Paused"
-        case .completed: return "Great Job!"
+        case .completed: return "Done!"
         }
     }
 
-    private var wedgeColor: Color {
+    private var progressColors: [Color] {
         switch state {
         case .idle:
-            return .red
+            return [.blue, .cyan]
         case .running:
-            // Dynamic color based on remaining time
             if progress > 0.5 {
-                return .red
+                return [.blue, .cyan]
             } else if progress > 0.25 {
-                return .orange
+                return [.orange, .yellow]
             } else {
-                return .yellow
+                return [.red, .orange]
             }
         case .paused:
-            return .orange
+            return [.orange, .yellow]
         case .completed:
-            return .green
+            return [.green, .mint]
         }
     }
 
@@ -145,12 +258,120 @@ struct CircularTimerView: View {
         case .completed: return .green
         }
     }
+
+    // MARK: - Animation Control
+
+    private func startAnimations() {
+        // Pulse
+        withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
+            pulseScale = 1.02
+        }
+        // Glow
+        withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+            glowOpacity = 0.6
+        }
+    }
+
+    private func stopAnimations() {
+        withAnimation(.easeOut(duration: 0.3)) {
+            pulseScale = 1.0
+            glowOpacity = 0.3
+        }
+    }
+
+    private func checkMilestone(_ newProgress: Double) {
+        let milestones = [0.75, 0.5, 0.25]
+        for milestone in milestones {
+            if lastMilestone > milestone && newProgress <= milestone {
+                triggerMilestone()
+                lastMilestone = milestone
+                break
+            }
+        }
+        if newProgress > lastMilestone {
+            lastMilestone = 1.0
+        }
+    }
+
+    private func triggerMilestone() {
+        showMilestone = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            showMilestone = false
+        }
+    }
+
+    private func triggerCompletion() {
+        showCompletion = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            showCompletion = false
+        }
+    }
 }
+
+// MARK: - Confetti Piece
+
+struct TimerConfettiPiece: View {
+    let index: Int
+    let isActive: Bool
+
+    @State private var offset: CGSize = .zero
+    @State private var rotation: Double = 0
+    @State private var opacity: Double = 0
+
+    private let colors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .pink]
+
+    var body: some View {
+        Image(systemName: ["star.fill", "circle.fill", "heart.fill", "sparkle"][index % 4])
+            .font(.system(size: CGFloat.random(in: 10...16)))
+            .foregroundColor(colors[index % colors.count])
+            .offset(offset)
+            .rotationEffect(.degrees(rotation))
+            .opacity(opacity)
+            .onChange(of: isActive) { active in
+                if active {
+                    animate()
+                }
+            }
+    }
+
+    private func animate() {
+        let angle = Double(index) * (360.0 / 16.0) * .pi / 180
+        let distance: CGFloat = CGFloat.random(in: 80...140)
+
+        offset = .zero
+        rotation = 0
+        opacity = 1
+
+        withAnimation(.easeOut(duration: 1.5)) {
+            offset = CGSize(
+                width: cos(angle) * distance,
+                height: sin(angle) * distance
+            )
+            rotation = Double.random(in: 180...720)
+        }
+
+        withAnimation(.easeIn(duration: 0.5).delay(1.0)) {
+            opacity = 0
+        }
+    }
+}
+
+// MARK: - Previews
 
 #Preview("Running") {
     CircularTimerView(
         progress: 0.75,
         remainingTime: 1125,
+        state: .running
+    )
+    .frame(width: 300, height: 300)
+    .padding()
+}
+
+#Preview("Half Time") {
+    CircularTimerView(
+        progress: 0.45,
+        remainingTime: 675,
         state: .running
     )
     .frame(width: 300, height: 300)
@@ -172,6 +393,16 @@ struct CircularTimerView: View {
         progress: 1.0,
         remainingTime: 1500,
         state: .idle
+    )
+    .frame(width: 300, height: 300)
+    .padding()
+}
+
+#Preview("Completed") {
+    CircularTimerView(
+        progress: 0.0,
+        remainingTime: 0,
+        state: .completed
     )
     .frame(width: 300, height: 300)
     .padding()

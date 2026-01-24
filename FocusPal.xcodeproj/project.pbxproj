@@ -14,6 +14,7 @@
 		04544D8965D0AB9899E5F778 /* TimerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC12BF9006BB231285E3796 /* TimerControlsView.swift */; };
 		04C91F7427B3C02C5C573636 /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B68ACCDD48A811853BF1D0 /* PermissionsView.swift */; };
 		05DAF141581C874F559B2AF7 /* KidsAnimatedBackgrounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE6827BD711033DAC75270C /* KidsAnimatedBackgrounds.swift */; };
+		05FC045EF211357C5110DC4F /* SpaceTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25C2252431E1DAFDFFC6C4A /* SpaceTimerView.swift */; };
 		092D3B41C2DDC90E5867BCDB /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4553CAD06F9551DCF5D477C /* Activity.swift */; };
 		09CD9AEDCA9352D38819EC8D /* ProfileCreationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90237BE0AF53825C1FED9DD /* ProfileCreationPage.swift */; };
 		0A5E4181AAA22A2AA0BF6502 /* CategoryManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F218887ED68C52E8FEEDA85B /* CategoryManagementViewModel.swift */; };
@@ -173,6 +174,7 @@
 		A962124EE7E5A8510D917F36 /* FocusPalShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C806E571F19B5319DD3643F9 /* FocusPalShortcuts.swift */; };
 		A9623A332BCAF793094EA7D3 /* ProgressRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD42681BFCC2DF817B6BEAB /* ProgressRingView.swift */; };
 		A9750E804483B3DD253D08DE /* ParentProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7122CE8192472E41CE585B0 /* ParentProfileView.swift */; };
+		A98963A36590393A0D19FE2E /* OceanTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4B5F0D344933DE7082AD29 /* OceanTimerView.swift */; };
 		A98C16C9410FBE13DCE913DB /* TimeGoalServiceIntegrationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE47B309E8B3F755F08E973 /* TimeGoalServiceIntegrationExample.swift */; };
 		AABAB3462BD820A1233B8C65 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6387AA8876CA38500D5E6 /* StatisticsView.swift */; };
 		AC1431C1953267A74990500A /* CoreDataPointsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC67340A9303BCEF66DE3D8 /* CoreDataPointsRepository.swift */; };
@@ -335,6 +337,7 @@
 		1DE9A5B97FE30EE9C1FDB5E7 /* SimpleProgressView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SimpleProgressView.swift; sourceTree = "<group>"; };
 		1E29F062D5CD7B0972983713 /* OnboardingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPage.swift; sourceTree = "<group>"; };
 		1EB32D35A3AC6B3652B919BD /* CategorySettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsViewModel.swift; sourceTree = "<group>"; };
+		1F4B5F0D344933DE7082AD29 /* OceanTimerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OceanTimerView.swift; path = FocusPal/Features/Timer/Views/OceanTimerView.swift; sourceTree = "<group>"; };
 		20A6FC04F4839E1BECB4295E /* CoreDataChildRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataChildRepository.swift; sourceTree = "<group>"; };
 		211EB9D92ACD56A487A6D6BB /* CoreDataTimeGoalRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTimeGoalRepositoryTests.swift; sourceTree = "<group>"; };
 		2187F7249083C8255993AA34 /* TimeGoalRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalRepositoryProtocol.swift; sourceTree = "<group>"; };
@@ -489,6 +492,7 @@
 		BC0E8E702F17776F00E720A9 /* WidgetDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDataService.swift; sourceTree = "<group>"; };
 		BF02A0D0D14DAE2EB60B0805 /* ChildPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildPoints.swift; sourceTree = "<group>"; };
 		C1CC779DD20DAFD32E06C89E /* SyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinator.swift; sourceTree = "<group>"; };
+		C25C2252431E1DAFDFFC6C4A /* SpaceTimerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SpaceTimerView.swift; path = FocusPal/Features/Timer/Views/SpaceTimerView.swift; sourceTree = "<group>"; };
 		C44CA5FB1381B381265E00D8 /* TimeGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoal.swift; sourceTree = "<group>"; };
 		C4DD78198DA4FD3F6EA6FD6E /* CoreDataPointsRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPointsRepositoryTests.swift; sourceTree = "<group>"; };
 		C5DB2E5D36463C98CA73A06B /* PINEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINEntryView.swift; sourceTree = "<group>"; };
@@ -1065,6 +1069,8 @@
 				BC0E8E172F15CD7400E720A9 /* Frameworks */,
 				F9391C3BDADB63D11417AA76 /* Products */,
 				71360C819E10CDF89B9C344F /* FocusPal */,
+				C25C2252431E1DAFDFFC6C4A /* SpaceTimerView.swift */,
+				1F4B5F0D344933DE7082AD29 /* OceanTimerView.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2198,6 +2204,8 @@
 				05DAF141581C874F559B2AF7 /* KidsAnimatedBackgrounds.swift in Sources */,
 				CE4094F63D6EE42A08E19C7E /* BackgroundSettingsView.swift in Sources */,
 				5E6A5D9F76B2ADBE16EDF11C /* DailyGiftBoxView.swift in Sources */,
+				05FC045EF211357C5110DC4F /* SpaceTimerView.swift in Sources */,
+				A98963A36590393A0D19FE2E /* OceanTimerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

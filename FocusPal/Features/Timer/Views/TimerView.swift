@@ -118,8 +118,10 @@ struct TimerView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
                         ForEach(TimerVisualizationMode.allCases, id: \.self) { mode in
-                            Button(mode.rawValue.capitalized) {
+                            Button {
                                 viewModel.setVisualizationMode(mode)
+                            } label: {
+                                Label(mode.displayName, systemImage: mode.iconName)
                             }
                         }
                     } label: {
@@ -360,6 +362,18 @@ struct TimerDisplayContainer: View {
             )
         case .analog:
             AnalogTimerView(
+                progress: progress,
+                remainingTime: remainingTime,
+                state: timerState
+            )
+        case .space:
+            SpaceTimerView(
+                progress: progress,
+                remainingTime: remainingTime,
+                state: timerState
+            )
+        case .ocean:
+            OceanTimerView(
                 progress: progress,
                 remainingTime: remainingTime,
                 state: timerState
