@@ -178,8 +178,6 @@ Pick a favorite color that appears throughout the app: Pink, Blue, Green, or Pur
 
 FocusPal syncs with your iOS Calendar to create a structured routine:
 
-![Schedule View](/focuspal/assets/images/screenshots/schedule.png)
-
 - **Recurring Tasks**: Set daily homework time, weekly piano practice, etc.
 - **Smart Reminders**: Notifications before tasks are due
 - **Time Slots**: Tasks organized into Morning, Afternoon, and Evening
