@@ -4,7 +4,7 @@ title: "See Time, Build Focus, Change Lives: Introducing FocusPal"
 date: 2025-01-04
 categories: [announcement, features]
 author: FocusPal Team
-excerpt: "FocusPal is an iOS app that helps children understand time through visual timers. Make time visible, activities rewarding, and parenting less stressful."
+excerpt: "FocusPal is an iOS app that helps children understand time through beautiful visual timers with fun themes. Make time visible, activities rewarding, and parenting less stressful."
 ---
 
 ## The Struggle Every Parent Knows
@@ -13,186 +13,267 @@ It's 5 PM on a Tuesday. You tell your daughter, "You have thirty minutes until d
 
 She hears infinity.
 
-By dinner time, she's still immersed in her activity—not because she's ignoring you, but because she genuinely can't *feel* time passing. Sound familiar? This scene plays out daily in homes everywhere. The morning routine takes twice as long. Homework sessions end in frustration. Transitions between activities trigger meltdowns. And the hardest part? Your child isn't being difficult—they're experiencing time differently than you.
+By dinner time, she's still immersed in her activity—not because she's ignoring you, but because she genuinely can't *feel* time passing. Sound familiar?
 
-Many children struggle to understand time as an abstract concept. Whether it's difficulty with focus, executive function challenges, or simply being young, millions of kids need help making time tangible. But here's the good news: **what if you could make time visible?**
+This scene plays out daily in homes everywhere. The morning routine takes twice as long. Homework sessions end in frustration. Transitions between activities trigger meltdowns. And the hardest part? Your child isn't being difficult—they're experiencing time differently than you.
 
-## Enter FocusPal: The Timer App Your Family Has Been Waiting For
+Many children struggle to understand time as an abstract concept. Whether it's difficulty with focus, executive function challenges, or simply being young, millions of kids need help making time tangible.
 
-Most timer apps are built for people who can naturally feel time passing. They assume you understand that "ten minutes" is shorter than "an hour." But many children need to *see* it.
+**What if you could make time visible—and fun?**
 
-FocusPal is an iOS app designed to help children understand time visually. It's not just another countdown clock. It's a complete family productivity system that makes time tangible, activities rewarding, and parenting less stressful.
+## Enter FocusPal: Where Time Meets Adventure
 
-Think of it as the digital evolution of the physical Time Timer, reimagined for modern families with powerful features that go far beyond a simple countdown.
+FocusPal is an iOS app designed to help children understand time visually while making focus feel like play. It's not just another countdown clock—it's a complete family productivity system that transforms time management into an engaging adventure.
 
-## Key Features That Transform Time Management
+![FocusPal Today Screen](/assets/images/screenshots/today-screen.png)
+*The Today tab greets your child with a friendly mascot and shows their daily progress*
 
-### Visual Timers That Actually Work
+---
 
-FocusPal offers three visual timer modes, so your child can choose the style that works best for them:
+## Five Beautiful Timer Themes
 
-**The Circular Timer** - Our signature visual timer uses the Time Timer concept, backed by research on visual learning. It shows time as a disappearing colored wedge, creating a visual representation that's immediately understandable. Your child can literally watch time disappear.
+Every child is different. That's why FocusPal offers five unique visual timer experiences:
 
-**The Bar Timer** - A simple, straightforward progress bar for children who prefer linear visuals.
+### Classic Timer
+A modern ring-style progress indicator with a pulsing glow effect. Clean, elegant, and easy to read. The ring depletes clockwise as time passes, with colors shifting from blue to orange to red as the timer runs low.
 
-**The Analog Timer** - A traditional clock-style display for kids who respond to analog visualizations.
+![Classic Timer](/assets/images/screenshots/timer-classic.png)
 
-Beyond the visuals, FocusPal includes smart audio callouts at key intervals (10 minutes remaining, 1 minute remaining) to help children prepare for transitions. These gentle audio warnings are game-changers for smooth activity changes.
+### Space Explorer
+Blast off into orbit! Watch a rocket circle a glowing planet as twinkling stars animate in the background. The fuel gauge depletes as time passes. Perfect for kids who love space and adventure.
 
-### Multi-Child Family Support: One App for Everyone
+![Space Timer](/assets/images/screenshots/timer-space.png)
 
-Instead of downloading five different apps, manage your entire family in one place. FocusPal supports multiple independent child profiles, each with their own:
+### Ocean Adventure
+Dive into an underwater world! Water drains from the tank as time passes, with colorful fish swimming by and bubbles floating up. Complete the timer to find the treasure chest!
 
-- Personal timers (kids can have concurrent timers running)
-- Activity tracking history
-- Achievements and milestones
-- Customized goal settings
-- Individual avatar and color theme
+![Ocean Timer](/assets/images/screenshots/timer-ocean.png)
 
-Each child's data stays completely separate. Your eight-year-old's homework timer doesn't interfere with your teenager's reading goals. Profile switching is seamless, so kids can quickly switch between who's using the app.
+### Progress Bar
+A simple, straightforward horizontal bar for children who prefer linear visuals. Great for kids who like to see exactly how much time is left at a glance.
 
-### Gamification That Genuinely Motivates
+### Analog Clock
+A traditional clock-style display with a sweeping hand for kids learning to read analog clocks.
 
-We all know what doesn't work: forced reward systems that feel hollow. FocusPal's gamification actually resonates with kids because it's built on principles that matter to them.
+**All timers feature:**
+- Milestone celebrations at 75%, 50%, and 25% remaining
+- Confetti burst animation on completion
+- Smooth color transitions as time runs low
+- Audio callouts at key intervals (optional)
 
-**Points & Rewards System** - Children earn 10 points for every completed activity. Bonus points are awarded for early finishes and beating their personal averages. Real achievement, real rewards.
+---
 
-**Weekly Reward Tiers** - Points unlock weekly progression: Bronze (100 points), Silver (250 points), Gold (500 points), and Platinum (1000 points). Every week is a fresh start, so streaks matter. Kids get multiple opportunities to win.
+## Daily Gift Box Surprise
 
-**Achievement Badges** - FocusPal features eight unlockable achievements:
-- *First Timer*: Complete your first activity
-- *3-Day Streak*: Activity logged 3 days in a row
-- *Week Warrior*: 7-day streak
-- *Monthly Master*: 30-day streak
-- *Homework Hero*: 10 hours of homework logged
-- *Reading Champion*: 20 hours of reading logged
-- *Balance Master*: 7 days with balanced activity distribution
-- *Early Bird*: Activity completed before 8 AM
+Every day starts with excitement! When your child opens FocusPal for the first time each day, a shaking gift box awaits them.
 
-These badges celebrate consistency, effort, and balance—not just speed or quantity.
+![Daily Gift Box](/assets/images/screenshots/daily-gift.png)
 
-### Activity Tracking That Reveals Patterns
+**Inside the gift box, they'll discover:**
+- Yesterday's points earned
+- Their current streak (with celebration!)
+- Activities completed
+- Any new badges unlocked
+- A personalized encouragement message
 
-Kids log activities either through the timer (automatic when the timer completes) or manually. Each entry captures:
+It's a small touch that makes opening the app feel special every single day.
 
-- Category (Homework, Reading, Creative Play, Screen Time, and more)
-- Duration
-- Mood (emoji scale of 1-5)
-- Optional notes for context
+---
 
-Over time, parents see patterns emerge. When does your child focus best? Which activities drain their energy? Where do they need encouragement? This data drives better family decisions.
+## The Today Tab: Your Child's Daily Hub
 
-### Siri Voice Integration for Hands-Free Control
+The Today tab is mission control for your child's day. A friendly clock mascot greets them with an expression that changes based on their activity level.
 
-Imagine your child being able to start their homework timer without navigating menus: "Hey Siri, start Homework in FocusPal." The app automatically detects the child profile (or asks if multiple exist) and the right category, and the timer begins.
+![Today Tab Overview](/assets/images/screenshots/today-overview.png)
 
-It works with any configured category and feels like magic the first time you use it.
+**What your child sees:**
+- **Today's Points**: How many points they've earned with encouraging messages
+- **Active Tasks**: Currently happening activities with one-tap timer start
+- **Upcoming Tasks**: The next three scheduled activities
+- **Today's Wins**: Completed tasks (collapsible for a clean view)
 
-### Calendar Integration & Scheduled Tasks
+A floating action button lets them start a timer instantly—no menus to navigate.
 
-FocusPal syncs with your iOS Calendar, letting you import events and create scheduled tasks. Set a task for "Piano Practice" at 4 PM on Tuesday with a 30-minute duration. FocusPal will send smart reminders before the scheduled time. Recurring tasks (daily homework sessions, weekly math tutoring) are fully supported.
+---
 
-Time slots organize tasks into Morning, Afternoon, and Evening windows for clarity.
+## Rewards That Actually Motivate
 
-### Parent Controls With PIN Protection
+FocusPal's gamification is built on principles that resonate with kids: visible progress, achievable goals, and genuine celebration.
 
-You need oversight—but not oppressiveness. FocusPal's Parent Dashboard, protected by a simple PIN, gives you insights without being intrusive.
+### Points System
+- Earn 1 point per minute of focused activity
+- Category multipliers (1.5x, 2x) for challenging tasks
+- Points tracked daily, weekly, and all-time
 
-**What Parents Can Configure:**
-- Create and manage activity categories
-- Set time goal recommendations per category
-- Adjust notification preferences
-- Change the PIN
+### Weekly Tier Progression
 
-**What Parents Can View:**
-- Weekly summaries of child activity
-- Category breakdowns with pie charts
-- Achievement progress and unlocked badges
-- Points earned and tier progression
-- Balance score metrics
-- Long-term trends and historical comparisons
+![Rewards Screen](/assets/images/screenshots/rewards-tiers.png)
 
-### Smart Notifications
+Every week is a fresh start with four achievement tiers:
+- **Bronze** (100 points) - Getting started!
+- **Silver** (250 points) - Building momentum
+- **Gold** (500 points) - Focus champion
+- **Platinum** (1000 points) - Legendary focus master
 
-FocusPal sends timely, relevant notifications without overwhelming:
+Kids can see exactly how close they are to the next tier with visual progress bars.
 
-- Timer completion alerts
-- 5-minute and 1-minute timer warnings
-- Time goal threshold notifications (80% of daily goal reached)
-- Streak celebrations ("You've got a 5-day streak!")
-- Daily reminders for scheduled tasks
-- Achievement unlock celebrations
+### Achievement Badges
 
-### Weekly Email Reports
+Eight unlockable badges celebrate different accomplishments:
 
-Parents receive automatic weekly summaries in their inbox, featuring:
+| Badge | Achievement |
+|-------|-------------|
+| First Timer | Complete your first activity |
+| 3-Day Streak | Log activities 3 days in a row |
+| Week Warrior | 7-day streak |
+| Monthly Master | 30-day streak |
+| Homework Hero | 10 hours of homework |
+| Reading Champion | 20 hours of reading |
+| Balance Master | 7 days of balanced activities |
+| Early Bird | Activity before 8 AM |
 
+![Badges Screen](/assets/images/screenshots/badges.png)
+
+**Shareable Achievement Cards**: When your child unlocks a badge, they can generate a beautiful shareable card to celebrate with family and friends!
+
+---
+
+## Multi-Child Family Support
+
+One app for your whole family. Each child gets their own complete profile with:
+
+- Independent timers (siblings can run timers simultaneously)
+- Personal activity history
+- Individual achievements and badges
+- Custom avatar and theme color
+- Separate points and tier progression
+
+![Profile Selection](/assets/images/screenshots/profile-select.png)
+
+Profile switching is instant—kids can quickly tap their avatar to switch who's using the app.
+
+---
+
+## Personalize the Experience
+
+Every child can customize their FocusPal experience:
+
+### Background Themes
+Choose from 8 animated background styles:
+- **Automatic** - Different style per screen
+- **Gradient** - Smooth color shifts
+- **Floating Shapes** - Stars and hearts float around
+- **Bubbles** - Rising bubble animations
+- **Waves** - Gentle wave patterns
+- **Sparkles** - Twinkling night sky
+- **Clouds** - Fluffy drifting clouds
+- **Solid** - Simple, battery-saving option
+
+### Theme Colors
+Pick a favorite color that appears throughout the app: Pink, Blue, Green, or Purple.
+
+---
+
+## Scheduled Tasks & Calendar Integration
+
+FocusPal syncs with your iOS Calendar to create a structured routine:
+
+![Schedule View](/assets/images/screenshots/schedule.png)
+
+- **Recurring Tasks**: Set daily homework time, weekly piano practice, etc.
+- **Smart Reminders**: Notifications before tasks are due
+- **Time Slots**: Tasks organized into Morning, Afternoon, and Evening
+- **Quick Completion**: Mark tasks done with one tap
+
+When a scheduled task's time arrives, it appears in the Today tab's "Active" section, ready to start.
+
+---
+
+## Parent Dashboard
+
+A PIN-protected (or Face ID) parent area gives you insights without being intrusive.
+
+![Parent Dashboard](/assets/images/screenshots/parent-dashboard.png)
+
+### What Parents Can Do:
+- **Manage Profiles**: Add children, edit settings
+- **Create Categories**: Custom activities with icons, colors, and duration
+- **Set Time Goals**: Daily and weekly targets per category
+- **View Statistics**: Charts showing daily/weekly activity patterns
+- **Track Achievements**: See which badges are close to unlocking
+- **Review Activity Log**: Complete history with manual entry option
+
+### Category Types:
+- **Task Categories**: Earn points when completed (Homework, Reading, Chores)
+- **Reward Categories**: Cost points to start (Screen Time, Gaming)
+
+This creates a natural balance—kids earn time for fun activities by completing responsibilities.
+
+---
+
+## Hands-Free with Siri
+
+"Hey Siri, start Homework in FocusPal."
+
+That's all it takes. The timer begins immediately with the right category and child profile. No menus, no taps—perfect for kids who are already at their desk ready to work.
+
+---
+
+## Weekly Email Reports
+
+Parents receive automatic weekly summaries featuring:
 - Total time logged across all children
-- Active days and engagement metrics
 - Points earned and tier achievements
 - Top categories by time
-- Achievement highlights
 - Streak status updates
+- Achievement highlights
 
-No login required—the insights come to you.
+No login required—insights delivered right to your inbox.
 
-## The Real Benefits: Why Families Choose FocusPal
+---
+
+## The Real Benefits
 
 ### For Children
 
-**See Time, Own Time** - Visual timers help children with time blindness finally understand how long thirty minutes actually is. Instead of time being an abstract concept that causes stress, it becomes tangible and manageable.
+**See Time, Own Time** - Visual timers help children finally understand how long thirty minutes actually is. Time becomes tangible and manageable.
 
-**Build Independence** - Children can start their own timers, log their activities, and track their progress without constant parental prompting. This autonomy builds confidence.
+**Build Independence** - Start timers, log activities, and track progress without constant parental prompting.
 
-**Stay Motivated** - Points, badges, and weekly tiers provide immediate, visible feedback. Kids know exactly where they stand and what unlocks next.
+**Stay Motivated** - Points, badges, and weekly tiers provide immediate, visible feedback.
 
-**Voice Control** - Hands-free timer activation makes starting sessions easy, even for younger children.
-
-**Make Good Choices** - Tracking mood alongside activities helps children recognize what energizes them and what drains them, leading to more intentional activity choices.
+**Make It Fun** - Space rockets, ocean adventures, and daily surprises turn focus time into something to look forward to.
 
 ### For Parents
 
-**Reduce the Nagging** - Once children see the value of the visual timer, they're more likely to accept transitions and manage time independently. One less thing to battle about.
+**Reduce the Nagging** - Once children see time visually, they're more likely to accept transitions independently.
 
-**Real Insights** - Weekly reports show patterns you might otherwise miss. Is homework always their worst time? Does reading energize or drain them? These insights guide meaningful conversations.
+**Real Insights** - Weekly reports reveal patterns: When does your child focus best? Which activities energize them?
 
-**One App for Everyone** - Manage multiple children without downloading five different apps. Everything is centralized.
+**Peace of Mind** - See progress objectively rather than relying on how it felt.
 
-**Peace of Mind** - You know what your kids are doing with their time. You can see progress objectively rather than relying on how it felt.
+**One App for Everyone** - Manage your entire family in one place.
 
-**Built for Your Family** - FocusPal isn't a generic time-tracking tool. It's specifically designed with visual learners and focus challenges in mind.
+---
 
-### For Children Who Need Extra Support
+## Getting Started
 
-**Research-Backed Design** - The circular timer visualization is inspired by research showing that visual time representation helps children understand time passage.
-
-**Reduced Cognitive Load** - The interface is intentionally simple. No unnecessary features or distracting elements. Children can focus on the task and the timer—nothing else.
-
-**Color-Coded Organization** - Categories use distinct colors to help visual learners quickly identify activities.
-
-**Audio Callouts for Preparation** - Time warnings give children a chance to mentally prepare for transitions, reducing the shock and resistance that often occurs.
-
-**Multiple Approaches to Success** - Different timer styles (circular, bar, analog) mean you can find what works for your child. One approach doesn't fit all learners.
-
-## Getting Started Is Simple
-
-1. Download FocusPal from the App Store
-2. Create your parent PIN
-3. Add your first child profile
-4. Start a timer and watch time become visible
+1. **Download** FocusPal from the App Store
+2. **Create** your parent PIN
+3. **Add** your first child profile
+4. **Pick** a timer theme
+5. **Start** your first timer and watch time become visible
 
 Most families see the difference within the first week.
 
-## The Bottom Line
-
-Every child needs help understanding time—some more than others. FocusPal doesn't just show a countdown—it transforms how your family relates to time itself. Parents report fewer transition conflicts, children report feeling more in control, and families report better overall routine management.
-
-Your child isn't lazy or willfully ignoring transitions. They're experiencing time differently. FocusPal makes time visible, manageable, and even rewarding.
+---
 
 ## Ready to Make Time Visible?
 
 Download FocusPal from the App Store today.
 
-Join thousands of families who are already seeing time differently.
+Your child isn't lazy or willfully ignoring transitions. They're experiencing time differently. FocusPal makes time visible, manageable, and genuinely fun.
 
 **Because every child deserves to see time passing. And every parent deserves a break from the constant time reminders.**
+
+[Download on the App Store](#)
