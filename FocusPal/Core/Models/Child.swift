@@ -59,6 +59,7 @@ struct ChildPreferences: Equatable, Hashable, Codable {
         case analog
         case space
         case ocean
+        case pomodoro
     }
 
     /// Available background style preferences

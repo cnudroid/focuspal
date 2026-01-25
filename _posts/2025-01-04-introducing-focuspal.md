@@ -25,8 +25,42 @@ Many children struggle to understand time as an abstract concept. Whether it's d
 
 FocusPal is an iOS app designed to help children understand time visually while making focus feel like play. It's not just another countdown clock—it's a complete family productivity system that transforms time management into an engaging adventure.
 
+---
+
+## The Kids Task Flow: Your Child's Command Center
+
+At the heart of FocusPal is the **Today tab**—a kid-friendly dashboard where children see their day at a glance. No complicated menus, no confusing interfaces. Just colorful task cards they can tap to start focusing.
+
 ![FocusPal Today Screen](/focuspal/assets/images/screenshots/today-screen.png)
-*The Today tab greets your child with a friendly mascot and shows their daily progress*
+*The Today tab shows active tasks, upcoming activities, and today's progress*
+
+### How Tasks Work for Kids
+
+**Active Tasks** - "Happening Now"
+When it's time for homework or reading, the task appears with a bright orange "NOW" badge. One tap opens the timer, and your child is off to focus. No negotiation required—the app tells them it's time.
+
+**Upcoming Tasks** - "Coming Up"
+Kids can see their next three activities with times and durations. This builds anticipation and reduces transition anxiety. "After piano practice, it's free time!"
+
+**Completed Tasks** - "Today's Wins"
+Every finished task moves to a collapsible "wins" section with satisfying checkmarks. Kids love seeing their accomplishments pile up throughout the day.
+
+### Task Cards Made for Kids
+
+Each task card shows:
+- **Category icon** (books for reading, calculator for math, musical note for practice)
+- **Task name** ("Reading Time", "Math Practice")
+- **Scheduled time** with duration badge ("3:30 PM • 30 min")
+- **Start Timer button** - big, colorful, impossible to miss
+
+A friendly clock mascot at the top changes expression based on activity level—smiling when they're productive, sleeping when it's quiet. Kids love watching its mood change!
+
+### Points as You Go
+
+Every minute of focus earns points. The points summary sits prominently at the top:
+- **Today's Points** with a star icon
+- **Streak indicator** ("Keep it up!" with a flame)
+- Real-time updates as timers complete
 
 ---
 
@@ -80,19 +114,20 @@ It's a small touch that makes opening the app feel special every single day.
 
 ---
 
-## The Today Tab: Your Child's Daily Hub
+## Starting a Timer: One Tap and Go
 
-The Today tab is mission control for your child's day. A friendly clock mascot greets them with an expression that changes based on their activity level.
+When your child taps a task card or the floating "Start Timer" button, a beautiful timer overlay appears. No navigation needed—they're instantly in focus mode.
 
 ![Today Tab Overview](/focuspal/assets/images/screenshots/today-overview.png)
+*The Today tab with points summary and the floating Start Timer button*
 
-**What your child sees:**
-- **Today's Points**: How many points they've earned with encouraging messages
-- **Active Tasks**: Currently happening activities with one-tap timer start
-- **Upcoming Tasks**: The next three scheduled activities
-- **Today's Wins**: Completed tasks (collapsible for a clean view)
+The timer overlay shows:
+- Their chosen visual theme (rocket, ocean, or classic ring)
+- The category they're working on with its color
+- Time remaining in large, kid-friendly numbers
+- A simple pause/stop control
 
-A floating action button lets them start a timer instantly—no menus to navigate.
+When the timer completes, confetti bursts across the screen, points are awarded, and the task moves to "Today's Wins." Your child feels accomplished, and you didn't have to nag once.
 
 ---
 
@@ -156,7 +191,10 @@ Profile switching is instant—kids can quickly tap their avatar to switch who's
 
 ## Personalize the Experience
 
-Every child can customize their FocusPal experience:
+Every child can customize their FocusPal experience from the **Me tab**—their personal profile screen.
+
+![Me Tab](/focuspal/assets/images/screenshots/me-tab.png)
+*The Me tab where kids personalize their profile and view their stats*
 
 ### Background Themes
 Choose from 8 animated background styles:
@@ -174,16 +212,23 @@ Pick a favorite color that appears throughout the app: Pink, Blue, Green, or Pur
 
 ---
 
-## Scheduled Tasks & Calendar Integration
+## Setting Up Your Child's Day
 
-FocusPal syncs with your iOS Calendar to create a structured routine:
+Parents create the schedule, kids follow it. From the Parent Dashboard, you can:
 
-- **Recurring Tasks**: Set daily homework time, weekly piano practice, etc.
-- **Smart Reminders**: Notifications before tasks are due
-- **Time Slots**: Tasks organized into Morning, Afternoon, and Evening
-- **Quick Completion**: Mark tasks done with one tap
+- **Create Recurring Tasks**: Daily homework at 4 PM, weekly piano practice on Tuesdays
+- **Set Time Goals**: "At least 30 minutes of reading per day"
+- **Define Categories**: Custom activities with icons, colors, and point multipliers
+- **Sync with Calendar**: Tasks from iOS Calendar appear automatically
 
-When a scheduled task's time arrives, it appears in the Today tab's "Active" section, ready to start.
+When scheduled time arrives, the task appears in your child's Today tab with a bright "NOW" badge. They tap, the timer starts, and focus begins. No negotiations, no reminders—the app handles it.
+
+### Category Types
+
+- **Task Categories** (Homework, Reading, Chores): Kids earn points when completed
+- **Reward Categories** (Screen Time, Gaming): Cost points to start
+
+This creates a natural balance—kids earn time for fun activities by completing responsibilities first. "I need 50 more points for 30 minutes of gaming" is a lot more motivating than "Do your homework!"
 
 ---
 
@@ -192,20 +237,16 @@ When a scheduled task's time arrives, it appears in the Today tab's "Active" sec
 A PIN-protected (or Face ID) parent area gives you insights without being intrusive.
 
 ![Parent Dashboard](/focuspal/assets/images/screenshots/parent-dashboard.png)
+*The parent dashboard with statistics and category management*
 
 ### What Parents Can Do:
-- **Manage Profiles**: Add children, edit settings
-- **Create Categories**: Custom activities with icons, colors, and duration
+- **Manage Profiles**: Add children, edit settings, switch between kids
+- **Create Categories**: Custom activities with icons, colors, and duration defaults
 - **Set Time Goals**: Daily and weekly targets per category
 - **View Statistics**: Charts showing daily/weekly activity patterns
 - **Track Achievements**: See which badges are close to unlocking
 - **Review Activity Log**: Complete history with manual entry option
-
-### Category Types:
-- **Task Categories**: Earn points when completed (Homework, Reading, Chores)
-- **Reward Categories**: Cost points to start (Screen Time, Gaming)
-
-This creates a natural balance—kids earn time for fun activities by completing responsibilities.
+- **Generate Reports**: Shareable weekly summaries for teachers or therapists
 
 ---
 

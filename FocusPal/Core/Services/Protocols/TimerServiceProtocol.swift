@@ -65,6 +65,7 @@ enum TimerVisualizationMode: String, CaseIterable {
     case analog
     case space
     case ocean
+    case pomodoro
 
     /// User-friendly display name for the theme
     var displayName: String {
@@ -74,6 +75,7 @@ enum TimerVisualizationMode: String, CaseIterable {
         case .analog: return "Clock"
         case .space: return "Space Explorer"
         case .ocean: return "Ocean Adventure"
+        case .pomodoro: return "Pomodoro"
         }
     }
 
@@ -85,6 +87,7 @@ enum TimerVisualizationMode: String, CaseIterable {
         case .analog: return "clock.fill"
         case .space: return "sparkles"
         case .ocean: return "drop.fill"
+        case .pomodoro: return "timer"
         }
     }
 }

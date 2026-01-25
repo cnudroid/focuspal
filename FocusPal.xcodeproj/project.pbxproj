@@ -64,6 +64,7 @@
 		3C9ABFC4CDF98A5C52E4AD2F /* CategoryEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F72AA37C972262E8202CF7 /* CategoryEditorView.swift */; };
 		3E054C2845372BDE85194AED /* ActivitySummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE997E29F2488D6A5EF08236 /* ActivitySummaryCard.swift */; };
 		3E807DCC8961DD6786F8B8C4 /* ParentAuthPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ED61A384B5B75BBC01B36F /* ParentAuthPage.swift */; };
+		3F1BDB31A9E529A14679026D /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C678AFAD66913D6B3CC6BBD9 /* ScreenshotTests.swift */; };
 		41D5633367F74AF218D00411 /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB458A93284E8A973DF9871 /* StatisticsViewModel.swift */; };
 		420EEA04157A0180C616F1EA /* ManualEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75821F4560E13C2B64FCF5AE /* ManualEntryView.swift */; };
 		42303565416011ED476EA870 /* ParentAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4D95B0012CF70FF64A17A2 /* ParentAuthView.swift */; };
@@ -175,6 +176,7 @@
 		A9623A332BCAF793094EA7D3 /* ProgressRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD42681BFCC2DF817B6BEAB /* ProgressRingView.swift */; };
 		A9750E804483B3DD253D08DE /* ParentProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7122CE8192472E41CE585B0 /* ParentProfileView.swift */; };
 		A98963A36590393A0D19FE2E /* OceanTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4B5F0D344933DE7082AD29 /* OceanTimerView.swift */; };
+		P0M0D0R0T1M3RV13WBU1LD01 /* PomodoroTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = P0M0D0R0T1M3RV13WF1L3R3F /* PomodoroTimerView.swift */; };
 		A98C16C9410FBE13DCE913DB /* TimeGoalServiceIntegrationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE47B309E8B3F755F08E973 /* TimeGoalServiceIntegrationExample.swift */; };
 		AABAB3462BD820A1233B8C65 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6387AA8876CA38500D5E6 /* StatisticsView.swift */; };
 		AC1431C1953267A74990500A /* CoreDataPointsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC67340A9303BCEF66DE3D8 /* CoreDataPointsRepository.swift */; };
@@ -338,6 +340,7 @@
 		1E29F062D5CD7B0972983713 /* OnboardingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPage.swift; sourceTree = "<group>"; };
 		1EB32D35A3AC6B3652B919BD /* CategorySettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsViewModel.swift; sourceTree = "<group>"; };
 		1F4B5F0D344933DE7082AD29 /* OceanTimerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OceanTimerView.swift; path = FocusPal/Features/Timer/Views/OceanTimerView.swift; sourceTree = "<group>"; };
+		P0M0D0R0T1M3RV13WF1L3R3F /* PomodoroTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerView.swift; sourceTree = "<group>"; };
 		20A6FC04F4839E1BECB4295E /* CoreDataChildRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataChildRepository.swift; sourceTree = "<group>"; };
 		211EB9D92ACD56A487A6D6BB /* CoreDataTimeGoalRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTimeGoalRepositoryTests.swift; sourceTree = "<group>"; };
 		2187F7249083C8255993AA34 /* TimeGoalRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoalRepositoryProtocol.swift; sourceTree = "<group>"; };
@@ -496,6 +499,7 @@
 		C44CA5FB1381B381265E00D8 /* TimeGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeGoal.swift; sourceTree = "<group>"; };
 		C4DD78198DA4FD3F6EA6FD6E /* CoreDataPointsRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPointsRepositoryTests.swift; sourceTree = "<group>"; };
 		C5DB2E5D36463C98CA73A06B /* PINEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINEntryView.swift; sourceTree = "<group>"; };
+		C678AFAD66913D6B3CC6BBD9 /* ScreenshotTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScreenshotTests.swift; path = FocusPalUITests/Tests/ScreenshotTests.swift; sourceTree = "<group>"; };
 		C6B68ACCDD48A811853BF1D0 /* PermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
 		C806E571F19B5319DD3643F9 /* FocusPalShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusPalShortcuts.swift; sourceTree = "<group>"; };
 		C82EDAE536633385324486CA /* TaskEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorView.swift; sourceTree = "<group>"; };
@@ -1071,6 +1075,7 @@
 				71360C819E10CDF89B9C344F /* FocusPal */,
 				C25C2252431E1DAFDFFC6C4A /* SpaceTimerView.swift */,
 				1F4B5F0D344933DE7082AD29 /* OceanTimerView.swift */,
+				C678AFAD66913D6B3CC6BBD9 /* ScreenshotTests.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1234,6 +1239,7 @@
 				926A0E075FF3510D9F7EF08E /* AnalogTimerView.swift */,
 				42029417E60C21CB22516EF0 /* BarTimerView.swift */,
 				12394E58041C982A22B90AAF /* CircularTimerView.swift */,
+				P0M0D0R0T1M3RV13WF1L3R3F /* PomodoroTimerView.swift */,
 				4AC12BF9006BB231285E3796 /* TimerControlsView.swift */,
 				05BD9567C0D9F95EB8F5724A /* TimerView.swift */,
 			);
@@ -2206,6 +2212,7 @@
 				5E6A5D9F76B2ADBE16EDF11C /* DailyGiftBoxView.swift in Sources */,
 				05FC045EF211357C5110DC4F /* SpaceTimerView.swift in Sources */,
 				A98963A36590393A0D19FE2E /* OceanTimerView.swift in Sources */,
+				P0M0D0R0T1M3RV13WBU1LD01 /* PomodoroTimerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2224,6 +2231,7 @@
 				8E4101FE8A3655E2DDACCDE5 /* ProfileCreationUITests.swift in Sources */,
 				3552DEAC17B9E8E8A0678372 /* TimerFlowUITests.swift in Sources */,
 				33372A6CC5C60A3BB78BF0BC /* TimerPage.swift in Sources */,
+				3F1BDB31A9E529A14679026D /* ScreenshotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

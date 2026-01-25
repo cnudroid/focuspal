@@ -378,6 +378,12 @@ struct TimerDisplayContainer: View {
                 remainingTime: remainingTime,
                 state: timerState
             )
+        case .pomodoro:
+            PomodoroTimerView(
+                progress: progress,
+                remainingTime: remainingTime,
+                state: timerState
+            )
         }
     }
 }

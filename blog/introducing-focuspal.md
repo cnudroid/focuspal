@@ -18,9 +18,39 @@ FocusPal is an iOS app designed to help children understand time visually. It's 
 
 Think of it as the digital evolution of the physical Time Timer, reimagined for modern families with powerful features that go far beyond a simple countdown.
 
-## Key Features That Transform Time Management
+## The Kids Task Flow: Your Child's Command Center
 
-### Visual Timers That Actually Work
+At the heart of FocusPal is the **Today tab**—a kid-friendly dashboard where children see their day at a glance. No complicated menus, no confusing interfaces. Just colorful task cards they can tap to start focusing.
+
+### How Tasks Work for Kids
+
+**Active Tasks** - "Happening Now"
+When it's time for homework or reading, the task appears with a bright orange "NOW" badge. One tap opens the timer, and your child is off to focus. No negotiation required—the app tells them it's time.
+
+**Upcoming Tasks** - "Coming Up"
+Kids can see their next three activities with times and durations. This builds anticipation and reduces transition anxiety. "After piano practice, it's free time!"
+
+**Completed Tasks** - "Today's Wins"
+Every finished task moves to a collapsible "wins" section with satisfying checkmarks. Kids love seeing their accomplishments pile up throughout the day.
+
+### Task Cards Made for Kids
+
+Each task card shows:
+- **Category icon** (books for reading, calculator for math, musical note for practice)
+- **Task name** ("Reading Time", "Math Practice")
+- **Scheduled time** with duration badge ("3:30 PM • 30 min")
+- **Start Timer button** - big, colorful, impossible to miss
+
+A friendly clock mascot at the top changes expression based on activity level—smiling when they're productive, sleeping when it's quiet. Kids love watching its mood change!
+
+### Points as You Go
+
+Every minute of focus earns points. The points summary sits prominently at the top:
+- **Today's Points** with a star icon
+- **Streak indicator** ("Keep it up!" with a flame)
+- Real-time updates as timers complete
+
+## Visual Timers That Actually Work
 
 FocusPal offers three visual timer modes, so your child can choose the style that works best for them:
 

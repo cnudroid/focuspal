@@ -58,18 +58,45 @@ class ScreenshotTests: BaseUITest {
 
     func testScreenshot_TodayTab() {
         launchAndPrepare()
+
+        // Ensure we're on the Today tab
+        if app.tabBars.buttons["Today"].exists {
+            app.tabBars.buttons["Today"].tap()
+        }
+
+        // Wait for content to load
+        sleep(2)
+
+        // Scroll to show task cards if they exist
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            // Scroll up to show mascot and top content
+            scrollView.swipeDown()
+            sleep(1)
+        }
+
         takeScreenshot(named: "01-today-screen")
     }
 
     func testScreenshot_TodayTabWithTasks() {
         launchAndPrepare()
 
-        // Navigate to Today if not already there
+        // Navigate to Today tab
         if app.tabBars.buttons["Today"].exists {
             app.tabBars.buttons["Today"].tap()
         }
 
-        sleep(1)
+        // Wait for content to load
+        sleep(2)
+
+        // Look for task-related content
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            // Scroll to show points summary and task cards
+            scrollView.swipeDown()
+            sleep(1)
+        }
+
         takeScreenshot(named: "02-today-overview")
     }
 
@@ -126,7 +153,16 @@ class ScreenshotTests: BaseUITest {
             app.tabBars.buttons["Rewards"].tap()
         }
 
-        sleep(1)
+        // Wait for rewards content to load
+        sleep(2)
+
+        // Scroll to show tier progression
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            scrollView.swipeDown()
+            sleep(1)
+        }
+
         takeScreenshot(named: "06-rewards-tiers")
     }
 
@@ -137,12 +173,19 @@ class ScreenshotTests: BaseUITest {
             app.tabBars.buttons["Rewards"].tap()
         }
 
-        sleep(1)
+        sleep(2)
 
         // Tap on Badges segment if it exists
         let badgesButton = app.buttons["Badges"]
         if badgesButton.exists {
             badgesButton.tap()
+            sleep(2)
+        }
+
+        // Scroll to show badges grid
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            scrollView.swipeDown()
             sleep(1)
         }
 
@@ -165,7 +208,16 @@ class ScreenshotTests: BaseUITest {
             app.tabBars.buttons["Me"].tap()
         }
 
-        sleep(1)
+        // Wait for Me tab content to load
+        sleep(2)
+
+        // Scroll to show profile customization options
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            scrollView.swipeDown()
+            sleep(1)
+        }
+
         takeScreenshot(named: "09-me-tab")
     }
 
@@ -177,17 +229,27 @@ class ScreenshotTests: BaseUITest {
         // Navigate to Me tab
         if app.tabBars.buttons["Me"].exists {
             app.tabBars.buttons["Me"].tap()
-            sleep(1)
+            sleep(2)
         }
 
         // Look for settings/parent button
         let settingsButton = app.buttons["gearshape.fill"]
         if settingsButton.exists {
             settingsButton.tap()
-            Thread.sleep(forTimeInterval: 0.5)
+            sleep(1)
 
             // Enter PIN if required
             enterPIN("1234", using: app)
+            sleep(2)
+        }
+
+        // Wait for parent dashboard content
+        sleep(1)
+
+        // Scroll to show dashboard stats
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            scrollView.swipeDown()
             sleep(1)
         }
 
@@ -256,14 +318,29 @@ class ScreenshotTests: BaseUITest {
         // This test runs through all screens and captures screenshots
         print("Starting screenshot capture...")
 
-        // Capture Today
+        // Capture Today - with task cards and mascot
         launchWithSampleData()
         sleep(2)
+        dismissAnyAlerts()
+
+        // Navigate to Today tab
+        if app.tabBars.buttons["Today"].exists {
+            app.tabBars.buttons["Today"].tap()
+        }
+        sleep(2)
+
+        // Scroll to show mascot and tasks
+        let todayScrollView = app.scrollViews.firstMatch
+        if todayScrollView.exists {
+            todayScrollView.swipeDown()
+            sleep(1)
+        }
         takeScreenshot(named: "today-screen")
 
         // Capture Timer - Classic theme
         tapStartTimerButton()
         sleep(2)
+        dismissAnyAlerts()
         takeScreenshot(named: "timer-classic")
 
         // Switch to Space theme
@@ -283,13 +360,20 @@ class ScreenshotTests: BaseUITest {
         // Capture Rewards
         if app.tabBars.buttons["Rewards"].exists {
             app.tabBars.buttons["Rewards"].tap()
-            sleep(1)
+            sleep(2)
+
+            // Scroll to show tier progression
+            let rewardsScrollView = app.scrollViews.firstMatch
+            if rewardsScrollView.exists {
+                rewardsScrollView.swipeDown()
+                sleep(1)
+            }
             takeScreenshot(named: "rewards-tiers")
 
             let badgesButton = app.buttons["Badges"]
             if badgesButton.exists {
                 badgesButton.tap()
-                sleep(1)
+                sleep(2)
                 takeScreenshot(named: "badges")
             }
         }
@@ -297,7 +381,14 @@ class ScreenshotTests: BaseUITest {
         // Capture Me tab
         if app.tabBars.buttons["Me"].exists {
             app.tabBars.buttons["Me"].tap()
-            sleep(1)
+            sleep(2)
+
+            // Scroll to show profile content
+            let meScrollView = app.scrollViews.firstMatch
+            if meScrollView.exists {
+                meScrollView.swipeDown()
+                sleep(1)
+            }
             takeScreenshot(named: "me-tab")
         }
 
