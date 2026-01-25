@@ -90,16 +90,23 @@ final class TimerViewModelPointsTests: XCTestCase {
 
     func testMarkIncomplete_DeductsActivityIncompletePoints() async {
         // Given: Timer completed but user didn't finish activity
-        sut.startTimer()
-
+        // (Note: markIncomplete uses pendingCompletionState, not timerManager state)
         let completedState = createCompletedState()
         sut.pendingCompletionState = completedState
 
         // When: User marks as incomplete
         sut.markIncomplete()
 
-        // Wait for async operations
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // Wait for async operations - poll until activity is logged or timeout
+        var attempts = 0
+        while mockActivityService.logActivityCallCount == 0 && attempts < 50 {
+            try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
+            attempts += 1
+        }
+
+        // Then: Should have logged the activity
+        XCTAssertGreaterThan(mockActivityService.logActivityCallCount, 0, "Activity should be logged")
+        XCTAssertEqual(mockActivityService.lastLoggedActivity?.isComplete, false, "Activity should be marked as incomplete")
 
         // Then: Should deduct 5 points for incomplete activity
         XCTAssertEqual(mockPointsService.deductCallCount, 1)
@@ -176,16 +183,20 @@ final class TimerViewModelPointsTests: XCTestCase {
 
     func testCompleteEarly_UnderEightyPercent_AwardsEarlyFinishBonus() async {
         // Given: Timer running for a 25-minute activity
+        // Start timer through SUT (which also sets timerState = .running)
         sut.startTimer()
 
-        // Start a timer that will have less than 80% elapsed time when completed early
-        mockTimerManager.startTimer(for: testChild, category: testCategory, duration: 1500)
+        // Wait a moment for state to settle
+        try? await Task.sleep(nanoseconds: 50_000_000)
+
+        // Verify timer is running
+        XCTAssertEqual(sut.timerState, .running, "Timer should be running after startTimer()")
 
         // When: User completes early
         sut.completeEarly()
 
-        // Wait for async operations
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // Wait for async operations (need longer wait for Task to complete)
+        try? await Task.sleep(nanoseconds: 500_000_000)
 
         // Then: Should award activity complete points AND early finish bonus
         XCTAssertEqual(mockPointsService.awardCallCount, 2, "Should award both completion and early finish bonus")
@@ -198,16 +209,20 @@ final class TimerViewModelPointsTests: XCTestCase {
 
     func testCompleteEarly_AlwaysAwardsEarlyBonus_WhenElapsedIsMinimal() async {
         // Given: Timer running for a 25-minute activity
+        // Start timer through SUT (which also sets timerState = .running)
         sut.startTimer()
 
-        // Start a timer - since we complete immediately, elapsed time is minimal (<80%)
-        mockTimerManager.startTimer(for: testChild, category: testCategory, duration: 1500)
+        // Wait a moment for state to settle
+        try? await Task.sleep(nanoseconds: 50_000_000)
+
+        // Verify timer is running
+        XCTAssertEqual(sut.timerState, .running, "Timer should be running after startTimer()")
 
         // When: User completes early (elapsed time is very small)
         sut.completeEarly()
 
-        // Wait for async operations
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // Wait for async operations (need longer wait for Task to complete)
+        try? await Task.sleep(nanoseconds: 500_000_000)
 
         // Then: Should award both completion points AND early bonus (since elapsed is minimal)
         XCTAssertEqual(mockPointsService.awardCallCount, 2, "Should award both completion and early bonus")

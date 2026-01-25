@@ -10,6 +10,10 @@ import UserNotifications
 
 /// Protocol for weekly email summary service
 protocol WeeklySummaryServiceProtocol {
+    /// Generate a weekly summary for a specific child
+    func generateSummary(for childId: UUID, weekStartDate: Date) async throws -> WeeklySummary
+
+    /// Generate summaries for all children using the current week
     func generateSummariesForAllChildren() async throws -> [WeeklySummary]
 }
 

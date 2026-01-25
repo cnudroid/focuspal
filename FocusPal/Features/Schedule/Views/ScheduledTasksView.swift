@@ -131,7 +131,7 @@ struct ScheduledTasksView: View {
                     onStartTimer: {
                         serviceContainer.pendingTimerCategoryId = task.categoryId
                         selectedTaskForDetail = nil
-                        selectedTab = .timer
+                        serviceContainer.pendingTimerOverlay = true
                     },
                     onComplete: {
                         Task {
@@ -734,7 +734,7 @@ private struct TaskDetailSheet: View {
 #Preview {
     ScheduledTasksView(
         child: Child(name: "Test", age: 8),
-        selectedTab: .constant(.schedule),
+        selectedTab: .constant(.today),
         calendarService: MockCalendarService.withSampleTasks(for: Child(name: "Test", age: 8))
     )
     .environmentObject(ServiceContainer())

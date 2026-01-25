@@ -60,16 +60,24 @@ struct FocusPalApp: App {
                 // Navigate to timer with specific category
                 serviceContainer.pendingTimerCategoryId = uuid
             }
-            serviceContainer.pendingDeepLinkTab = .timer
+            // Trigger timer overlay instead of tab navigation
+            serviceContainer.pendingTimerOverlay = true
 
-        case "stats":
-            serviceContainer.pendingDeepLinkTab = .stats
+        case "today":
+            // Navigate to Today tab
+            serviceContainer.pendingDeepLinkTab = .today
 
         case "rewards":
+            // Navigate to Rewards tab
             serviceContainer.pendingDeepLinkTab = .rewards
 
-        case "log":
-            serviceContainer.pendingDeepLinkTab = .log
+        case "stats", "log":
+            // Route to Me tab (parent controls access for Stats and Log)
+            serviceContainer.pendingDeepLinkTab = .me
+
+        case "me":
+            // Navigate to Me tab
+            serviceContainer.pendingDeepLinkTab = .me
 
         default:
             break

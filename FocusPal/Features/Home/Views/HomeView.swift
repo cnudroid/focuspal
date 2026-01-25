@@ -68,7 +68,8 @@ struct HomeView: View {
                             icon: "timer",
                             color: .blue
                         ) {
-                            selectedTab = .timer
+                            // Timer is now an overlay, trigger via ViewModel
+                            viewModel.startTimerTapped()
                         }
 
                         QuickActionButton(
@@ -135,5 +136,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(selectedTab: .constant(.home), currentChild: Child(name: "Test", age: 8))
+    HomeView(selectedTab: .constant(.today), currentChild: Child(name: "Test", age: 8))
 }

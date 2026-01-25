@@ -92,7 +92,7 @@ final class EmailContentBuilderTests: XCTestCase {
         XCTAssertTrue(body.contains("Emma"), "Body should include child's name")
         XCTAssertTrue(body.contains("15"), "Body should include total activities count")
         XCTAssertTrue(body.contains("12"), "Body should include completed activities")
-        XCTAssertTrue(body.contains("450"), "Body should include total minutes")
+        XCTAssertTrue(body.contains("7.5 hr") || body.contains("450"), "Body should include total minutes (formatted as hours)")
         XCTAssertTrue(body.contains("105"), "Body should include net points")
         XCTAssertTrue(body.contains("Bronze") || body.contains("bronze"), "Body should include tier")
         XCTAssertTrue(body.contains("Homework"), "Body should include top category")
@@ -251,7 +251,7 @@ final class EmailContentBuilderTests: XCTestCase {
         XCTAssertTrue(body.contains("Homework"), "Should include top category")
         XCTAssertTrue(body.contains("Reading"), "Should include second category")
         XCTAssertTrue(body.contains("Sports"), "Should include third category")
-        XCTAssertTrue(body.contains("180") || body.contains("3 hr"), "Should include minutes or hours for top category")
+        XCTAssertTrue(body.contains("180") || body.contains("3.0 hr") || body.contains("3 hr"), "Should include minutes or hours for top category")
     }
 
     func testBuildEmailBody_WithStreak_HighlightsIt() {

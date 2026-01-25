@@ -29,10 +29,14 @@ struct RewardsView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Mascot with encouraging message
-                    ClockMascot(
+            ZStack {
+                // Animated background (respects child preferences)
+                ChildPreferenceBackground(child: viewModel.child, screenType: .rewards)
+
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Mascot with encouraging message
+                        ClockMascot(
                         size: 100,
                         message: rewardsMascotMessage,
                         mood: rewardsMascotMood
@@ -81,8 +85,8 @@ struct RewardsView: View {
                     }
                 }
                 .padding(.bottom, 24)
+                }
             }
-            .background(Color(.systemGroupedBackground))
             .navigationTitle("Rewards")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

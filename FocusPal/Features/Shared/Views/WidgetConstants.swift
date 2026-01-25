@@ -31,10 +31,18 @@ enum WidgetConstants {
     /// Deep link URL schemes
     enum DeepLink {
         static let scheme = "focuspal"
+
+        // Primary tabs
+        static let today = "focuspal://today"
+        static let rewards = "focuspal://rewards"
+        static let me = "focuspal://me"
+
+        // Timer overlay
         static let timer = "focuspal://timer"
         static let timerWithCategory = "focuspal://timer?category="
+
+        // Legacy deep links (redirect to Me tab for parent controls access)
         static let stats = "focuspal://stats"
-        static let rewards = "focuspal://rewards"
         static let log = "focuspal://log"
     }
 }
