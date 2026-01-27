@@ -47,6 +47,7 @@ class MultiChildTimerManager: ObservableObject {
     deinit {
         persistenceTimer?.invalidate()
         updateTimer?.invalidate()
+        NotificationCenter.default.removeObserver(self)  // Remove all notification observers to prevent memory leaks
     }
 
     // MARK: - Public Methods

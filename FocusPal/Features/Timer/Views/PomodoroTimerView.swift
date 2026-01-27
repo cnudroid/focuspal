@@ -80,6 +80,9 @@ struct PomodoroTimerView: View {
         .onChange(of: progress) { newProgress in
             checkMilestone(newProgress)
         }
+        .onDisappear {
+            stopAnimations()  // Clean up animations when view is removed to prevent background CPU usage
+        }
     }
 
     // MARK: - Background Circle
@@ -102,45 +105,17 @@ struct PomodoroTimerView: View {
 
     private func filledWedge(size: CGFloat) -> some View {
         // The wedge shows remaining time, depleting clockwise from 12 o'clock
-        Circle()
-            .trim(from: 0, to: progress)
+        // Using a custom WedgeShape for accurate pie-slice rendering
+        WedgeShape(progress: progress)
             .fill(wedgeColor)
             .frame(width: size * 0.85, height: size * 0.85)
-            .rotationEffect(.degrees(-90))
-            .scaleEffect(x: -1, y: 1) // Clockwise direction
-            .mask(
-                Circle()
-                    .trim(from: 0, to: progress)
-                    .stroke(style: StrokeStyle(lineWidth: size * 0.425, lineCap: .butt))
-                    .frame(width: size * 0.425, height: size * 0.425)
-                    .rotationEffect(.degrees(-90))
-                    .scaleEffect(x: -1, y: 1)
-            )
+            .scaleEffect(x: -1, y: 1)  // Flip horizontally to make it go clockwise visually
     }
 
-    // MARK: - Tick Marks
+    // MARK: - Tick Marks (Canvas for performance - avoids 60 view redraws per tick)
 
     private func tickMarks(size: CGFloat) -> some View {
-        ZStack {
-            ForEach(0..<60, id: \.self) { index in
-                Rectangle()
-                    .fill(tickColor(for: index))
-                    .frame(
-                        width: index % 5 == 0 ? 2.5 : 1,
-                        height: index % 5 == 0 ? 14 : 8
-                    )
-                    .offset(y: -size * 0.44)
-                    .rotationEffect(.degrees(Double(index) * 6))
-            }
-        }
-    }
-
-    private func tickColor(for index: Int) -> Color {
-        if index % 5 == 0 {
-            return Color(.systemGray2)
-        } else {
-            return Color(.systemGray4)
-        }
+        TickMarksCanvas(size: size)
     }
 
     // MARK: - Center Dot
@@ -307,6 +282,84 @@ struct PomodoroTimerView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             showCompletion = false
         }
+    }
+}
+
+// MARK: - Tick Marks Canvas (separate view for compiler performance)
+
+/// Canvas-based tick marks for better performance - drawn once, not recreated on each timer tick
+struct TickMarksCanvas: View {
+    let size: CGFloat
+
+    private let majorTickColor = Color(.systemGray2)
+    private let minorTickColor = Color(.systemGray4)
+
+    var body: some View {
+        Canvas { context, canvasSize in
+            let center = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
+            let radius = size * 0.44
+
+            for index in 0..<60 {
+                drawTick(context: context, center: center, radius: radius, index: index)
+            }
+        }
+    }
+
+    private func drawTick(context: GraphicsContext, center: CGPoint, radius: CGFloat, index: Int) {
+        let angle = CGFloat(index) * 6 * .pi / 180 - .pi / 2
+        let isMajor = index % 5 == 0
+        let tickWidth: CGFloat = isMajor ? 2.5 : 1
+        let tickHeight: CGFloat = isMajor ? 14 : 8
+
+        let outerPoint = CGPoint(
+            x: center.x + cos(angle) * radius,
+            y: center.y + sin(angle) * radius
+        )
+        let innerPoint = CGPoint(
+            x: center.x + cos(angle) * (radius - tickHeight),
+            y: center.y + sin(angle) * (radius - tickHeight)
+        )
+
+        var path = Path()
+        path.move(to: innerPoint)
+        path.addLine(to: outerPoint)
+
+        context.stroke(
+            path,
+            with: .color(isMajor ? majorTickColor : minorTickColor),
+            style: StrokeStyle(lineWidth: tickWidth, lineCap: .round)
+        )
+    }
+}
+
+// MARK: - Wedge Shape
+
+/// Custom shape that draws a pie wedge for accurate progress visualization.
+/// The wedge starts at 12 o'clock and sweeps clockwise based on progress.
+struct WedgeShape: Shape {
+    let progress: Double
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let center = CGPoint(x: rect.midX, y: rect.midY)
+        let radius = min(rect.width, rect.height) / 2
+
+        // Start at 12 o'clock (-90 degrees)
+        let startAngle = Angle(degrees: -90)
+        // Sweep clockwise by progress amount
+        let endAngle = Angle(degrees: -90 + (360 * progress))
+
+        path.move(to: center)
+        path.addArc(
+            center: center,
+            radius: radius,
+            startAngle: startAngle,
+            endAngle: endAngle,
+            clockwise: true  // true = clockwise in iOS coordinate system (Y points down)
+        )
+        path.closeSubpath()
+
+        return path
     }
 }
 

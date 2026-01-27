@@ -78,6 +78,9 @@ struct CircularTimerView: View {
         .onChange(of: progress) { newProgress in
             checkMilestone(newProgress)
         }
+        .onDisappear {
+            stopAnimations()  // Clean up animations when view is removed
+        }
     }
 
     // MARK: - Background

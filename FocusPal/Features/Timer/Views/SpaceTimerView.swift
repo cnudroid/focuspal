@@ -58,6 +58,9 @@ struct SpaceTimerView: View {
         .onChange(of: progress) { newProgress in
             checkMilestone(newProgress)
         }
+        .onDisappear {
+            stopAnimations()  // Clean up animations when view is removed
+        }
     }
 
     // MARK: - Space Background
@@ -272,6 +275,12 @@ struct SpaceTimerView: View {
         guard state == .running else { return }
         withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) {
             starsPhase = .pi * 2
+        }
+    }
+
+    private func stopAnimations() {
+        withAnimation(.easeOut(duration: 0.3)) {
+            starsPhase = 0
         }
     }
 

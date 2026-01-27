@@ -69,6 +69,9 @@ struct OceanTimerView: View {
                 startAnimations()
             }
         }
+        .onDisappear {
+            stopAnimations()  // Clean up animations when view is removed
+        }
     }
 
     // MARK: - Ocean Background
@@ -312,6 +315,14 @@ struct OceanTimerView: View {
         // Wave animation
         withAnimation(.linear(duration: 2).repeatForever(autoreverses: false)) {
             wavePhase = .pi * 2
+        }
+    }
+
+    private func stopAnimations() {
+        withAnimation(.easeOut(duration: 0.3)) {
+            bubblePhase = 0
+            fishOffset = 0
+            wavePhase = 0
         }
     }
 
