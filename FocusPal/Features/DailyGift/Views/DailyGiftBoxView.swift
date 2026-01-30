@@ -336,7 +336,7 @@ struct EmptyGiftSurprise: View {
         ("🎸", "Rock Star Mode!", "You've got the talent, now show the world!"),
         ("🧙", "Magic Maker!", "You have the power to make amazing things happen!"),
         ("🌻", "Grow Today!", "Every flower starts as a tiny seed!"),
-        ("🎯", "Aim High!", "Set your sights on something awesome today!"),
+        ("🎯", "Aim High!", "Set your sights on something awesome today!")
     ]
 
     var body: some View {

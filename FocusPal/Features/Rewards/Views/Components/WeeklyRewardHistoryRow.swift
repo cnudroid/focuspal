@@ -277,7 +277,7 @@ struct EmptyRewardHistory: View {
         (emoji: "🚀", message: "Ready to earn some awesome rewards?"),
         (emoji: "🏆", message: "Future trophies await you!"),
         (emoji: "🎯", message: "Set your sights on success!"),
-        (emoji: "✨", message: "Magic happens when you focus!"),
+        (emoji: "✨", message: "Magic happens when you focus!")
     ]
 
     private var randomEncouragement: (emoji: String, message: String) {

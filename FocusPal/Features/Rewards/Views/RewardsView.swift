@@ -873,7 +873,7 @@ private struct EmptyBadgesView: View {
         (emoji: "🎖️", title: "Badge Collection", message: "Your medals are waiting to be earned!"),
         (emoji: "🌟", title: "Star Collector", message: "Every hero needs their badges!"),
         (emoji: "🏅", title: "Champion Zone", message: "This space is reserved for your victories!"),
-        (emoji: "✨", title: "Magic Unlocks", message: "Special badges for special kids!"),
+        (emoji: "✨", title: "Magic Unlocks", message: "Special badges for special kids!")
     ]
 
     private var content: (emoji: String, title: String, message: String) {
