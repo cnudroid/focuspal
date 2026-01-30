@@ -129,55 +129,66 @@ struct DailyGiftBoxView: View {
 
     private var revealedContentSection: some View {
         VStack(spacing: 24) {
-            // Points earned
-            if giftContent.pointsYesterday > 0 {
-                GiftRewardRow(
-                    emoji: "⭐",
-                    title: "Points Earned",
-                    value: "+\(giftContent.pointsYesterday)",
-                    color: .yellow
-                )
-            }
+            // Check if there's any progress to show
+            let hasProgress = giftContent.pointsYesterday > 0 ||
+                              giftContent.currentStreak > 0 ||
+                              giftContent.activitiesCompleted > 0 ||
+                              !giftContent.newBadges.isEmpty
 
-            // Streak
-            if giftContent.currentStreak > 0 {
-                GiftRewardRow(
-                    emoji: "🔥",
-                    title: "Day Streak",
-                    value: "\(giftContent.currentStreak) days",
-                    color: .orange
-                )
-            }
+            if hasProgress {
+                // Points earned
+                if giftContent.pointsYesterday > 0 {
+                    GiftRewardRow(
+                        emoji: "⭐",
+                        title: "Points Earned",
+                        value: "+\(giftContent.pointsYesterday)",
+                        color: .yellow
+                    )
+                }
 
-            // Activities completed
-            if giftContent.activitiesCompleted > 0 {
-                GiftRewardRow(
-                    emoji: "✅",
-                    title: "Activities Done",
-                    value: "\(giftContent.activitiesCompleted)",
-                    color: .green
-                )
-            }
+                // Streak
+                if giftContent.currentStreak > 0 {
+                    GiftRewardRow(
+                        emoji: "🔥",
+                        title: "Day Streak",
+                        value: "\(giftContent.currentStreak) days",
+                        color: .orange
+                    )
+                }
 
-            // New badges
-            if !giftContent.newBadges.isEmpty {
-                VStack(spacing: 12) {
-                    Text("New Badges!")
-                        .font(.headline)
-                        .foregroundColor(.purple)
+                // Activities completed
+                if giftContent.activitiesCompleted > 0 {
+                    GiftRewardRow(
+                        emoji: "✅",
+                        title: "Activities Done",
+                        value: "\(giftContent.activitiesCompleted)",
+                        color: .green
+                    )
+                }
 
-                    HStack(spacing: 16) {
-                        ForEach(giftContent.newBadges, id: \.self) { badge in
-                            Text(badge)
-                                .font(.system(size: 40))
+                // New badges
+                if !giftContent.newBadges.isEmpty {
+                    VStack(spacing: 12) {
+                        Text("New Badges!")
+                            .font(.headline)
+                            .foregroundColor(.purple)
+
+                        HStack(spacing: 16) {
+                            ForEach(giftContent.newBadges, id: \.self) { badge in
+                                Text(badge)
+                                    .font(.system(size: 40))
+                            }
                         }
                     }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.purple.opacity(0.1))
+                    )
                 }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.purple.opacity(0.1))
-                )
+            } else {
+                // Fun empty state with surprise content for kids
+                EmptyGiftSurprise()
             }
 
             // Encouragement message
@@ -302,6 +313,79 @@ struct DailyGiftContent {
             activitiesCompleted: 0,
             newBadges: [],
             encouragementMessage: "Start a timer to earn your first reward!"
+        )
+    }
+}
+
+// MARK: - Empty Gift Surprise
+
+/// Fun surprise content shown when there's no activity data yet
+struct EmptyGiftSurprise: View {
+    @State private var selectedSurprise = Int.random(in: 0..<surpriseContent.count)
+    @State private var bouncing = false
+
+    private static let surpriseContent: [(emoji: String, title: String, message: String)] = [
+        ("🌟", "You're a Star!", "Every champion starts somewhere. Today could be YOUR day!"),
+        ("🚀", "Ready for Liftoff!", "Your adventure awaits! Start a timer and blast off!"),
+        ("🦸", "Hero in Training!", "Even superheroes practice. What will you master today?"),
+        ("🌈", "Rainbow Day!", "Make today colorful! Try something fun and new!"),
+        ("🎨", "Creative Genius!", "Your imagination is your superpower!"),
+        ("🦋", "Transformation Time!", "Small steps lead to big changes!"),
+        ("🎪", "Fun Awaits!", "The circus of learning is in town!"),
+        ("🏆", "Future Champion!", "Trophies are earned one day at a time!"),
+        ("🎸", "Rock Star Mode!", "You've got the talent, now show the world!"),
+        ("🧙", "Magic Maker!", "You have the power to make amazing things happen!"),
+        ("🌻", "Grow Today!", "Every flower starts as a tiny seed!"),
+        ("🎯", "Aim High!", "Set your sights on something awesome today!"),
+    ]
+
+    var body: some View {
+        VStack(spacing: 20) {
+            // Large animated emoji
+            Text(Self.surpriseContent[selectedSurprise].emoji)
+                .font(.system(size: 80))
+                .scaleEffect(bouncing ? 1.1 : 1.0)
+                .animation(
+                    .easeInOut(duration: 0.6).repeatForever(autoreverses: true),
+                    value: bouncing
+                )
+                .onAppear { bouncing = true }
+
+            // Inspiring title
+            Text(Self.surpriseContent[selectedSurprise].title)
+                .font(.title2.weight(.bold))
+                .foregroundColor(.primary)
+
+            // Motivational message
+            Text(Self.surpriseContent[selectedSurprise].message)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+
+            // Fun emoji row
+            HStack(spacing: 12) {
+                ForEach(["✨", "💪", "🎉"], id: \.self) { emoji in
+                    Text(emoji)
+                        .font(.title)
+                }
+            }
+            .padding(.top, 8)
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.purple.opacity(0.1),
+                            Color.blue.opacity(0.1),
+                            Color.pink.opacity(0.1)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
         )
     }
 }

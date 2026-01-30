@@ -342,23 +342,9 @@ struct RewardsView: View {
                 }
             }
 
-            // Empty state
+            // Empty state with fun emojis for kids
             if viewModel.achievements.isEmpty {
-                VStack(spacing: 16) {
-                    Image(systemName: "trophy")
-                        .font(.system(size: 50))
-                        .foregroundColor(.secondary)
-
-                    Text("No badges yet!")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-
-                    Text("Complete activities to earn badges")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 40)
+                EmptyBadgesView()
             }
         }
     }
@@ -875,6 +861,77 @@ private struct BadgeGridItem: View {
             }
         }
         .frame(maxWidth: .infinity)
+    }
+}
+
+// MARK: - Empty Badges View
+
+private struct EmptyBadgesView: View {
+    @State private var bouncing = false
+
+    private static let funContent = [
+        (emoji: "🎖️", title: "Badge Collection", message: "Your medals are waiting to be earned!"),
+        (emoji: "🌟", title: "Star Collector", message: "Every hero needs their badges!"),
+        (emoji: "🏅", title: "Champion Zone", message: "This space is reserved for your victories!"),
+        (emoji: "✨", title: "Magic Unlocks", message: "Special badges for special kids!"),
+    ]
+
+    private var content: (emoji: String, title: String, message: String) {
+        Self.funContent[abs(Date().hashValue) % Self.funContent.count]
+    }
+
+    var body: some View {
+        VStack(spacing: 20) {
+            // Animated emoji
+            Text(content.emoji)
+                .font(.system(size: 60))
+                .scaleEffect(bouncing ? 1.15 : 1.0)
+                .animation(
+                    .easeInOut(duration: 0.7).repeatForever(autoreverses: true),
+                    value: bouncing
+                )
+                .onAppear { bouncing = true }
+
+            VStack(spacing: 8) {
+                Text(content.title)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+
+                Text(content.message)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+
+            // Fun emoji encouragement
+            HStack(spacing: 12) {
+                ForEach(["🎯", "💪", "🌈"], id: \.self) { emoji in
+                    Text(emoji)
+                        .font(.title2)
+                }
+            }
+
+            Text("Complete activities to unlock awesome badges!")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 40)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.yellow.opacity(0.05),
+                            Color.orange.opacity(0.05)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+        )
+        .padding(.horizontal)
     }
 }
 

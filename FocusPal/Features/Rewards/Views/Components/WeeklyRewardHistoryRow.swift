@@ -270,24 +270,73 @@ struct RewardHistorySectionHeader: View {
 
 /// Empty state for when there's no reward history.
 struct EmptyRewardHistory: View {
+    @State private var bouncing = false
+
+    private static let encouragements = [
+        (emoji: "🌟", message: "Your reward adventure starts today!"),
+        (emoji: "🚀", message: "Ready to earn some awesome rewards?"),
+        (emoji: "🏆", message: "Future trophies await you!"),
+        (emoji: "🎯", message: "Set your sights on success!"),
+        (emoji: "✨", message: "Magic happens when you focus!"),
+    ]
+
+    private var randomEncouragement: (emoji: String, message: String) {
+        Self.encouragements[abs(Date().hashValue) % Self.encouragements.count]
+    }
+
     var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "trophy.fill")
-                .font(.system(size: 48))
-                .foregroundColor(.secondary.opacity(0.5))
+        VStack(spacing: 20) {
+            // Fun animated emoji instead of boring icon
+            Text(randomEncouragement.emoji)
+                .font(.system(size: 60))
+                .scaleEffect(bouncing ? 1.1 : 1.0)
+                .animation(
+                    .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
+                    value: bouncing
+                )
+                .onAppear { bouncing = true }
 
-            Text("No Rewards Yet")
-                .font(.headline)
-                .foregroundColor(.secondary)
+            VStack(spacing: 8) {
+                Text("Your Journey Begins!")
+                    .font(.headline)
+                    .foregroundColor(.primary)
 
-            Text("Complete focus sessions to earn points and unlock rewards!")
-                .font(.subheadline)
+                Text(randomEncouragement.message)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            // Encouraging emoji row
+            HStack(spacing: 16) {
+                ForEach(["💪", "🌈", "🎉"], id: \.self) { emoji in
+                    Text(emoji)
+                        .font(.title2)
+                }
+            }
+
+            Text("Complete focus sessions to fill this page with achievements!")
+                .font(.caption)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
+                .padding(.horizontal, 24)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 40)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.purple.opacity(0.05),
+                            Color.blue.opacity(0.05)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+        )
+        .padding(.horizontal)
     }
 }
 
